@@ -3,7 +3,7 @@ package at.arz.latte.framework.services.models;
 /**
  * Current status of a module
  */
-public enum ModulStatus {
+public enum ModuleStatus {
 
 	/**
 	 * unknown status, no contact to framework since start

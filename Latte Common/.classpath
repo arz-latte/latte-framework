@@ -7,5 +7,6 @@
 			<attribute name="owner.project.facets" value="java"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="C:/apache-tomee-plus-1.7.2/lib/javaee-api-6.0-6.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
