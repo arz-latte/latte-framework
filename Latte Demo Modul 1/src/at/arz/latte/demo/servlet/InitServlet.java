@@ -1,6 +1,7 @@
 package at.arz.latte.demo.servlet;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -8,6 +9,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
+
+import at.arz.latte.framework.services.models.ModuleStatus;
 
 @WebServlet("/init")
 public class InitServlet extends HttpServlet {
@@ -20,7 +25,20 @@ public class InitServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
-		resp.getWriter().write("demo");
+		resp.setContentType("application/json");
+		resp.setCharacterEncoding("utf-8");
+
+		JSONObject json = new JSONObject();
+
+		try {
+			json.put("status", ModuleStatus.STARTED_ACTIVE);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		PrintWriter out = resp.getWriter();
+		out.print(json.toString());
 	}
 
 }

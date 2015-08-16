@@ -11,6 +11,7 @@ import javax.ws.rs.core.Response;
 
 import org.apache.cxf.jaxrs.client.WebClient;
 
+import at.arz.latte.framework.services.models.ModuleStatus;
 import at.arz.latte.framework.services.models.ModuleModel;
 import at.arz.latte.framework.services.models.ResultModel;
 
@@ -46,7 +47,7 @@ public class InitServletContextListener implements ServletContextListener {
 	}
 
 	public void register() {
-		ModuleModel request = new ModuleModel("Latte Demo Modul 1");
+		ModuleModel request = new ModuleModel("Latte Demo Modul 1", ModuleStatus.STARTED_ACTIVE, 1);
 
 		ResultModel rm = WebClient.create(API_URL).path(API_PATH + "/register")
 				.accept(MediaType.APPLICATION_JSON)
@@ -66,7 +67,7 @@ public class InitServletContextListener implements ServletContextListener {
 	}
 
 	private void unregister() {
-		ModuleModel request = new ModuleModel("Latte Demo Modul 1");
+		ModuleModel request = new ModuleModel("Latte Demo Modul 1", ModuleStatus.STARTED_ACTIVE, 1);
 
 		ResultModel rm = WebClient.create(API_URL)
 				.path(API_PATH + "/unregister")
