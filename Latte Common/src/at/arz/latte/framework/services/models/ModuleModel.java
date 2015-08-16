@@ -3,14 +3,14 @@ package at.arz.latte.framework.services.models;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
-public class ApplicationModel {
+public class ModuleModel {
 	
 	private String name;
 
-	public ApplicationModel() {
+	public ModuleModel() {
 	}
 
-	public ApplicationModel(String name) {
+	public ModuleModel(String name) {
 		super();
 		this.name = name;
 	}

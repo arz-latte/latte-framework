@@ -2,6 +2,7 @@ package at.arz.latte.demo.servlet;
 
 import java.util.List;
 
+import javax.imageio.spi.RegisterableService;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
@@ -10,25 +11,29 @@ import javax.ws.rs.core.Response;
 
 import org.apache.cxf.jaxrs.client.WebClient;
 
-import at.arz.latte.framework.services.models.ApplicationModel;
+import at.arz.latte.framework.services.models.ModuleModel;
 import at.arz.latte.framework.services.models.ResultModel;
 
 @WebListener
-public class InitServletContextListener implements ServletContextListener,
-		Runnable {
+public class InitServletContextListener implements ServletContextListener {
 
 	private static final String API_URL = "http://localhost:8080";
 	private static final String API_PATH = "/Latte_Framework/api/v1/framework";
 
 	private Thread runner;
 
-	// Run this before web application is started
 	@Override
 	public void contextInitialized(ServletContextEvent arg0) {
 
 		System.out.println("ServletContextEvent initialized");
 
-		runner = new Thread(this);
+		runner = new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				register();
+			}
+		});
 		runner.start();
 	}
 
@@ -36,28 +41,38 @@ public class InitServletContextListener implements ServletContextListener,
 	public void contextDestroyed(ServletContextEvent arg0) {
 		System.out.println("ServletContextListener destroyed");
 		runner.interrupt();
+
+		unregister();
 	}
 
-	@Override
-	public void run() {
+	public void register() {
+		ModuleModel request = new ModuleModel("Latte Demo Modul 1");
 
-		// register app
-		ApplicationModel request = new ApplicationModel("Latte Demo Modul 1");
+		ResultModel rm = WebClient.create(API_URL).path(API_PATH + "/register")
+				.accept(MediaType.APPLICATION_JSON)
+				.post(request, ResultModel.class);
 
-		ResultModel rm = WebClient.create(API_URL).path(API_PATH + "/add")
-                .accept(MediaType.APPLICATION_JSON)
-                .post(request, ResultModel.class);
-		
 		System.out.println(rm.getSuccess());
 
 		// get all apps
-		List<ApplicationModel> apps = (List<ApplicationModel>) WebClient.create(API_URL).path(API_PATH + "/list")
+		List<ModuleModel> apps = (List<ModuleModel>) WebClient
+				.create(API_URL).path(API_PATH + "/list")
 				.accept(MediaType.APPLICATION_JSON)
-				.getCollection(ApplicationModel.class);
+				.getCollection(ModuleModel.class);
 
-		for (ApplicationModel app : apps) {
+		for (ModuleModel app : apps) {
 			System.out.println(app.getName());
 		}
+	}
 
+	private void unregister() {
+		ModuleModel request = new ModuleModel("Latte Demo Modul 1");
+
+		ResultModel rm = WebClient.create(API_URL)
+				.path(API_PATH + "/unregister")
+				.accept(MediaType.APPLICATION_JSON)
+				.post(request, ResultModel.class);
+		
+		System.out.println(rm.getSuccess());
 	}
 }
