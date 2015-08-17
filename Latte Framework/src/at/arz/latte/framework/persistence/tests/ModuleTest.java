@@ -1,8 +1,5 @@
 package at.arz.latte.framework.persistence.tests;
 
-import static org.junit.Assert.*;
-
-import java.util.List;
 import java.util.Properties;
 
 import javax.ejb.embeddable.EJBContainer;
@@ -19,6 +16,7 @@ public class ModuleTest {
 	public void test() throws Exception {
 
 		final Properties p = new Properties();
+
 		p.put("LatteFrameworkDS", "new://Resource?type=DataSource");
 		p.put("LatteFrameworkDS.JdbcDriver", "com.mysql.jdbc.Driver");
 		p.put("LatteFrameworkDS.JdbcUrl", "jdbc:mysql://localhost:3306/latte");
@@ -32,7 +30,7 @@ public class ModuleTest {
 
 		Module m = new Module();
 		m.setName("demo");
-		modules.addModule(m);
+		modules.createModule(m);
 
 	}
 
