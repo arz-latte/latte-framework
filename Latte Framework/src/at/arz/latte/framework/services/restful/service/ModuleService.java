@@ -1,9 +1,11 @@
 package at.arz.latte.framework.services.restful.service;
 
+import java.util.Arrays;
 import java.util.List;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -39,27 +41,30 @@ public class ModuleService {
 		return moduleBean.getAllModulesFull();
 	}
 
+	// TODO: JAXBException occurred : name:
+	// com.sun.xml.internal.bind.namespacePrefixMapper, value:
+	// org.apache.cxf.common.jaxb.NamespaceMapper@10267045.
+	// issue in cxf jsonprovider configuration...
+
 	@GET
 	@Path("{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Module getModule(@PathParam("id") int id) {
-		Module module = moduleBean.getModule(id);
-
-		return module;
-	}
-
-	@PUT
-	@Path("update")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Module updateModule(Module module) {
-		return moduleBean.updateModule(module);
+	public List<Module> getModule(@PathParam("id") int id) {
+		return Arrays.asList(moduleBean.getModule(id));
 	}
 
 	@POST
 	@Path("create")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Module createModule(Module module) {
-		return moduleBean.createModule(module);
+	public List<Module> createModule(Module module) {
+		return Arrays.asList(moduleBean.createModule(module));
+	}
+
+	@PUT
+	@Path("update")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<Module> updateModule(Module module) {
+		return Arrays.asList(moduleBean.updateModule(module));
 	}
 
 	@DELETE
