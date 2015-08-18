@@ -2,13 +2,13 @@ package at.arz.latte.framework.persistence.beans;
 
 import java.util.List;
 
-import javax.ejb.Stateless;
+import javax.ejb.Stateful;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import at.arz.latte.framework.persistence.models.Module;
 
-@Stateless
+@Stateful
 public class ModuleBean {
 
 	@PersistenceContext
@@ -28,7 +28,7 @@ public class ModuleBean {
 		return module;
 	}
 
-	public Module updateCustomer(Module module) {
+	public Module updateModule(Module module) {
 		Module result = em.merge(module);
 
 		return result;
