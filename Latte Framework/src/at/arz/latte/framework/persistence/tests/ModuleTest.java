@@ -1,5 +1,8 @@
 package at.arz.latte.framework.persistence.tests;
 
+import static org.junit.Assert.assertEquals;
+
+import java.util.List;
 import java.util.Properties;
 
 import javax.ejb.embeddable.EJBContainer;
@@ -9,6 +12,7 @@ import org.junit.Test;
 
 import at.arz.latte.framework.persistence.beans.ModuleBean;
 import at.arz.latte.framework.persistence.models.Module;
+import at.arz.latte.framework.persistence.models.ModuleStatus;
 
 public class ModuleTest {
 
@@ -25,12 +29,19 @@ public class ModuleTest {
 
 		final Context context = EJBContainer.createEJBContainer(p).getContext();
 
-		ModuleBean modules = (ModuleBean) context
+		ModuleBean moduleBean = (ModuleBean) context
 				.lookup("java:global/Latte Framework/ModuleBean");
 
-		Module m = new Module();
+		Module m = new Module(0, "Demo Modul", "1",
+				"http://localhost:8080/Latte_Framework", 60,
+				ModuleStatus.Unknown, true);
 		m.setName("demo");
-		modules.createModule(m);
+		moduleBean.createModule(m);
+
+		List<Module> mo = moduleBean.getAllModulesFull();
+		assertEquals(1, mo.size());
+
+		assertEquals(true, mo.get(0).getEnabled());
 
 	}
 
