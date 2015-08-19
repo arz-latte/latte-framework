@@ -1,12 +1,17 @@
 package at.arz.latte.framework.services.restful.service;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.enterprise.context.RequestScoped;
+import javax.validation.ConstraintViolation;
 import javax.validation.Valid;
+import javax.validation.Validation;
+import javax.validation.Validator;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -14,15 +19,18 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 
 import at.arz.latte.framework.modules.models.Module;
+import at.arz.latte.framework.modules.models.ModuleStatus;
 import at.arz.latte.framework.persistence.beans.ModuleManagementBean;
 import at.arz.latte.framework.persistence.beans.MyValidationException;
+import at.arz.latte.framework.persistence.beans.ValidateBean;
 
 @RequestScoped
 @Path("modules")
-//@Stateless
+// @Stateless
 public class ModuleService {
 
 	@EJB
@@ -35,25 +43,22 @@ public class ModuleService {
 		return bean.getAllModules();
 	}
 
-	// TODO: JAXBException occurred : name:
-	// com.sun.xml.internal.bind.namespacePrefixMapper, value:
-	// org.apache.cxf.common.jaxb.NamespaceMapper@10267045.
-	// issue in cxf jsonprovider configuration...
-
 	@GET
 	@Path("{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<Module> getModule(@PathParam("id") int id) {
-		return Arrays.asList(bean.getModule(id));
+	public Module getModule(@PathParam("id") int id) {
+		return new Module();
+		//return bean.getModule(id);
 	}
 
+	// 201
 	@POST
 	@Path("create")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<Module> createModule(@Valid Module module) { //throws ValidationException {		
-		//return Arrays.asList(bean.createModule(module));
-		
-		return Arrays.asList(module);
+	public Module createModule(Module module) {
+		//ValidateBean.validate(module);
+		//return null;
+		return bean.createModule(module);
 	}
 
 	@PUT

@@ -16,11 +16,11 @@ public class BaseModuleData {
 	private boolean enabled;
 
 	public BaseModuleData(Module m) {
-		this.id = m.getId();
+	/*	this.id = m.getId();
 		this.name = m.getName();
 		this.version = m.getVersion();
-		this.status = m.getStatus();
-		this.enabled = m.getEnabled();
+		//this.status = m.getStatus();
+		this.enabled = m.getEnabled();*/
 	}
 
 }

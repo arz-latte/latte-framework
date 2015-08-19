@@ -1,50 +1,19 @@
 package at.arz.latte.framework.persistence.beans;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Set;
 
-import javax.ejb.Stateful;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 
 import at.arz.latte.framework.modules.models.Module;
+import at.arz.latte.framework.services.restful.service.ModuleValidationWebApplicationException;
 
-@Stateful
-public class ModuleManagementBean {
 
-	@PersistenceContext
-	private EntityManager em;
+public class ValidateBean {
 
-	public List<Module> getAllModules() {
-		return em.createQuery("SELECT m FROM Module m", Module.class)
-				.getResultList();
-	}
-
-	public Module getModule(int moduleId) {
-		//return em.find(Module.class, moduleId);
-		return new Module();
-	}
-
-	public Module createModule(Module module) {
-		em.persist(module);
-		return module;
-	}
-
-	public Module updateModule(Module module) {
-		Module result = em.merge(module);
-
-		return result;
-	}
-
-	public void deleteModule(int moduleId) {
-		em.remove(getModule(moduleId));
-	}
-
-	private Module validate(Module module) {
+	public static void validate(Module module) {		
 		Validator validator = Validation.buildDefaultValidatorFactory()
 				.getValidator();
 		Set<ConstraintViolation<Module>> constraintViolations = validator
@@ -63,8 +32,9 @@ public class ModuleManagementBean {
 			}
 
 			System.out.println("---------------------------------------");
+			
+		//	throw new ModuleValidationWebApplicationException(violationMessages, module);
 		}
-		return module;
 	}
 
 }
