@@ -10,9 +10,9 @@ import javax.naming.Context;
 
 import org.junit.Test;
 
-import at.arz.latte.framework.persistence.beans.ModuleBean;
-import at.arz.latte.framework.persistence.models.Module;
-import at.arz.latte.framework.persistence.models.ModuleStatus;
+import at.arz.latte.framework.modules.models.Module;
+import at.arz.latte.framework.modules.models.ModuleStatus;
+import at.arz.latte.framework.persistence.beans.ModuleManagementBean;
 
 public class ModuleTest {
 
@@ -29,16 +29,15 @@ public class ModuleTest {
 
 		final Context context = EJBContainer.createEJBContainer(p).getContext();
 
-		ModuleBean moduleBean = (ModuleBean) context
-				.lookup("java:global/Latte Framework/ModuleBean");
+		ModuleManagementBean moduleManagementBean = (ModuleManagementBean) context
+				.lookup("java:global/Latte Framework/ModuleManagementBean");
 
 		Module m = new Module(0, "Demo Modul", "1",
 				"http://localhost:8080/Latte_Framework", 60,
 				ModuleStatus.Unknown, true);
-		m.setName("demo");
-		moduleBean.createModule(m);
+		moduleManagementBean.createModule(m);
 
-		List<Module> mo = moduleBean.getAllModulesFull();
+		List<Module> mo = moduleManagementBean.getAllModules();
 		assertEquals(1, mo.size());
 
 		assertEquals(true, mo.get(0).getEnabled());

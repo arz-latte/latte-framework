@@ -5,7 +5,8 @@ import java.util.List;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
-import javax.ws.rs.Consumes;
+import javax.enterprise.context.RequestScoped;
+import javax.validation.Valid;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -15,30 +16,23 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import at.arz.latte.framework.persistence.beans.ModuleBean;
-import at.arz.latte.framework.persistence.models.Module;
+import at.arz.latte.framework.modules.models.Module;
+import at.arz.latte.framework.persistence.beans.ModuleManagementBean;
+import at.arz.latte.framework.persistence.beans.MyValidationException;
 
+@RequestScoped
 @Path("modules")
-@Stateless
+//@Stateless
 public class ModuleService {
 
 	@EJB
-	private ModuleBean moduleBean;
-
-	/*
-	 * @GET
-	 * 
-	 * @Path("all")
-	 * 
-	 * @Produces(MediaType.APPLICATION_JSON) public List<BaseModuleData>
-	 * getModules() { return moduleManagementBean.getAllModules(); }
-	 */
+	private ModuleManagementBean bean;
 
 	@GET
 	@Path("all")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<Module> getAllModules() {
-		return moduleBean.getAllModulesFull();
+		return bean.getAllModules();
 	}
 
 	// TODO: JAXBException occurred : name:
@@ -50,26 +44,28 @@ public class ModuleService {
 	@Path("{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<Module> getModule(@PathParam("id") int id) {
-		return Arrays.asList(moduleBean.getModule(id));
+		return Arrays.asList(bean.getModule(id));
 	}
 
 	@POST
 	@Path("create")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<Module> createModule(Module module) {
-		return Arrays.asList(moduleBean.createModule(module));
+	public List<Module> createModule(@Valid Module module) { //throws ValidationException {		
+		//return Arrays.asList(bean.createModule(module));
+		
+		return Arrays.asList(module);
 	}
 
 	@PUT
 	@Path("update")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<Module> updateModule(Module module) {
-		return Arrays.asList(moduleBean.updateModule(module));
+		return Arrays.asList(bean.updateModule(module));
 	}
 
 	@DELETE
 	@Path("delete/{id}")
 	public void deleteModule(@PathParam("id") int moduleId) {
-		moduleBean.deleteModule(moduleId);
+		bean.deleteModule(moduleId);
 	}
 }

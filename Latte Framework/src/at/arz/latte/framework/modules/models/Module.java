@@ -1,8 +1,8 @@
-package at.arz.latte.framework.persistence.models;
+package at.arz.latte.framework.modules.models;
 
-import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -10,32 +10,34 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Transient;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.eclipse.persistence.annotations.TypeConverter;
 
 @XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 @Entity
-public class Module implements Serializable {
-
-	private static final long serialVersionUID = 1L;
+public class Module {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
 	@NotNull
-	@Size(min=2, max = 63)
+	@Size(min = 2, max = 63)
 	private String name;
 
 	/**
 	 * version of module
 	 */
 	@NotNull
-	@Size(min=1, max = 15)
+	@Size(min = 1, max = 15)
 	private String version;
 
 	/**
@@ -57,8 +59,11 @@ public class Module implements Serializable {
 	@Enumerated(EnumType.STRING)
 	private ModuleStatus status;
 
-	@TypeConverter(dataType=Integer.class, name = "enabled")
+	@TypeConverter(dataType = Integer.class, name = "enabled")
 	private boolean enabled;
+
+	@Transient
+	private HashMap<String, String> violationMessages;
 
 	public Module() {
 		super();
@@ -124,16 +129,20 @@ public class Module implements Serializable {
 		this.checkInterval = checkInterval;
 	}
 
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-
 	public boolean getEnabled() {
 		return enabled;
 	}
 
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
+	}
+
+	public HashMap<String, String> getViolationMessages() {
+		return violationMessages;
+	}
+
+	public void setViolationMessages(HashMap<String, String> violationMessages) {
+		this.violationMessages = violationMessages;
 	}
 
 	public String getHost() throws MalformedURLException {

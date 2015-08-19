@@ -1,4 +1,4 @@
-package at.arz.latte.framework.persistence.models;
+package at.arz.latte.framework.modules.models;
 
 /**
  * Current status of a module
