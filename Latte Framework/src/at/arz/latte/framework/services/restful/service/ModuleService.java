@@ -21,7 +21,6 @@ import at.arz.latte.framework.persistence.beans.ModuleManagementBean;
 
 @RequestScoped
 @Path("modules")
-// @Stateless
 public class ModuleService {
 
 	@EJB
@@ -47,7 +46,7 @@ public class ModuleService {
 	public ResultData createModule(ModuleFullData m) {
 		Module module = new Module(m.getId(), m.getName(), m.getVersion(), m.getUrl(), m.getCheckInterval(),
 				m.getStatus(), m.getEnabled());
-		return bean.createModule(module);
+		return new ResultData(bean.createModule(module));
 	}
 
 	@PUT
@@ -56,7 +55,7 @@ public class ModuleService {
 	public ResultData updateModule(ModuleFullData m) {
 		Module module = new Module(m.getId(), m.getName(), m.getVersion(), m.getUrl(), m.getCheckInterval(),
 				m.getStatus(), m.getEnabled());
-		return bean.updateModule(module);
+		return new ResultData(bean.updateModule(module));
 	}
 
 	@DELETE

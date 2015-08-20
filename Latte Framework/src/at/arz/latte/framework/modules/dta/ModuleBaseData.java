@@ -4,6 +4,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import at.arz.latte.framework.modules.models.ModuleStatus;
 
+/**
+ * used to transmit some module data to client
+ * 
+ * @author Dominik
+ *
+ */
 @XmlRootElement(name = "module_base")
 public class ModuleBaseData {
 
