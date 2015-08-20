@@ -30,7 +30,7 @@ public class ModuleService {
 	@Path("all")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<ModuleBaseData> getAllModules() {
-		return bean.getAllModules();
+		return bean.getAllModulesBase();
 	}
 
 	@GET

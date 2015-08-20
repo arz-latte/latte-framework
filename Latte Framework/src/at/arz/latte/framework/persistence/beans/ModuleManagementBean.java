@@ -15,8 +15,12 @@ public class ModuleManagementBean extends GenericManagementBean<Module> {
 	@PersistenceContext
 	private EntityManager em;
 
-	public List<ModuleBaseData> getAllModules() {
-		return em.createNamedQuery(Module.QUERY_GETALL, ModuleBaseData.class).getResultList();
+	public List<ModuleBaseData> getAllModulesBase() {
+		return em.createNamedQuery(Module.QUERY_GETALL_BASE, ModuleBaseData.class).getResultList();
+	}
+
+	public List<Module> getAllModules() {
+		return em.createNamedQuery(Module.QUERY_GETALL, Module.class).getResultList();
 	}
 
 	public Module getModule(int moduleId) {

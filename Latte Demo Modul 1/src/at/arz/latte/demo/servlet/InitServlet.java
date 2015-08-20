@@ -12,7 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import at.arz.latte.framework.services.models.ModuleStatus;
+import at.arz.latte.framework.modules.models.ModuleStatus;
+
 
 @WebServlet("/init")
 public class InitServlet extends HttpServlet {
@@ -31,9 +32,8 @@ public class InitServlet extends HttpServlet {
 		JSONObject json = new JSONObject();
 
 		try {
-			json.put("status", ModuleStatus.STARTED_ACTIVE);
+			json.put("status", ModuleStatus.StartedActive);
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

@@ -1,8 +1,20 @@
 package at.arz.latte.framework.services.schedule;
 
+import java.net.MalformedURLException;
+
 import javax.ejb.EJB;
 import javax.ejb.Schedule;
 import javax.ejb.Singleton;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.MediaType;
+
+import org.apache.cxf.jaxrs.client.ClientWebApplicationException;
+import org.apache.cxf.jaxrs.client.WebClient;
+
+import at.arz.latte.framework.modules.dta.ModuleFullData;
+import at.arz.latte.framework.modules.models.Module;
+import at.arz.latte.framework.modules.models.ModuleStatus;
+import at.arz.latte.framework.persistence.beans.ModuleManagementBean;
 
 /**
  * timer for periodic checking of module status
@@ -11,7 +23,7 @@ import javax.ejb.Singleton;
 public class ModuleTimerService {
 
 	@EJB
-	private ModuleStatusService moduleStatusService;
+	private ModuleManagementBean bean;
 
 	private int counter = 0;
 
@@ -19,14 +31,39 @@ public class ModuleTimerService {
 	private void checkModules() {
 
 		counter++;
-/*
-		for (Module module : DataHandler.getApplications()) {
+
+		for (Module module : bean.getAllModules()) {
 
 			int checkInterval = module.getCheckInterval();
 			if (checkInterval > 0 && counter % checkInterval == 0) {
-				moduleStatusService.checkStatus(module);
+				checkStatus(module);
 			}
 		}
-*/
+
+	}
+	
+	private void checkStatus(Module module) {
+		System.out.println("check module status: " + module.getName());
+
+		try {
+			ModuleFullData status = WebClient.create(module.getHost())
+					.path(module.getPath() + "/status")
+					.accept(MediaType.APPLICATION_JSON).get(ModuleFullData.class);
+
+			// set module as active
+			module.setStatus(ModuleStatus.StartedActive);			
+			bean.updateModule(module);
+
+		} catch (WebApplicationException | ClientWebApplicationException ex) {
+			System.out.println("WebApplicationException: " + ex.getMessage());
+
+			// set module as inactive
+			if (module.getStatus() == ModuleStatus.StartedActive) {
+				module.setStatus(ModuleStatus.StartedInactive);
+				bean.updateModule(module);
+			}
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
 	}
 }

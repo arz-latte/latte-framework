@@ -11,16 +11,13 @@ import javax.ws.rs.core.Response;
 
 import org.apache.cxf.jaxrs.client.WebClient;
 
-import at.arz.latte.framework.services.models.ModuleStatus;
-import at.arz.latte.framework.services.models.ModuleModel;
-import at.arz.latte.framework.services.models.ResultModel;
 import at.arz.latte.modules.services.restful.config.DemoModuleConfiguration;
 
 @WebListener
 public class InitServletContextListener implements ServletContextListener {
 
 	private static final String API_URL = "http://localhost:8080";
-	private static final String API_PATH = "/Latte_Framework/api/v1/framework";
+	private static final String API_PATH = "/latte/api/v1/module";
 
 	private Thread runner;
 
@@ -33,7 +30,7 @@ public class InitServletContextListener implements ServletContextListener {
 
 			@Override
 			public void run() {
-				register();
+			//	register();
 			}
 		});
 		runner.start();
@@ -44,13 +41,13 @@ public class InitServletContextListener implements ServletContextListener {
 		System.out.println("ServletContextListener destroyed");
 		runner.interrupt();
 
-		unregister();
+		//unregister();
 	}
-
+/*
 	public void register() {
-		ModuleModel request = DemoModuleConfiguration.MODULE;
+		Module request = DemoModuleConfiguration.MODULE;
 
-		ResultModel rm = WebClient.create(API_URL).path(API_PATH + "/register")
+		Result rm = WebClient.create(API_URL).path(API_PATH + "/register")
 				.accept(MediaType.APPLICATION_JSON)
 				.post(request, ResultModel.class);
 
@@ -76,5 +73,5 @@ public class InitServletContextListener implements ServletContextListener {
 				.post(request, ResultModel.class);
 		
 		System.out.println(rm.getSuccess());
-	}
+	}*/
 }
