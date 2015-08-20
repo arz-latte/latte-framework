@@ -9,7 +9,7 @@ var app = {
 
 		$.getJSON(app.API_MODULES + "/all", function(data) {
 
-			app.modules = data.base_module; // save result
+			app.modules = data.module_base; // save result
 
 			var $modules = $("#modules");
 			$modules.find("tr:has(td)").remove(); // clear
@@ -42,7 +42,7 @@ var app = {
 		// load module details
 		var id = $(this).attr("data-id");
 		$.getJSON(app.API_MODULES + "/" + id, function(data) {
-			var m = data.full_module;
+			var m = data.module_full;
 			app.currentModule = new Module();
 			app.currentModule.init(m.id, m.name, m.version, m.status, m.url,
 					m.checkInterval, m.enabled);
@@ -220,7 +220,7 @@ Module.prototype.init = function(id, name, version, status, url, checkInterval,
 };
 Module.prototype.createJSON = function() {
 	return JSON.stringify({
-		"full_module" : this
+		"module_full" : this
 	});
 };
 

@@ -8,8 +8,6 @@
 
 		<jta-data-source>java:comp/env/jdbc/PostgreSQL Database</jta-data-source>
 		<non-jta-data-source>java:comp/env/jdbc/PostgreSQL Database</non-jta-data-source>
-
-		<class>com.jvmhub.tutorial.entity.AppUser</class>
 		<class>at.arz.latte.framework.modules.models.Module</class>
 
 		<properties>

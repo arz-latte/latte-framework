@@ -11,7 +11,6 @@ import org.apache.cxf.jaxrs.client.WebClient;
 
 import at.arz.latte.framework.modules.models.Module;
 import at.arz.latte.framework.modules.models.ModuleStatus;
-import at.arz.latte.framework.persistence.DataHandler;
 
 /**
  * check status of a single module

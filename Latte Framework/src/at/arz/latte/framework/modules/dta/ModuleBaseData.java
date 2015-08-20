@@ -4,7 +4,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import at.arz.latte.framework.modules.models.ModuleStatus;
 
-@XmlRootElement(name = "base_module")
+@XmlRootElement(name = "module_base")
 public class ModuleBaseData {
 
 	protected int id;

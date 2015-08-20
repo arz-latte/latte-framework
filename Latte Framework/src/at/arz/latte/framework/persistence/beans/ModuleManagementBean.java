@@ -12,10 +12,8 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 
 import at.arz.latte.framework.modules.dta.ModuleBaseData;
-import at.arz.latte.framework.modules.dta.ModuleFullData;
 import at.arz.latte.framework.modules.dta.ResultData;
 import at.arz.latte.framework.modules.models.Module;
-import at.arz.latte.framework.modules.models.ModuleStatus;
 
 @Stateful
 public class ModuleManagementBean {

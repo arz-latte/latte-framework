@@ -16,8 +16,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import at.arz.latte.framework.modules.dta.ModuleFullData;
-
 @Entity
 @NamedQuery(name = Module.QUERY_GETALL, query = "SELECT new at.arz.latte.framework.modules.dta.ModuleBaseData(m.id, m.name, m.version, m.status, m.enabled) FROM Module m ORDER BY m.name")
 @XmlRootElement(name = "module")
@@ -61,7 +59,6 @@ public class Module implements Serializable {
 	@Enumerated(EnumType.STRING)
 	private ModuleStatus status;
 
-	// @TypeConverter(dataType = Integer.class, name = "enabled")
 	private boolean enabled;
 
 	public Module() {
@@ -89,7 +86,7 @@ public class Module implements Serializable {
 		this.url = m.url;
 		this.checkInterval = m.checkInterval;
 		this.enabled = m.enabled;
-	}	
+	}
 
 	public int getId() {
 		return id;

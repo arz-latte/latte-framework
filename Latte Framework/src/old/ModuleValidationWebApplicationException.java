@@ -1,4 +1,4 @@
-package at.arz.latte.framework.services.restful.service;
+package old;
 
 import java.util.HashMap;
 
@@ -19,7 +19,7 @@ public class ModuleValidationWebApplicationException extends
 
 	public ModuleValidationWebApplicationException(
 			HashMap<String, String> violationMessages, Module m)  {	    
-		super(Response.status(Response.Status.OK).entity(new ModuleFullData(m, violationMessages)).type(MediaType.APPLICATION_JSON).build());
+		//super(Response.status(Response.Status.OK).entity(new ModuleFullData(m, violationMessages)).type(MediaType.APPLICATION_JSON).build());
 		
 	}
 }

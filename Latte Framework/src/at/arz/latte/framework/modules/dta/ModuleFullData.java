@@ -6,7 +6,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import at.arz.latte.framework.modules.models.Module;
 
-@XmlRootElement(name = "full_module")
+@XmlRootElement(name = "module_full")
 public class ModuleFullData extends ModuleBaseData {
 
 	private String url;
@@ -28,13 +28,7 @@ public class ModuleFullData extends ModuleBaseData {
 
 	public ModuleFullData(Module m) {
 		super(m.getId(), m.getName(), m.getVersion(), m.getStatus(), m.getEnabled());
-		this.url = m.getUrl();
 		this.checkInterval = m.getCheckInterval();
-	}
-
-	public ModuleFullData(Module m, HashMap<String, String> validation) {
-		this(m);
-		this.validation = validation;
 	}
 
 	public void setModule(Module m) {
