@@ -6,8 +6,15 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
  
 @Entity
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class AppUser implements Serializable {
  
 	private static final long serialVersionUID = 1L;
@@ -21,10 +28,12 @@ public class AppUser implements Serializable {
  
 	};
  
+	@XmlAttribute
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
  
+	
 	private String login;
  
 	public Long getId() {

@@ -5,3 +5,7 @@
 #messageBox.error { 
 	color: red;
 }
+
+form span {
+	visibility: hidden;
+}

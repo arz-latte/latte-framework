@@ -1,4 +1,4 @@
-package at.arz.latte.framework.persistence.beans;
+package old;
 
 import java.util.HashMap;
 

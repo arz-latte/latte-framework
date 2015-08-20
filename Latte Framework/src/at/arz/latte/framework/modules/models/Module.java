@@ -1,8 +1,8 @@
 package at.arz.latte.framework.modules.models;
 
+import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -10,18 +10,22 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Transient;
+import javax.persistence.NamedQuery;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
+import at.arz.latte.framework.modules.dta.ModuleFullData;
+
 @Entity
-public class Module {
+@NamedQuery(name = Module.QUERY_GETALL, query = "SELECT new at.arz.latte.framework.modules.dta.ModuleBaseData(m.id, m.name, m.version, m.status, m.enabled) FROM Module m ORDER BY m.name")
+@XmlRootElement(name = "module")
+public class Module implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+
+	public static final String QUERY_GETALL = "Module.GetAll";
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,7 +47,7 @@ public class Module {
 	 * http://localhost:8080/Modul1/api/v1/module
 	 */
 	@NotNull
-	@Size(max = 255)
+	@Size(min = 1, max = 255)
 	private String url;
 
 	/**
@@ -57,18 +61,15 @@ public class Module {
 	@Enumerated(EnumType.STRING)
 	private ModuleStatus status;
 
-	//@TypeConverter(dataType = Integer.class, name = "enabled")
+	// @TypeConverter(dataType = Integer.class, name = "enabled")
 	private boolean enabled;
-
-	@Transient
-	private HashMap<String, String> violationMessages;
 
 	public Module() {
 		super();
 	}
 
-	public Module(int id, String name, String version, String url,
-			int checkInterval, ModuleStatus status, boolean enabled) {
+	public Module(int id, String name, String version, String url, int checkInterval, ModuleStatus status,
+			boolean enabled) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -78,6 +79,17 @@ public class Module {
 		this.checkInterval = checkInterval;
 		this.enabled = enabled;
 	}
+
+	public Module(Module m) {
+		super();
+		this.id = m.id;
+		this.name = m.name;
+		this.status = m.status;
+		this.version = m.version;
+		this.url = m.url;
+		this.checkInterval = m.checkInterval;
+		this.enabled = m.enabled;
+	}	
 
 	public int getId() {
 		return id;
@@ -135,14 +147,6 @@ public class Module {
 		this.enabled = enabled;
 	}
 
-	public HashMap<String, String> getViolationMessages() {
-		return violationMessages;
-	}
-
-	public void setViolationMessages(HashMap<String, String> violationMessages) {
-		this.violationMessages = violationMessages;
-	}
-
 	public String getHost() throws MalformedURLException {
 		URL u = new URL(url);
 		return u.getProtocol() + "://" + u.getAuthority();
@@ -152,4 +156,11 @@ public class Module {
 		URL u = new URL(url);
 		return u.getPath();
 	}
+
+	@Override
+	public String toString() {
+		return "Module [id=" + id + ", name=" + name + ", version=" + version + ", url=" + url + ", checkInterval="
+				+ checkInterval + ", status=" + status + ", enabled=" + enabled + "]";
+	}
+
 }

@@ -9,7 +9,7 @@ var app = {
 
 		$.getJSON(app.API_MODULES + "/all", function(data) {
 
-			app.modules = data.module; // save result
+			app.modules = data.base_module; // save result
 
 			var $modules = $("#modules");
 			$modules.find("tr:has(td)").remove(); // clear
@@ -42,29 +42,29 @@ var app = {
 		// load module details
 		var id = $(this).attr("data-id");
 		$.getJSON(app.API_MODULES + "/" + id, function(data) {
-			var m = data.module[0];
-
+			var m = data.full_module;
 			app.currentModule = new Module();
 			app.currentModule.init(m.id, m.name, m.version, m.status, m.url,
 					m.checkInterval, m.enabled);
 
 			// fill form
-			$('[name=name]').val(app.currentModule.name);
-			$('[name=version]').val(app.currentModule.version);
-			$('[name=url]').val(app.currentModule.url);
-			$('[name=checkInterval]').val(app.currentModule.checkInterval);
-			$('[name=enabled]').prop("checked", app.currentModule.enabled);
+			$('[name=input-name]').val(app.currentModule.name);
+			$('[name=input-version]').val(app.currentModule.version);
+			$('[name=input-url]').val(app.currentModule.url);
+			$('[name=input-checkInterval]')
+					.val(app.currentModule.checkInterval);
+			$('[name=input-enabled]')
+					.prop("checked", app.currentModule.enabled);
 		});
 	},
 
 	storeModule : function() {
 		// copy form to model
-		app.currentModule.name = $('[name=name]').val();
-		app.currentModule.version = $('[name=version]').val();
-		app.currentModule.url = $('[name=url]').val();
-		app.currentModule.checkInterval = $('[name=checkInterval]').val();
-		app.currentModule.enabled = $('[name=enabled]').prop("checked");
-		console.log($('[name=enabled]').prop("checked"));
+		app.currentModule.name = $('[name=input-name]').val();
+		app.currentModule.version = $('[name=input-version]').val();
+		app.currentModule.url = $('[name=input-url]').val();
+		app.currentModule.checkInterval = $('[name=input-checkInterval]').val();
+		app.currentModule.enabled = $('[name=input-enabled]').prop("checked");
 
 		if (app.currentModule && app.currentModule.id > 0) {
 
@@ -74,8 +74,7 @@ var app = {
 				data : app.currentModule.createJSON(),
 				contentType : "application/json; charset=UTF-8",
 			}).done(function(data) {
-				app.showMessage("Modul aktualisiert");
-				app.loadModules();
+				app.storeModuleCallback(data.result, "Modul aktualisiert");
 			}).fail(function() {
 				app.showErrorMessage("Fehler");
 			});
@@ -85,10 +84,9 @@ var app = {
 				url : app.API_MODULES + "/create",
 				type : "POST",
 				data : app.currentModule.createJSON(),
-				contentType : "application/json; charset=UTF-8",				
+				contentType : "application/json; charset=UTF-8",
 			}).done(function(data) {
-				app.showMessage("Modul erstellt");
-				app.loadModules();
+				app.storeModuleCallback(data.result, "Modul erstellt");
 			}).fail(function() {
 				app.showErrorMessage("Fehler");
 			});
@@ -97,17 +95,61 @@ var app = {
 		return false;
 	},
 
-	deleteModule : function() {
+	resetFormValidation : function() {
+		// reset form valid
+		$('#moduleEditArea input').each(function() {
+			$(this).closest(".form-group").removeClass("has-error");
+			$(this).next().hide(); // hide glyphicon
 
-		$.ajax({
-			url : app.API_MODULES + "/delete/" + app.currentModule.id,
-			type : "DELETE",
-		}).done(function(data) {
-			app.showMessage("Modul gel�scht");
+			var text = $(this).parent().prev().text();
+			$(this).parent().prev().text(text.split(": ")[0]);
+		})
+	},
+
+	storeModuleCallback : function(data, msg) {
+
+		if (data.validation) {
+			app.showErrorMessage("Fehler beim Speichern");
+			app.resetFormValidation();
+
+			// mark invalid
+			var entries = [];
+			if ($.isArray(data.validation.entry)) {
+				$.merge(entries, data.validation.entry);
+			} else {
+				entries.push(data.validation.entry);
+			}
+			$.each(entries, function(i, e) {
+				// mark input as invalid
+				var $input = $("[name=input-" + e.key + "]");
+				$input.closest(".form-group").addClass("has-error");
+
+				$input.next().show(); // show glyphicon
+
+				// set label text
+				var text = $input.parent().prev().text();
+				$input.parent().prev().text(text + ": " + e.value);
+			});
+
+		} else {
+			app.showMessage(msg);
 			app.loadModules();
-		}).fail(function() {
-			app.showErrorMessage("Fehler");
-		});
+		}
+	},
+
+	deleteModule : function() {
+		var choice = confirm("Sind Sie sicher?");
+		if(choice == true) { 
+			$.ajax({
+				url : app.API_MODULES + "/delete/" + app.currentModule.id,
+				type : "DELETE",
+			}).done(function(data) {
+				app.showMessage("Modul gel&ouml;scht");
+				app.loadModules();
+			}).fail(function() {
+				app.showErrorMessage("Fehler");
+			});
+		}
 
 		return false;
 	},
@@ -124,18 +166,20 @@ var app = {
 	showMessage : function(msg) {
 		var $box = $("#messageBox");
 		$box.removeClass("error");
-		$box.text(msg);
+		$box.html(msg);
 		$box.show(100).delay(2000).hide(100);
 	},
 
 	showErrorMessage : function(msg) {
 		var $box = $("#messageBox");
 		$box.addClass("error");
-		$box.text(msg);
+		$box.html(msg);
 		$box.show(100).delay(2000).hide(100);
 	},
 
 	enterEditMode : function() {
+		app.resetFormValidation();
+
 		$("#moduleListArea").hide();
 		$("#moduleEditArea").show();
 
@@ -176,7 +220,7 @@ Module.prototype.init = function(id, name, version, status, url, checkInterval,
 };
 Module.prototype.createJSON = function() {
 	return JSON.stringify({
-		"module" : this
+		"full_module" : this
 	});
 };
 
@@ -194,7 +238,7 @@ function initFramework() {
 
 	$("#moduleListArea tbody").on("click", "tr", app.showModule);
 
-	//app.loadModules();
+	app.loadModules();
 }
 
 $(initFramework);

@@ -12,6 +12,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Valid;
 import javax.validation.Validation;
 import javax.validation.Validator;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -21,11 +22,16 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
+import com.jvmhub.tutorial.entity.AppUser;
+
+import at.arz.latte.framework.modules.dta.ModuleFullData;
+import at.arz.latte.framework.modules.dta.ModuleBaseData;
+import at.arz.latte.framework.modules.dta.ResultData;
 import at.arz.latte.framework.modules.models.Module;
 import at.arz.latte.framework.modules.models.ModuleStatus;
 import at.arz.latte.framework.persistence.beans.ModuleManagementBean;
-import at.arz.latte.framework.persistence.beans.MyValidationException;
 import at.arz.latte.framework.persistence.beans.ValidateBean;
 
 @RequestScoped
@@ -39,33 +45,31 @@ public class ModuleService {
 	@GET
 	@Path("all")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<Module> getAllModules() {
+	public List<ModuleBaseData> getAllModules() {
 		return bean.getAllModules();
 	}
 
 	@GET
 	@Path("{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Module getModule(@PathParam("id") int id) {
-		return new Module();
-		//return bean.getModule(id);
+	public ModuleFullData getModule(@PathParam("id") int id) {
+		return new ModuleFullData(bean.getModule(id));
 	}
 
-	// 201
 	@POST
 	@Path("create")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Module createModule(Module module) {
-		//ValidateBean.validate(module);
-		//return null;
+	public ResultData createModule(ModuleFullData m) {
+		Module module = new Module(m.getId(), m.getName(), m.getVersion(), m.getUrl(), m.getCheckInterval(), m.getStatus(), m.getEnabled());
 		return bean.createModule(module);
 	}
 
 	@PUT
 	@Path("update")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<Module> updateModule(Module module) {
-		return Arrays.asList(bean.updateModule(module));
+	public ResultData updateModule(Module m) {
+		Module module = new Module(m.getId(), m.getName(), m.getVersion(), m.getUrl(), m.getCheckInterval(), m.getStatus(), m.getEnabled());
+		return bean.updateModule(module);
 	}
 
 	@DELETE

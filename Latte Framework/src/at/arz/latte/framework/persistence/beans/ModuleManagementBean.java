@@ -5,14 +5,17 @@ import java.util.List;
 import java.util.Set;
 
 import javax.ejb.Stateful;
-import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 
+import at.arz.latte.framework.modules.dta.ModuleBaseData;
+import at.arz.latte.framework.modules.dta.ModuleFullData;
+import at.arz.latte.framework.modules.dta.ResultData;
 import at.arz.latte.framework.modules.models.Module;
+import at.arz.latte.framework.modules.models.ModuleStatus;
 
 @Stateful
 public class ModuleManagementBean {
@@ -20,53 +23,59 @@ public class ModuleManagementBean {
 	@PersistenceContext
 	private EntityManager em;
 
-	public List<Module> getAllModules() {
-		return em.createQuery("SELECT m FROM Module m", Module.class)
-				.getResultList();
+	public List<ModuleBaseData> getAllModules() {
+		return em.createNamedQuery(Module.QUERY_GETALL, ModuleBaseData.class).getResultList();
 	}
 
 	public Module getModule(int moduleId) {
-		System.out.println(em);
-		//return em.find(Module.class, moduleId);
-		return new Module();
+		return em.find(Module.class, moduleId);
 	}
 
-	public Module createModule(Module module) {
-		em.persist(module);
-		return module;
+	public ResultData createModule(Module module) {
+		ResultData resp = validate(module);
+		if (resp.isSaveable()) {
+			em.persist(module);
+			resp.setId(module.getId());
+			System.out.println("id: " + module.getId());
+		}
+
+		return resp;
 	}
 
-	public Module updateModule(Module module) {
-		Module result = em.merge(module);
+	public ResultData updateModule(Module module) {
+		ResultData resp = validate(module);
+		if (resp.isSaveable()) {
+			em.merge(module);
+			resp.setId(module.getId());
+			System.out.println("id: " + module.getId());
+		}
 
-		return result;
+		return resp;
 	}
 
 	public void deleteModule(int moduleId) {
 		em.remove(getModule(moduleId));
 	}
 
-	private Module validate(Module module) {
-		Validator validator = Validation.buildDefaultValidatorFactory()
-				.getValidator();
-		Set<ConstraintViolation<Module>> constraintViolations = validator
-				.validate(module);
+	private ResultData validate(Module module) {
+		ResultData result = new ResultData();
+
+		Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+		Set<ConstraintViolation<Module>> constraintViolations = validator.validate(module);
 
 		if (constraintViolations.size() > 0) {
-			System.out.println("---------------------------------------");
 			HashMap<String, String> violationMessages = new HashMap<String, String>();
 
 			for (ConstraintViolation<Module> cv : constraintViolations) {
-				violationMessages.put(cv.getPropertyPath().toString(),
-						cv.getMessage());
+				violationMessages.put(cv.getPropertyPath().toString(), cv.getMessage());
 
-				System.out.println(cv.getPropertyPath() + ": "
-						+ cv.getMessage());
+				System.out.println(cv.getPropertyPath() + ": " + cv.getMessage());
 			}
 
-			System.out.println("---------------------------------------");
+			result.setValidation(violationMessages);
 		}
-		return module;
+
+		return result;
 	}
 
 }
