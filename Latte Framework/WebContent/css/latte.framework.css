@@ -1,0 +1,7 @@
+#messageBox { 
+	color: green;
+}
+
+#messageBox.error { 
+	color: red;
+}
