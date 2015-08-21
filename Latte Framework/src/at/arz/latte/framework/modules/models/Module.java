@@ -24,7 +24,7 @@ import at.arz.latte.framework.modules.models.validator.CheckUrl;
  */
 @Entity
 @NamedQueries({
-		@NamedQuery(name = Module.QUERY_GETALL_BASE, query = "SELECT new at.arz.latte.framework.modules.dta.ModuleBaseData(m.id, m.name, m.version, m.status, m.enabled) FROM Module m ORDER BY m.name"),
+		@NamedQuery(name = Module.QUERY_GETALL_BASE, query = "SELECT new at.arz.latte.framework.modules.dta.ModuleBaseData(m.id, m.name, m.provider, m.version, m.status, m.enabled) FROM Module m ORDER BY m.name"),
 		@NamedQuery(name = Module.QUERY_GETALL, query = "SELECT m FROM Module m"),
 		@NamedQuery(name = Module.UPDATE_ALL, query = "UPDATE Module m SET m.status = ModuleStatus.Unknown")
 })
@@ -40,6 +40,10 @@ public class Module extends AbstractEntity implements Serializable {
 	@NotNull
 	@Size(min = 1, max = 63)
 	private String name;
+
+	@NotNull
+	@Size(min = 1, max = 63)
+	private String provider;
 
 	/**
 	 * version of module
@@ -75,9 +79,10 @@ public class Module extends AbstractEntity implements Serializable {
 		// jpa constructor
 	}
 
-	public Module(Long id, String name, String version, String url, int checkInterval, ModuleStatus status, boolean enabled) {
+	public Module(Long id, String name, String provider, String version, String url, int checkInterval, ModuleStatus status, boolean enabled) {
 		super(id);
 		this.name = name;
+		this.provider = provider;
 		this.status = status;
 		this.version = version;
 		this.url = url;
@@ -85,9 +90,10 @@ public class Module extends AbstractEntity implements Serializable {
 		this.enabled = enabled;
 	}
 
-	public Module(String name, String version, String url, int checkInterval, ModuleStatus status, boolean enabled) {
+	public Module(String name, String provider, String version, String url, int checkInterval, ModuleStatus status, boolean enabled) {
 		super();
 		this.name = name;
+		this.provider = provider;
 		this.status = status;
 		this.version = version;
 		this.url = url;
@@ -98,6 +104,7 @@ public class Module extends AbstractEntity implements Serializable {
 	public Module(Module m) {
 		super(m.id);
 		this.name = m.name;
+		this.provider = m.provider;
 		this.status = m.status;
 		this.version = m.version;
 		this.url = m.url;
@@ -109,6 +116,10 @@ public class Module extends AbstractEntity implements Serializable {
 		return name;
 	}
 
+	public String getProvider() {
+		return provider;
+	}
+	
 	public ModuleStatus getStatus() {
 		return status;
 	}
@@ -147,7 +158,7 @@ public class Module extends AbstractEntity implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Module [id=" + id + ", name=" + name + ", version=" + version + ", url=" + url + ", checkInterval="
+		return "Module [id=" + id + ", name=" + name + ", provider=" + provider + ", version=" + version + ", url=" + url + ", checkInterval="
 				+ checkInterval + ", status=" + status + ", enabled=" + enabled + "]";
 	}
 

@@ -1,5 +1,11 @@
 var app = {
 
+
+		// ==========================================================================
+		// module
+		// ===========================================================================
+
+		
 	API_MODULES : 'api/v1/modules',
 	modules : [],
 	currentModule : null,
@@ -17,12 +23,13 @@ var app = {
 			$.each(app.modules, function(index, module) {
 				var $name = $("<td/>").append(module.name);
 				var $version = $("<td/>").append(module.version);
+				var $provider = $("<td/>").append(module.provider);
 				var $status = $("<td/>").append(module.status);
 				var $enabled = $("<td/>")
 						.append(module.enabled ? "ja" : "nein");
 
 				var $row = $('<tr/>').attr("data-id", module.id);
-				$row.append($name).append($version).append($status).append(
+				$row.append($name).append($provider).append($version).append($status).append(
 						$enabled);
 
 				$modules.append($row);
@@ -44,11 +51,12 @@ var app = {
 		$.getJSON(app.API_MODULES + "/" + id, function(data) {
 			var m = data.module_full;
 			app.currentModule = new Module();
-			app.currentModule.init(m.id, m.name, m.version, m.status, m.url,
+			app.currentModule.init(m.id, m.name, m.provider, m.version, m.status, m.url,
 					m.checkInterval, m.enabled);
 
 			// fill form
 			$('[name=input-name]').val(app.currentModule.name);
+			$('[name=input-provider]').val(app.currentModule.provider);
 			$('[name=input-version]').val(app.currentModule.version);
 			$('[name=input-url]').val(app.currentModule.url);
 			$('[name=input-checkInterval]')
@@ -61,6 +69,7 @@ var app = {
 	storeModule : function() {
 		// copy form to model
 		app.currentModule.name = $('[name=input-name]').val();
+		app.currentModule.provider = $('[name=input-provider]').val();
 		app.currentModule.version = $('[name=input-version]').val();
 		app.currentModule.url = $('[name=input-url]').val();
 		app.currentModule.checkInterval = $('[name=input-checkInterval]').val();
@@ -159,6 +168,44 @@ var app = {
 		return false;
 	},
 
+
+	// ==========================================================================
+	// helper functions
+	// ===========================================================================
+
+	initWebSocket : function() {
+
+		var uri = "ws://" + document.location.host + "/latte/chatplus";
+		var websocket = new WebSocket(uri);
+		
+		console.log("init websocket");
+		
+		websocket.onmessage = function(msg) {
+			console.log("onmessage");
+			var data = JSON.parse(msg.data);
+			app.showMessage(data.message);
+		};
+		
+		websocket.onerror = function(evt) {
+			app.showErrorMessage(evt);
+		};
+		
+		websocket.onclose = function() {
+			app.showErrorMessage("VERBINDUNG GESCHLOSSEN");
+		};
+		
+/*		$("#button").click(function() {
+			var msg = {
+					sender : $("#name").val(),
+					color : $("#color").val(),
+					message : $("#message").val()
+			}
+			
+			websocket.send(JSON.stringify(msg));
+			$("#message").val("");
+		});*/
+	},
+	
 	// ==========================================================================
 	// helper functions
 	// ===========================================================================
@@ -202,16 +249,18 @@ var app = {
 function Module() {
 	this.id = null;
 	this.name = null;
+	this.provider = null;
 	this.version = null;
 	this.status = null;
 	this.url = null;
 	this.checkInterval = null;
 	this.enabled = null;
 }
-Module.prototype.init = function(id, name, version, status, url, checkInterval,
+Module.prototype.init = function(id, name, provider, version, status, url, checkInterval,
 		enabled) {
 	this.id = id;
 	this.name = name;
+	this.provider = provider;
 	this.version = version;
 	this.status = status;
 	this.url = url;
@@ -238,6 +287,8 @@ function initFramework() {
 
 	$("#moduleListArea tbody").on("click", "tr", app.showModule);
 
+	app.initWebSocket();
+	
 	app.loadModules();
 }
 

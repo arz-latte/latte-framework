@@ -22,7 +22,7 @@ public class ModuleFullData extends ModuleBaseData {
 	}
 
 	public ModuleFullData(Module m) {
-		super(m.getId(), m.getName(), m.getVersion(), m.getStatus(), m.getEnabled());
+		super(m.getId(), m.getName(), m.getProvider(), m.getVersion(), m.getStatus(), m.getEnabled());
 		this.checkInterval = m.getCheckInterval();
 		this.url = m.getUrl();
 	}
@@ -42,5 +42,7 @@ public class ModuleFullData extends ModuleBaseData {
 	public void setCheckInterval(int checkInterval) {
 		this.checkInterval = checkInterval;
 	}
+
+
 
 }

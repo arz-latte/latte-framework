@@ -17,6 +17,8 @@ public class ModuleBaseData {
 
 	protected String name;
 
+	protected String provider;
+
 	protected String version;
 
 	protected ModuleStatus status;
@@ -27,10 +29,11 @@ public class ModuleBaseData {
 		super();
 	}
 
-	public ModuleBaseData(Long id, String name, String version, ModuleStatus status, boolean enabled) {
+	public ModuleBaseData(Long id, String name, String provider, String version, ModuleStatus status, boolean enabled) {
 		super();
 		this.id = id;
 		this.name = name;
+		this.provider = provider;
 		this.version = version;
 		this.status = status;
 		this.enabled = enabled;
@@ -50,6 +53,14 @@ public class ModuleBaseData {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getProvider() {
+		return provider;
+	}
+
+	public void setProvider(String provider) {
+		this.provider = provider;
 	}
 
 	public String getVersion() {
@@ -76,4 +87,5 @@ public class ModuleBaseData {
 		this.enabled = enabled;
 	}
 
+	
 }
