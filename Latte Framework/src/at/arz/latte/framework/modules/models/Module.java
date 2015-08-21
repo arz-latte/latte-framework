@@ -7,16 +7,14 @@ import java.net.URL;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.TableGenerator;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import at.arz.latte.framework.modules.models.validator.CheckUrl;
 
 /**
  * module entity
@@ -27,7 +25,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @NamedQueries({
 		@NamedQuery(name = Module.QUERY_GETALL_BASE, query = "SELECT new at.arz.latte.framework.modules.dta.ModuleBaseData(m.id, m.name, m.version, m.status, m.enabled) FROM Module m ORDER BY m.name"),
-		@NamedQuery(name = Module.QUERY_GETALL, query = "SELECT m FROM Module m") })
+		@NamedQuery(name = Module.QUERY_GETALL, query = "SELECT m FROM Module m"),
+		@NamedQuery(name = Module.UPDATE_ALL, query = "UPDATE Module m SET m.status = ModuleStatus.Unknown")
+})
 @XmlRootElement(name = "module")
 public class Module extends AbstractEntity implements Serializable {
 
@@ -35,12 +35,7 @@ public class Module extends AbstractEntity implements Serializable {
 
 	public static final String QUERY_GETALL_BASE = "Module.GetAllBase";
 	public static final String QUERY_GETALL = "Module.GetAll";
-
-	@Id
-	// @GeneratedValue(strategy = GenerationType.IDENTITY)
-	@GeneratedValue(strategy = GenerationType.TABLE, generator = "Module.ID")
-	@TableGenerator(name = "Module.ID", table = "LATTESEQ", pkColumnName = "KEY", valueColumnName = "VALUE")
-	protected Long id;
+	public static final String UPDATE_ALL = "Module.UpdateAll";
 
 	@NotNull
 	@Size(min = 1, max = 63)
@@ -59,6 +54,7 @@ public class Module extends AbstractEntity implements Serializable {
 	 */
 	@NotNull
 	@Size(min = 1, max = 255)
+	@CheckUrl
 	private String url;
 
 	/**
@@ -75,11 +71,12 @@ public class Module extends AbstractEntity implements Serializable {
 	private boolean enabled;
 
 	protected Module() {
+		super();
 		// jpa constructor
 	}
 
 	public Module(Long id, String name, String version, String url, int checkInterval, ModuleStatus status, boolean enabled) {
-		this.id = id;
+		super(id);
 		this.name = name;
 		this.status = status;
 		this.version = version;
@@ -89,6 +86,7 @@ public class Module extends AbstractEntity implements Serializable {
 	}
 
 	public Module(String name, String version, String url, int checkInterval, ModuleStatus status, boolean enabled) {
+		super();
 		this.name = name;
 		this.status = status;
 		this.version = version;
@@ -98,18 +96,13 @@ public class Module extends AbstractEntity implements Serializable {
 	}
 
 	public Module(Module m) {
-		this.id = m.id;
+		super(m.id);
 		this.name = m.name;
 		this.status = m.status;
 		this.version = m.version;
 		this.url = m.url;
 		this.checkInterval = m.checkInterval;
 		this.enabled = m.enabled;
-	}
-
-	@Override
-	public Long getId() {
-		return id;
 	}
 
 	public String getName() {

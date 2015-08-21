@@ -17,7 +17,7 @@
 		<dependency org="org.apache.cxf" name="cxf-rt-frontend-jaxrs" rev="2.6.16" conf="compile->default"/>
 
 		<dependency org="org.postgresql" name="postgresql" rev="9.4-1201-jdbc41" conf="provided->default"/>	
-		<dependency org="org.apache.derby" name="derby" rev="10.11.1.1" conf="test->default"/>
+		<!--<dependency org="org.apache.derby" name="derby" rev="10.11.1.1" conf="test->default"/>-->
 		
 		<dependency org="org.apache.openejb" name="tomee-embedded" rev="1.7.2" conf="provided->default"/>
 		<dependency org="junit" name="junit" rev="4.12" conf="test->default"/>

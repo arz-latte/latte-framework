@@ -4,8 +4,6 @@
 	version="2.0">
 
 	<persistence-unit name="latte-unit">
-		<!--<provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider>-->
-
 		<jta-data-source>java:comp/env/jdbc/PostgreSQL Database</jta-data-source>
  		<non-jta-data-source>java:comp/env/jdbc/PostgreSQL Database</non-jta-data-source>
 		<class>at.arz.latte.framework.modules.models.AbstractEntity</class>

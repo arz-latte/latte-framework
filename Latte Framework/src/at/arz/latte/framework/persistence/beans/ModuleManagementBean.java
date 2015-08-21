@@ -2,18 +2,22 @@ package at.arz.latte.framework.persistence.beans;
 
 import java.util.List;
 
-import javax.ejb.Stateful;
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import at.arz.latte.framework.modules.dta.ModuleBaseData;
 import at.arz.latte.framework.modules.models.Module;
 
-@Stateful
+@Stateless
 public class ModuleManagementBean extends GenericManagementBean<Module> {
 
 	@PersistenceContext
 	private EntityManager em;
+
+	public void initAllModules() {
+		em.createNamedQuery(Module.UPDATE_ALL).executeUpdate();
+	}
 
 	public List<ModuleBaseData> getAllModulesBase() {
 		return em.createNamedQuery(Module.QUERY_GETALL_BASE, ModuleBaseData.class).getResultList();

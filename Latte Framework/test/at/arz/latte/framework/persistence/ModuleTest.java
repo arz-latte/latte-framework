@@ -28,7 +28,7 @@ public class ModuleTest  {
 	public void moduleIsPersistent() {
 		em.getTransaction().begin();
 
-		Module m = new Module("Demo Modul", "1", "http://localhost:8080/Latte_Framework", 60, ModuleStatus.Unknown, true);
+		Module m = new Module(1L, "Demo Modul", "v1.00", "http://localhost:8080/demo", 60, ModuleStatus.Unknown, true);
 
 		em.persist(m);
 

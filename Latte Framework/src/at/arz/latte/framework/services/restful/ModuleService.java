@@ -1,4 +1,4 @@
-package at.arz.latte.framework.services.restful.service;
+package at.arz.latte.framework.services.restful;
 
 import java.util.List;
 

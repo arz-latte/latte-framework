@@ -10,6 +10,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.apache.cxf.jaxrs.client.ClientWebApplicationException;
 import org.apache.cxf.jaxrs.client.WebClient;
+import org.apache.cxf.transport.http.HTTPConduit;
 
 import at.arz.latte.framework.modules.dta.ModuleFullData;
 import at.arz.latte.framework.modules.models.Module;
@@ -46,9 +47,13 @@ public class ModuleTimerService {
 		System.out.println("check module status: " + module.getName());
 
 		try {
-			ModuleFullData status = WebClient.create(module.getHost()).path(module.getPath() + "/status")
-					.accept(MediaType.APPLICATION_JSON).get(ModuleFullData.class);
-
+			WebClient client = WebClient.create(module.getHost()).path(module.getPath() + "/status");
+			HTTPConduit conduit = WebClient.getConfig(client).getHttpConduit();
+	        conduit.getClient().setReceiveTimeout(2000);
+	        conduit.getClient().setConnectionTimeout(2000);
+	        
+	        ModuleFullData status = client.accept(MediaType.APPLICATION_JSON).get(ModuleFullData.class);
+	        
 			// set module as active
 			module.setStatus(ModuleStatus.StartedActive);
 			bean.updateModule(module);
