@@ -6,6 +6,12 @@ import java.net.URL;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
+/**
+ * url validator
+ * 
+ * Dominik Neuner {@link "mailto:dominik@neuner-it.at"}
+ *
+ */
 public class CheckUrlValidator implements ConstraintValidator<CheckUrl, String> {
 
 

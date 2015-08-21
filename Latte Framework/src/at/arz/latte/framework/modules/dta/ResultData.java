@@ -11,7 +11,8 @@ import at.arz.latte.framework.modules.models.Module;
 /**
  * used to transmit information about newly created or updated object
  * id and validation messages
- * @author Dominik
+ * 
+ * Dominik Neuner {@link "mailto:dominik@neuner-it.at"}
  *
  */
 @XmlRootElement(name = "result")

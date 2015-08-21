@@ -6,6 +6,12 @@ import javax.ejb.EJB;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 
+/**
+ * initializes status of all stored modules
+ * 
+ * Dominik Neuner {@link "mailto:dominik@neuner-it.at"}
+ *
+ */
 @Singleton
 @Startup
 @DependsOn("ModuleManagementBean")

@@ -9,7 +9,7 @@ import javax.ws.rs.core.Response;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import at.arz.latte.framework.modules.dta.ModuleFullData;
+//import at.arz.latte.framework.modules.dta.ModuleFullData;
 import at.arz.latte.framework.modules.models.Module;
 
 public class ModuleValidationWebApplicationException extends

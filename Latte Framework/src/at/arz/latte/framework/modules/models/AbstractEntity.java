@@ -6,6 +6,12 @@ import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
 
+/**
+ * superclass for all persistent entities, manages id and validation messages
+ * 
+ * Dominik Neuner {@link "mailto:dominik@neuner-it.at"}
+ *
+ */
 @MappedSuperclass
 public abstract class AbstractEntity {
 	

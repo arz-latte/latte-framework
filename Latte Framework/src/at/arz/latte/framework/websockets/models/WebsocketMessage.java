@@ -4,15 +4,21 @@ import java.io.StringReader;
 import javax.json.Json;
 import javax.json.JsonObject;
 
-public class ChatMessage {
+/**
+ * message for websocket communication
+ * 
+ * Dominik Neuner {@link "mailto:dominik@neuner-it.at"}
+ *
+ */
+public class WebsocketMessage {
 	
 	private String message;
 	
 	private String sender;
 	
-	public ChatMessage() {}
+	public WebsocketMessage() {}
 	
-	public ChatMessage(String message, String sender) {
+	public WebsocketMessage(String message, String sender) {
 		super();
 		this.message = message;
 		this.sender = sender;
@@ -45,13 +51,13 @@ public class ChatMessage {
 		return json.toString();
 	}
 
-	public static ChatMessage fromJSON(String message) {
+	public static WebsocketMessage fromJSON(String message) {
 		JsonObject json = 
 				Json.createReader(
 						new StringReader(message))
 							.readObject();
 		
-		ChatMessage result = new ChatMessage(
+		WebsocketMessage result = new WebsocketMessage(
 				json.getString("message"),
 				json.getString("sender"));
 		

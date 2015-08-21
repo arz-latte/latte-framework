@@ -9,6 +9,12 @@ import javax.ws.rs.core.Application;
 
 import at.arz.latte.framework.services.restful.ModuleService;
 
+/**
+ * initialization of RESTful Service classes
+ * 
+ * Dominik Neuner {@link "mailto:dominik@neuner-it.at"}
+ *
+ */
 @ApplicationScoped
 @ApplicationPath("/api/v1")
 public class FrameworkConfiguration extends Application {

@@ -17,14 +17,14 @@ import javax.xml.bind.annotation.XmlRootElement;
 import at.arz.latte.framework.modules.models.validator.CheckUrl;
 
 /**
- * module entity
+ * persistent entity for a module
  * 
- * @author Dominik
+ * Dominik Neuner {@link "mailto:dominik@neuner-it.at"}
  *
  */
 @Entity
 @NamedQueries({
-		@NamedQuery(name = Module.QUERY_GETALL_BASE, query = "SELECT new at.arz.latte.framework.modules.dta.ModuleBaseData(m.id, m.name, m.provider, m.version, m.status, m.enabled) FROM Module m ORDER BY m.name"),
+		@NamedQuery(name = Module.QUERY_GETALL_BASE, query = "SELECT new at.arz.latte.framework.modules.dta.ModuleMultipleData(m.id, m.name, m.provider, m.version, m.status, m.enabled) FROM Module m ORDER BY m.name"),
 		@NamedQuery(name = Module.QUERY_GETALL, query = "SELECT m FROM Module m"),
 		@NamedQuery(name = Module.UPDATE_ALL, query = "UPDATE Module m SET m.status = ModuleStatus.Unknown")
 })
@@ -67,7 +67,7 @@ public class Module extends AbstractEntity implements Serializable {
 	 */
 	@NotNull
 	@Min(0)
-	private int checkInterval;
+	private int interval;
 
 	@Enumerated(EnumType.STRING)
 	private ModuleStatus status;
@@ -79,25 +79,46 @@ public class Module extends AbstractEntity implements Serializable {
 		// jpa constructor
 	}
 
-	public Module(Long id, String name, String provider, String version, String url, int checkInterval, ModuleStatus status, boolean enabled) {
+	public Module(Long id, String name, String provider, String version, String url, int interval, ModuleStatus status, boolean enabled) {
 		super(id);
 		this.name = name;
 		this.provider = provider;
 		this.status = status;
 		this.version = version;
 		this.url = url;
-		this.checkInterval = checkInterval;
+		this.interval = interval;
 		this.enabled = enabled;
 	}
-
-	public Module(String name, String provider, String version, String url, int checkInterval, ModuleStatus status, boolean enabled) {
+	
+	/**
+	 * 
+	 * used for partial updates
+	 * 
+	 * @param name
+	 * @param provider
+	 * @param version
+	 * @param url
+	 * @param checkInterval
+	 * @param status
+	 * @param enabled
+	 */
+	public Module(Long id, String name, String provider, String url, int interval, boolean enabled) {
+		super(id);
+		this.name = name;
+		this.provider = provider;
+		this.url = url;
+		this.interval = interval;
+		this.enabled = enabled;
+	}
+	
+	public Module(String name, String provider, String version, String url, int interval, ModuleStatus status, boolean enabled) {
 		super();
 		this.name = name;
 		this.provider = provider;
 		this.status = status;
 		this.version = version;
 		this.url = url;
-		this.checkInterval = checkInterval;
+		this.interval = interval;
 		this.enabled = enabled;
 	}
 
@@ -108,18 +129,52 @@ public class Module extends AbstractEntity implements Serializable {
 		this.status = m.status;
 		this.version = m.version;
 		this.url = m.url;
-		this.checkInterval = m.checkInterval;
+		this.interval = m.interval;
 		this.enabled = m.enabled;
 	}
+
+	// ------------------ helper ------------------
 
 	public String getName() {
 		return name;
 	}
 
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	public String getProvider() {
 		return provider;
 	}
-	
+
+	public void setProvider(String provider) {
+		this.provider = provider;
+	}
+
+	public String getVersion() {
+		return version;
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public int getInterval() {
+		return interval;
+	}
+
+	public void setInterval(int interval) {
+		this.interval = interval;
+	}
+
 	public ModuleStatus getStatus() {
 		return status;
 	}
@@ -128,23 +183,13 @@ public class Module extends AbstractEntity implements Serializable {
 		this.status = status;
 	}
 
-	public String getVersion() {
-		return version;
-	}
-
-	public String getUrl() {
-		return url;
-	}
-
-	public int getCheckInterval() {
-		return checkInterval;
-	}
-
 	public boolean getEnabled() {
 		return enabled;
 	}
 
-	// ------------------ helper ------------------
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
 
 	public String getHost() throws MalformedURLException {
 		URL u = new URL(url);
@@ -159,7 +204,7 @@ public class Module extends AbstractEntity implements Serializable {
 	@Override
 	public String toString() {
 		return "Module [id=" + id + ", name=" + name + ", provider=" + provider + ", version=" + version + ", url=" + url + ", checkInterval="
-				+ checkInterval + ", status=" + status + ", enabled=" + enabled + "]";
+				+ interval + ", status=" + status + ", enabled=" + enabled + "]";
 	}
 
 }

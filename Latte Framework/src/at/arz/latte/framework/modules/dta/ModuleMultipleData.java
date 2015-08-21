@@ -5,42 +5,45 @@ import javax.xml.bind.annotation.XmlRootElement;
 import at.arz.latte.framework.modules.models.ModuleStatus;
 
 /**
- * used to transmit some module data to client
+ * used to transmit module data to the client, for list view
  * 
- * @author Dominik
+ * Dominik Neuner {@link "mailto:dominik@neuner-it.at"}
  *
  */
-@XmlRootElement(name = "module_base")
-public class ModuleBaseData {
+@XmlRootElement(name = "module_multiple")
+public class ModuleMultipleData {
 
-	protected int id;
+	private Long id;
 
-	protected String name;
+	private String name;
 
-	protected String version;
+	private String provider;
 
-	protected ModuleStatus status;
+	private String version;
 
-	protected boolean enabled;
+	private ModuleStatus status;
 
-	public ModuleBaseData() {
-		super();
+	private boolean enabled;
+
+	public ModuleMultipleData() {
 	}
 
-	public ModuleBaseData(int id, String name, String version, ModuleStatus status, boolean enabled) {
+	public ModuleMultipleData(Long id, String name, String provider, String version, ModuleStatus status,
+			boolean enabled) {
 		super();
 		this.id = id;
 		this.name = name;
+		this.provider = provider;
 		this.version = version;
 		this.status = status;
 		this.enabled = enabled;
 	}
 
-	public int getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -50,6 +53,14 @@ public class ModuleBaseData {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getProvider() {
+		return provider;
+	}
+
+	public void setProvider(String provider) {
+		this.provider = provider;
 	}
 
 	public String getVersion() {

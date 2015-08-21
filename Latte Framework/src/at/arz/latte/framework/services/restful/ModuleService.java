@@ -13,12 +13,19 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import at.arz.latte.framework.modules.dta.ModuleBaseData;
-import at.arz.latte.framework.modules.dta.ModuleFullData;
+import at.arz.latte.framework.modules.dta.ModuleMultipleData;
+import at.arz.latte.framework.modules.dta.ModuleSingleData;
 import at.arz.latte.framework.modules.dta.ResultData;
 import at.arz.latte.framework.modules.models.Module;
+import at.arz.latte.framework.modules.models.ModuleStatus;
 import at.arz.latte.framework.persistence.beans.ModuleManagementBean;
 
+/**
+ * RESTful service for module management
+ * 
+ * Dominik Neuner {@link "mailto:dominik@neuner-it.at"}
+ *
+ */
 @RequestScoped
 @Path("modules")
 public class ModuleService {
@@ -29,38 +36,38 @@ public class ModuleService {
 	@GET
 	@Path("all")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<ModuleBaseData> getAllModules() {
+	public List<ModuleMultipleData> getAllModules() {
 		return bean.getAllModulesBase();
 	}
 
 	@GET
 	@Path("{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public ModuleFullData getModule(@PathParam("id") int id) {
-		return new ModuleFullData(bean.getModule(id));
+	public ModuleSingleData getModule(@PathParam("id") Long id) {
+		return new ModuleSingleData(bean.getModule(id));
 	}
 
 	@POST
 	@Path("create")
 	@Produces(MediaType.APPLICATION_JSON)
-	public ResultData createModule(ModuleFullData m) {
-		Module module = new Module(m.getId(), m.getName(), m.getProvider(), m.getVersion(), m.getUrl(), m.getCheckInterval(),
-				m.getStatus(), m.getEnabled());
+	public ResultData createModule(ModuleSingleData m) {
+		Module module = new Module(m.getId(), m.getName(), m.getProvider(), "-", m.getUrl(), m.getInterval(),
+				ModuleStatus.Unknown, m.getEnabled());
 		return new ResultData(bean.createModule(module));
 	}
 
 	@PUT
 	@Path("update")
 	@Produces(MediaType.APPLICATION_JSON)
-	public ResultData updateModule(ModuleFullData m) {
-		Module module = new Module(m.getId(), m.getName(), m.getProvider(), m.getVersion(), m.getUrl(), m.getCheckInterval(),
-				m.getStatus(), m.getEnabled());
+	public ResultData updateModule(ModuleSingleData m) {
+		Module module = new Module(m.getId(), m.getName(), m.getProvider(), m.getUrl(), m.getInterval(),
+				m.getEnabled());
 		return new ResultData(bean.updateModule(module));
 	}
 
 	@DELETE
 	@Path("delete/{id}")
-	public void deleteModule(@PathParam("id") int moduleId) {
+	public void deleteModule(@PathParam("id") Long moduleId) {
 		bean.deleteModule(moduleId);
 	}
 }

@@ -12,9 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import at.arz.latte.framework.modules.models.ModuleStatus;
-
-
 @WebServlet("/init")
 public class InitServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -28,17 +25,19 @@ public class InitServlet extends HttpServlet {
 			throws ServletException, IOException {
 		resp.setContentType("application/json");
 		resp.setCharacterEncoding("utf-8");
-
+/*
 		JSONObject json = new JSONObject();
 
 		try {
 			json.put("status", ModuleStatus.StartedActive);
 		} catch (JSONException e) {
 			e.printStackTrace();
-		}
+		}*/
 
 		PrintWriter out = resp.getWriter();
-		out.print(json.toString());
+//		out.print(json.toString());
+		
+		out.print("initialized");
 	}
 
 }

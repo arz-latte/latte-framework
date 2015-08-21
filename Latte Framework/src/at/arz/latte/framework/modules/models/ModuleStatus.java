@@ -1,7 +1,10 @@
 package at.arz.latte.framework.modules.models;
 
 /**
- * Current status of a module
+ * current status of a module
+ * 
+ * Dominik Neuner {@link "mailto:dominik@neuner-it.at"}
+ *
  */
 public enum ModuleStatus {
 

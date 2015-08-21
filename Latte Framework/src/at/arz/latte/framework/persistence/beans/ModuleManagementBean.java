@@ -6,9 +6,15 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import at.arz.latte.framework.modules.dta.ModuleBaseData;
+import at.arz.latte.framework.modules.dta.ModuleMultipleData;
 import at.arz.latte.framework.modules.models.Module;
 
+/**
+ * bean for module management
+ * 
+ * Dominik Neuner {@link "mailto:dominik@neuner-it.at"}
+ *
+ */
 @Stateless
 public class ModuleManagementBean extends GenericManagementBean<Module> {
 
@@ -19,15 +25,15 @@ public class ModuleManagementBean extends GenericManagementBean<Module> {
 		em.createNamedQuery(Module.UPDATE_ALL).executeUpdate();
 	}
 
-	public List<ModuleBaseData> getAllModulesBase() {
-		return em.createNamedQuery(Module.QUERY_GETALL_BASE, ModuleBaseData.class).getResultList();
+	public List<ModuleMultipleData> getAllModulesBase() {
+		return em.createNamedQuery(Module.QUERY_GETALL_BASE, ModuleMultipleData.class).getResultList();
 	}
 
 	public List<Module> getAllModules() {
 		return em.createNamedQuery(Module.QUERY_GETALL, Module.class).getResultList();
 	}
 
-	public Module getModule(int moduleId) {
+	public Module getModule(Long moduleId) {
 		return em.find(Module.class, moduleId);
 	}
 
@@ -40,14 +46,21 @@ public class ModuleManagementBean extends GenericManagementBean<Module> {
 	}
 
 	public Module updateModule(Module module) {
-		if (validate(module)) {
-			em.merge(module);
+		Module m = getModule(module.getId());
+		m.setName(module.getName());
+		m.setProvider(module.getProvider());
+		m.setUrl(module.getUrl());
+		m.setInterval(module.getInterval());
+		m.setEnabled(module.getEnabled());
+		
+		if (validate(m)) {
+			em.merge(m);
 		}
 
-		return module;
+		return m;
 	}
 
-	public void deleteModule(int moduleId) {
+	public void deleteModule(Long moduleId) {
 		em.remove(getModule(moduleId));
 
 	}

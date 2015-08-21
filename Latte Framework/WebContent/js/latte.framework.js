@@ -1,36 +1,34 @@
 var app = {
 
+	// ==========================================================================
+	// module
+	// ===========================================================================
 
-		// ==========================================================================
-		// module
-		// ===========================================================================
-
-		
 	API_MODULES : 'api/v1/modules',
-	modules : [],
-	currentModule : null,
+	//modules : [],
+	//currentModule : null,
+	currentId : null,
 
 	loadModules : function() {
 		app.leaveEditMode();
 
 		$.getJSON(app.API_MODULES + "/all", function(data) {
 
-			app.modules = data.module_base; // save result
+			//app.modules = data.module_base; // save result
 
 			var $modules = $("#modules");
 			$modules.find("tr:has(td)").remove(); // clear
 
-			$.each(app.modules, function(index, module) {
+			$.each(data.module_multiple, function(index, module) {
 				var $name = $("<td/>").append(module.name);
 				var $version = $("<td/>").append(module.version);
 				var $provider = $("<td/>").append(module.provider);
 				var $status = $("<td/>").append(module.status);
-				var $enabled = $("<td/>")
-						.append(module.enabled ? "ja" : "nein");
+				var $enabled = $("<td/>").append(module.enabled ? "ja" : "nein");
 
 				var $row = $('<tr/>').attr("data-id", module.id);
-				$row.append($name).append($provider).append($version).append($status).append(
-						$enabled);
+				$row.append($name).append($provider).append($version).append(
+						$status).append($enabled);
 
 				$modules.append($row);
 			});
@@ -47,40 +45,35 @@ var app = {
 		app.enterEditMode();
 
 		// load module details
-		var id = $(this).attr("data-id");
-		$.getJSON(app.API_MODULES + "/" + id, function(data) {
-			var m = data.module_full;
-			app.currentModule = new Module();
-			app.currentModule.init(m.id, m.name, m.provider, m.version, m.status, m.url,
-					m.checkInterval, m.enabled);
+		app.currentId = $(this).attr("data-id");
+		$.getJSON(app.API_MODULES + "/" + app.currentId, function(data) {
 
 			// fill form
-			$('[name=input-name]').val(app.currentModule.name);
-			$('[name=input-provider]').val(app.currentModule.provider);
-			$('[name=input-version]').val(app.currentModule.version);
-			$('[name=input-url]').val(app.currentModule.url);
-			$('[name=input-checkInterval]')
-					.val(app.currentModule.checkInterval);
-			$('[name=input-enabled]')
-					.prop("checked", app.currentModule.enabled);
+			var m = data.module_single;
+			$('[name=input-name]').val(m.name);
+			$('[name=input-provider]').val(m.provider);
+			$('[name=input-url]').val(m.url);
+			$('[name=input-interval]').val(m.interval);
+			$('[name=input-enabled]').prop("checked", m.enabled);
 		});
 	},
 
 	storeModule : function() {
 		// copy form to model
-		app.currentModule.name = $('[name=input-name]').val();
-		app.currentModule.provider = $('[name=input-provider]').val();
-		app.currentModule.version = $('[name=input-version]').val();
-		app.currentModule.url = $('[name=input-url]').val();
-		app.currentModule.checkInterval = $('[name=input-checkInterval]').val();
-		app.currentModule.enabled = $('[name=input-enabled]').prop("checked");
-
-		if (app.currentModule && app.currentModule.id > 0) {
+		var m = {};
+		m.id = app.currentId;
+		m.name = $('[name=input-name]').val();
+		m.provider = $('[name=input-provider]').val();
+		m.url = $('[name=input-url]').val();
+		m.interval = $('[name=input-interval]').val();
+		m.enabled = $('[name=input-enabled]').prop("checked");
+		
+		if (m.id > 0) {
 
 			$.ajax({
 				url : app.API_MODULES + "/update",
 				type : "PUT",
-				data : app.currentModule.createJSON(),
+				data : JSON.stringify({"module_single" : m}),
 				contentType : "application/json; charset=UTF-8",
 			}).done(function(data) {
 				app.storeModuleCallback(data.result, "Modul aktualisiert");
@@ -92,7 +85,7 @@ var app = {
 			$.ajax({
 				url : app.API_MODULES + "/create",
 				type : "POST",
-				data : app.currentModule.createJSON(),
+				data : JSON.stringify({"module_single" : m}),
 				contentType : "application/json; charset=UTF-8",
 			}).done(function(data) {
 				app.storeModuleCallback(data.result, "Modul erstellt");
@@ -148,9 +141,9 @@ var app = {
 
 	deleteModule : function() {
 		var choice = confirm("Sind Sie sicher?");
-		if(choice == true) { 
+		if (choice == true) {
 			$.ajax({
-				url : app.API_MODULES + "/delete/" + app.currentModule.id,
+				url : app.API_MODULES + "/delete/" + app.currentId,
 				type : "DELETE",
 			}).done(function(data) {
 				app.showMessage("Modul gel&ouml;scht");
@@ -168,44 +161,40 @@ var app = {
 		return false;
 	},
 
-
 	// ==========================================================================
 	// helper functions
 	// ===========================================================================
 
 	initWebSocket : function() {
 
-		var uri = "ws://" + document.location.host + "/latte/chatplus";
+		var uri = "ws://" + document.location.host + "/latte/ws";
 		var websocket = new WebSocket(uri);
-		
+
 		console.log("init websocket");
-		
+
 		websocket.onmessage = function(msg) {
-			console.log("onmessage");
 			var data = JSON.parse(msg.data);
+			console.log("onmessage" + msg.data);
 			app.showMessage(data.message);
 		};
-		
+
 		websocket.onerror = function(evt) {
 			app.showErrorMessage(evt);
 		};
-		
+
 		websocket.onclose = function() {
 			app.showErrorMessage("VERBINDUNG GESCHLOSSEN");
 		};
-		
-/*		$("#button").click(function() {
-			var msg = {
-					sender : $("#name").val(),
-					color : $("#color").val(),
-					message : $("#message").val()
-			}
-			
-			websocket.send(JSON.stringify(msg));
-			$("#message").val("");
-		});*/
+
+		/*
+		 * $("#button").click(function() { var msg = { sender :
+		 * $("#name").val(), color : $("#color").val(), message :
+		 * $("#message").val() }
+		 * 
+		 * websocket.send(JSON.stringify(msg)); $("#message").val(""); });
+		 */
 	},
-	
+
 	// ==========================================================================
 	// helper functions
 	// ===========================================================================
@@ -231,13 +220,13 @@ var app = {
 		$("#moduleEditArea").show();
 
 		$('#moduleEditArea form').trigger("reset");
-		app.currentModule = new Module();
+		app.currentId = null;
 	},
 
 	leaveEditMode : function() {
 		$("#moduleEditArea").hide();
 		$("#moduleListArea").show();
-		app.currentModule = null;
+		app.currentId = null;
 	},
 
 };
@@ -245,7 +234,7 @@ var app = {
 // ===========================================================================
 // classes
 // ===========================================================================
-
+/*
 function Module() {
 	this.id = null;
 	this.name = null;
@@ -256,8 +245,8 @@ function Module() {
 	this.checkInterval = null;
 	this.enabled = null;
 }
-Module.prototype.init = function(id, name, provider, version, status, url, checkInterval,
-		enabled) {
+Module.prototype.init = function(id, name, provider, version, status, url,
+		checkInterval, enabled) {
 	this.id = id;
 	this.name = name;
 	this.provider = provider;
@@ -269,9 +258,9 @@ Module.prototype.init = function(id, name, provider, version, status, url, check
 };
 Module.prototype.createJSON = function() {
 	return JSON.stringify({
-		"module_full" : this
+		"module_single" : this
 	});
-};
+};*/
 
 // ===========================================================================
 // ready & event handlers
@@ -288,7 +277,7 @@ function initFramework() {
 	$("#moduleListArea tbody").on("click", "tr", app.showModule);
 
 	app.initWebSocket();
-	
+
 	app.loadModules();
 }
 

@@ -4,11 +4,20 @@ import java.util.HashMap;
 import java.util.Set;
 
 import javax.ejb.Stateful;
+import javax.ejb.Stateless;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 
+/**
+ * generic bean for entity validation
+ * 
+ * Dominik Neuner {@link "mailto:dominik@neuner-it.at"}
+ *
+ * @param <AbstractEntity>
+ */
 @Stateful
+//@Stateless & abstract
 public class GenericManagementBean<AbstractEntity> {
 
 	/**

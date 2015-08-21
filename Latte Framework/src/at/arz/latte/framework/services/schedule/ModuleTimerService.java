@@ -13,25 +13,28 @@ import org.apache.cxf.jaxrs.client.ClientWebApplicationException;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.apache.cxf.transport.http.HTTPConduit;
 
-import at.arz.latte.framework.modules.dta.ModuleFullData;
+import at.arz.latte.framework.modules.dta.ModulUpdateData;
 import at.arz.latte.framework.modules.models.Module;
 import at.arz.latte.framework.modules.models.ModuleStatus;
 import at.arz.latte.framework.persistence.beans.ModuleManagementBean;
-import at.arz.latte.framework.websockets.ChatPlusEndpoint;
-import at.arz.latte.framework.websockets.models.ChatMessage;
+import at.arz.latte.framework.websockets.WebsocketEndpoint;
+import at.arz.latte.framework.websockets.models.WebsocketMessage;
 
 /**
  * timer for periodic checking of module status
+ * 
+ * Dominik Neuner {@link "mailto:dominik@neuner-it.at"}
+ *
  */
 @Singleton
-@DependsOn({"ModuleManagementBean","ChatPlusEndpoint"})
+@DependsOn({"ModuleManagementBean","WebsocketEndpoint"})
 public class ModuleTimerService {
 
 	@EJB
 	private ModuleManagementBean bean;
 
 	@EJB
-	private ChatPlusEndpoint websocket;
+	private WebsocketEndpoint websocket;
 
 	private int counter = 0;
 
@@ -42,7 +45,7 @@ public class ModuleTimerService {
 
 		for (Module module : bean.getAllModules()) {
 
-			int checkInterval = module.getCheckInterval();
+			int checkInterval = module.getInterval();
 			if (module.getEnabled() && checkInterval > 0 && counter % checkInterval == 0) {
 				checkStatus(module);
 			}
@@ -59,13 +62,13 @@ public class ModuleTimerService {
 	        conduit.getClient().setReceiveTimeout(2000);
 	        conduit.getClient().setConnectionTimeout(2000);
 	        
-	        ModuleFullData status = client.accept(MediaType.APPLICATION_JSON).get(ModuleFullData.class);
+	        ModulUpdateData status = client.accept(MediaType.APPLICATION_JSON).get(ModulUpdateData.class);
 	        
 			// set module as active
 	        if (module.getStatus() != ModuleStatus.StartedActive) {
 				module.setStatus(ModuleStatus.StartedActive);
 				bean.updateModule(module);				
-				websocket.chat(new ChatMessage("active", "server"));
+				websocket.chat(new WebsocketMessage("active", "server"));
 			}			
 
 		} catch (WebApplicationException | ClientWebApplicationException ex) {
@@ -75,7 +78,7 @@ public class ModuleTimerService {
 			if (module.getStatus() == ModuleStatus.StartedActive) {
 				module.setStatus(ModuleStatus.StartedInactive);
 				bean.updateModule(module);
-				websocket.chat(new ChatMessage("inactive", "server"));
+				websocket.chat(new WebsocketMessage("inactive", "server"));
 			}
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
