@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<ivy-module version="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
+       
+    <info organisation="at.arz.latte" module="latte-demo-modul" revision="1.0.0">
+	</info>
+	
+	<configurations>
+		<conf name="default"/>
+		<conf name="compile"/>
+		<conf name="provided"/>
+		<conf name="runtime"/>
+		<conf name="optional"/>
+	</configurations>
+	
+	<dependencies>
+		<dependency org="org.codehaus.jettison" name="jettison" rev="1.3.7" conf="compile->default"/>
+		<dependency org="junit" name="junit" rev="4.12" conf="provided->default"/>	
+		<dependency org="javax" name="javaee-api" rev="6.0" conf="provided->default"/>
+		<dependency org="org.apache.cxf" name="cxf-rt-frontend-jaxrs" rev="2.6.16" conf="provided->default"/>		
+	</dependencies>
+	
+</ivy-module>

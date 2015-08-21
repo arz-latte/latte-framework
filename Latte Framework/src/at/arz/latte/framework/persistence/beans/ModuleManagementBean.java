@@ -11,7 +11,7 @@ import at.arz.latte.framework.modules.models.Module;
 
 @Stateful
 public class ModuleManagementBean extends GenericManagementBean<Module> {
-	
+
 	@PersistenceContext
 	private EntityManager em;
 
@@ -28,9 +28,7 @@ public class ModuleManagementBean extends GenericManagementBean<Module> {
 	}
 
 	public Module createModule(Module module) {
-		validate(module);
-
-		if (module.isSaveable()) {
+		if (validate(module)) {
 			em.persist(module);
 		}
 
@@ -38,9 +36,7 @@ public class ModuleManagementBean extends GenericManagementBean<Module> {
 	}
 
 	public Module updateModule(Module module) {
-		validate(module);
-
-		if (module.isSaveable()) {
+		if (validate(module)) {
 			em.merge(module);
 		}
 
@@ -49,7 +45,7 @@ public class ModuleManagementBean extends GenericManagementBean<Module> {
 
 	public void deleteModule(int moduleId) {
 		em.remove(getModule(moduleId));
-	
+
 	}
 
 }

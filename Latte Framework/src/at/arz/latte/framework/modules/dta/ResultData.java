@@ -18,7 +18,7 @@ import at.arz.latte.framework.modules.models.Module;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class ResultData {
 
-	private long id;
+	private Long id;
 
 	private HashMap<String, String> validation;
 
@@ -34,16 +34,8 @@ public class ResultData {
 		return id;
 	}
 
-	public void setId(long id) {
-		this.id = id;
-	}
-
 	public HashMap<String, String> getValidation() {
 		return validation;
-	}
-
-	public void setValidation(HashMap<String, String> validation) {
-		this.validation = validation;
 	}
 
 	public boolean isSaveable() {

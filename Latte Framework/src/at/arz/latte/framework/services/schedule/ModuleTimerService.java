@@ -35,23 +35,22 @@ public class ModuleTimerService {
 		for (Module module : bean.getAllModules()) {
 
 			int checkInterval = module.getCheckInterval();
-			if (checkInterval > 0 && counter % checkInterval == 0) {
+			if (module.getEnabled() && checkInterval > 0 && counter % checkInterval == 0) {
 				checkStatus(module);
 			}
 		}
 
 	}
-	
+
 	private void checkStatus(Module module) {
 		System.out.println("check module status: " + module.getName());
 
 		try {
-			ModuleFullData status = WebClient.create(module.getHost())
-					.path(module.getPath() + "/status")
+			ModuleFullData status = WebClient.create(module.getHost()).path(module.getPath() + "/status")
 					.accept(MediaType.APPLICATION_JSON).get(ModuleFullData.class);
 
 			// set module as active
-			module.setStatus(ModuleStatus.StartedActive);			
+			module.setStatus(ModuleStatus.StartedActive);
 			bean.updateModule(module);
 
 		} catch (WebApplicationException | ClientWebApplicationException ex) {

@@ -8,10 +8,8 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 
-import at.arz.latte.framework.modules.models.Module;
-
 @Stateful
-public class GenericManagementBean<T> {
+public class GenericManagementBean<AbstractEntity> {
 
 	/**
 	 * validates object, adds validation messages to it if invalid
@@ -19,24 +17,25 @@ public class GenericManagementBean<T> {
 	 * @param module
 	 * @return
 	 */
-	protected T validate(T object) {
+	protected boolean validate(AbstractEntity entity) {
 
 		Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-		Set<ConstraintViolation<T>> constraintViolations = validator.validate(object);
+		Set<ConstraintViolation<AbstractEntity>> constraintViolations = validator.validate(entity);
 
 		if (constraintViolations.size() > 0) {
 			HashMap<String, String> violationMessages = new HashMap<String, String>();
 
-			for (ConstraintViolation<T> cv : constraintViolations) {
+			for (ConstraintViolation<AbstractEntity> cv : constraintViolations) {
 				violationMessages.put(cv.getPropertyPath().toString(), cv.getMessage());
 
 				System.out.println(cv.getPropertyPath() + ": " + cv.getMessage());
 			}
 
-			((Module) object).setValidation(violationMessages);
+			((at.arz.latte.framework.modules.models.AbstractEntity) entity).setValidation(violationMessages);
+			return false;
 		}
 
-		return object;
+		return true;
 	}
 
 }

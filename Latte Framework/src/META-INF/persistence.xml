@@ -4,29 +4,18 @@
 	version="2.0">
 
 	<persistence-unit name="latte-unit">
-		<provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider>
+		<!--<provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider>-->
 
 		<jta-data-source>java:comp/env/jdbc/PostgreSQL Database</jta-data-source>
-		<non-jta-data-source>java:comp/env/jdbc/PostgreSQL Database</non-jta-data-source>
-		<class>at.arz.latte.framework.modules.models.Module</class>
+ 		<non-jta-data-source>java:comp/env/jdbc/PostgreSQL Database</non-jta-data-source>
+		<class>at.arz.latte.framework.modules.models.AbstractEntity</class>
+ 		<class>at.arz.latte.framework.modules.models.Module</class>
 
 		<properties>
-			<property name="openjpa.ConnectionURL" value="jdbc:postgresql://localhost/latte" />
-			<property name="openjpa.jdbc.DBDictionary" value="postgres" />
-			<property name="openjpa.ConnectionDriverName" value="org.postgresql.Driver" />
-			<property name="openjpa.ConnectionUserName" value="latte" />
-			<property name="openjpa.ConnectionPassword" value="latte" />
-			<property name="openjpa.Log" value="SQL=TRACE" />
-
 			<property name="openjpa.DynamicEnhancementAgent" value="true" />
 			<property name="openjpa.RuntimeUnenhancedClasses" value="supported" />
-
 			<property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema" />
-			<property name="openjpa.ConnectionFactoryProperties" value="printParameters=true" />
-			<property name="openjpa.jdbc.MappingDefaults"
-				value="ForeignKeyDeleteAction=restrict,
-JoinForeignKeyDeleteAction=restrict" />
-
+			<property name="openjpa.jdbc.MappingDefaults" value="ForeignKeyDeleteAction=restrict,JoinForeignKeyDeleteAction=restrict" />
 		</properties>
 	</persistence-unit>
 </persistence>

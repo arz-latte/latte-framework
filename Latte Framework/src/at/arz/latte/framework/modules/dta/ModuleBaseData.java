@@ -13,7 +13,7 @@ import at.arz.latte.framework.modules.models.ModuleStatus;
 @XmlRootElement(name = "module_base")
 public class ModuleBaseData {
 
-	protected int id;
+	protected Long id;
 
 	protected String name;
 
@@ -27,7 +27,7 @@ public class ModuleBaseData {
 		super();
 	}
 
-	public ModuleBaseData(int id, String name, String version, ModuleStatus status, boolean enabled) {
+	public ModuleBaseData(Long id, String name, String version, ModuleStatus status, boolean enabled) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -36,11 +36,11 @@ public class ModuleBaseData {
 		this.enabled = enabled;
 	}
 
-	public int getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
