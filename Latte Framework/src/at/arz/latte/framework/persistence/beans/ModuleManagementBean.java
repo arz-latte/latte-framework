@@ -46,16 +46,23 @@ public class ModuleManagementBean extends GenericManagementBean<Module> {
 
 		return module;
 	}
-
+	
 	public Module updateModule(Module module) {
-		Module m = getModule(module.getId());
-		m.setName(module.getName());
-		m.setProvider(module.getProvider());
-		m.setVersion(module.getVersion());
-		m.setUrl(module.getUrl());
-		m.setInterval(module.getInterval());
-		m.setStatus(module.getStatus());
-		m.setEnabled(module.getEnabled());
+		if (validate(module)) {
+			em.merge(module);
+		}
+
+		return module;
+	}
+
+	public Module updateModule(Long id, String name, String provider, String url, int interval, boolean enabled) {
+		Module m = getModule(id);
+		
+		m.setName(name);
+		m.setProvider(provider);
+		m.setUrl(url);
+		m.setInterval(interval);
+		m.setEnabled(enabled);
 		
 		if (validate(m)) {
 			em.merge(m);

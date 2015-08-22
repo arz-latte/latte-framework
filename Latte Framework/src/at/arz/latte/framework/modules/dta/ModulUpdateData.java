@@ -42,4 +42,9 @@ public class ModulUpdateData {
 		this.menu = menu;
 	}
 
+	@Override
+	public String toString() {
+		return "ModulUpdateData [version=" + version + ", menu=" + menu + "]";
+	}	
+
 }

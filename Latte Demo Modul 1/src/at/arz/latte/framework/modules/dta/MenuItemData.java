@@ -64,4 +64,10 @@ public class MenuItemData {
 		this.children = children;
 	}
 
+	@Override
+	public String toString() {
+		return "MenuItemData [value=" + value + ", permission=" + permission + ", position=" + position + ", children="
+				+ children + "]";
+	}
+
 }

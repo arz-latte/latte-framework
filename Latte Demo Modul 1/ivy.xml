@@ -15,9 +15,12 @@
 	
 	<dependencies>
 		<dependency org="org.codehaus.jettison" name="jettison" rev="1.3.7" conf="compile->default"/>
+	<!--	<dependency org="javax" name="javaee-api" rev="6.0" conf="provided->default"/>-->
+		<dependency org="org.apache.cxf" name="cxf-rt-frontend-jaxrs" rev="2.6.16" conf="provided->default"/>
 		<dependency org="junit" name="junit" rev="4.12" conf="provided->default"/>	
-		<dependency org="javax" name="javaee-api" rev="6.0" conf="provided->default"/>
-		<dependency org="org.apache.cxf" name="cxf-rt-frontend-jaxrs" rev="2.6.16" conf="provided->default"/>		
+
+
+<!--		<dependency org="org.apache.openejb" name="tomee-embedded" rev="1.7.2" conf="provided->default"/>-->
 	</dependencies>
 	
 </ivy-module>

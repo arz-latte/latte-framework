@@ -60,9 +60,7 @@ public class ModuleService {
 	@Path("update")
 	@Produces(MediaType.APPLICATION_JSON)
 	public ResultData updateModule(ModuleSingleData m) {
-		Module module = new Module(m.getId(), m.getName(), m.getProvider(), m.getUrl(), m.getInterval(),
-				m.getEnabled());
-		return new ResultData(bean.updateModule(module));
+		return new ResultData(bean.updateModule(m.getId(), m.getName(), m.getProvider(), m.getUrl(), m.getInterval(), m.getEnabled()));
 	}
 
 	@DELETE

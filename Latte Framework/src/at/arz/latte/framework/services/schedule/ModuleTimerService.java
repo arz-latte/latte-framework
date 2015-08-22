@@ -63,6 +63,7 @@ public class ModuleTimerService {
 			conduit.getClient().setConnectionTimeout(2000);
 
 			ModulUpdateData status = client.accept(MediaType.APPLICATION_JSON).get(ModulUpdateData.class);
+			System.out.println(status);
 
 			// set module as active
 			if (module.getStatus() != ModuleStatus.StartedActive) {
