@@ -7,7 +7,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-//import org.apache.derby.jdbc.EmbeddedDataSource;
+import org.apache.derby.jdbc.EmbeddedDataSource;
 
 public class JpaPersistenceSetup {
 
@@ -19,32 +19,28 @@ public class JpaPersistenceSetup {
 
 	public static EntityManagerFactory getEntityManagerFactory() {
 		if (entityMangerFactory == null) {
-			initEntityManagerFactory();
+			initPostgreEntityManagerFactory(); // or initDerbyEntityManagerFactory();
 		}
 		return entityMangerFactory;
 	}
 
-	// ----------------------- DERBY  -----------------------
-	/*private static void initEntityManagerFactory() {
-		Properties properties = loadJpaPersistenceSetupProperties();
+	private static void initDerbyEntityManagerFactory() {
+		Properties properties = loadJpaPersistenceSetupProperties("persistence-derby-test.properties");
 		EmbeddedDataSource dataSource = createDerbyDB();
 		properties.put("openjpa.ConnectionFactory", dataSource);
 		properties.put("openjpa.ConnectionFactory2", dataSource);
-		entityMangerFactory = Persistence.createEntityManagerFactory(
-				"latte-unit", properties);
+		entityMangerFactory = Persistence.createEntityManagerFactory("latte-unit", properties);
 	}
-	
+
 	private static EmbeddedDataSource createDerbyDB() {
 		EmbeddedDataSource dataSource = new EmbeddedDataSource();
 		dataSource.setCreateDatabase("create");
 		dataSource.setDatabaseName("memory:test-jpa");
 		return dataSource;
-	}*/
-	
-	// ----------------------- DERBY  -----------------------
-	
-	private static void initEntityManagerFactory() {
-		Properties properties = loadJpaPersistenceSetupProperties("persistence-postgre-test.properties");	// persistence-derby-test.properties
+	}
+
+	private static void initPostgreEntityManagerFactory() {
+		Properties properties = loadJpaPersistenceSetupProperties("persistence-postgre-test.properties");
 		entityMangerFactory = Persistence.createEntityManagerFactory("latte-unit", properties);
 	}
 

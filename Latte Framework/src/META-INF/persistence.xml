@@ -3,17 +3,19 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
 	version="2.0">
 
-	<persistence-unit name="latte-unit">
-		<jta-data-source>java:comp/env/jdbc/PostgreSQL Database</jta-data-source>
- 		<non-jta-data-source>java:comp/env/jdbc/PostgreSQL Database</non-jta-data-source>
+	<persistence-unit name="latte-unit">	
+		<jta-data-source>java:comp/env/jdbc/latte</jta-data-source>
+		<non-jta-data-source>java:comp/env/jdbc/latte</non-jta-data-source>
 		<class>at.arz.latte.framework.modules.models.AbstractEntity</class>
- 		<class>at.arz.latte.framework.modules.models.Module</class>
+		<class>at.arz.latte.framework.modules.models.Module</class>
 
 		<properties>
 			<property name="openjpa.DynamicEnhancementAgent" value="true" />
 			<property name="openjpa.RuntimeUnenhancedClasses" value="supported" />
-			<property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema" />
-			<property name="openjpa.jdbc.MappingDefaults" value="ForeignKeyDeleteAction=restrict,JoinForeignKeyDeleteAction=restrict" />
+			<property name="javax.persistence.schema-generation.database.action" value="create" />
+			<property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(ForeignKeys=true)" />
+			<property name="openjpa.jdbc.MappingDefaults"
+				value="ForeignKeyDeleteAction=restrict,JoinForeignKeyDeleteAction=restrict" />
 		</properties>
 	</persistence-unit>
 </persistence>

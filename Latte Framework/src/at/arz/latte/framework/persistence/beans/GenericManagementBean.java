@@ -17,7 +17,7 @@ import javax.validation.Validator;
  * @param <AbstractEntity>
  */
 @Stateful
-//@Stateless & abstract
+//Todo:  @Stateless & abstract	// stateful?
 public class GenericManagementBean<AbstractEntity> {
 
 	/**

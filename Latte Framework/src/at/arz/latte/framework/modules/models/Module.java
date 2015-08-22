@@ -7,8 +7,13 @@ import java.net.URL;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -22,13 +27,13 @@ import at.arz.latte.framework.modules.models.validator.CheckUrl;
  * Dominik Neuner {@link "mailto:dominik@neuner-it.at"}
  *
  */
-@Entity
 @NamedQueries({
 		@NamedQuery(name = Module.QUERY_GETALL_BASE, query = "SELECT new at.arz.latte.framework.modules.dta.ModuleMultipleData(m.id, m.name, m.provider, m.version, m.status, m.enabled) FROM Module m ORDER BY m.name"),
 		@NamedQuery(name = Module.QUERY_GETALL, query = "SELECT m FROM Module m"),
-		@NamedQuery(name = Module.UPDATE_ALL, query = "UPDATE Module m SET m.status = ModuleStatus.Unknown")
-})
-@XmlRootElement(name = "module")
+		@NamedQuery(name = Module.UPDATE_ALL, query = "UPDATE Module m SET m.status = ModuleStatus.Unknown") })
+@XmlRootElement(name = "module") // required?
+@Entity
+@Table(name = "module")
 public class Module extends AbstractEntity implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -36,6 +41,11 @@ public class Module extends AbstractEntity implements Serializable {
 	public static final String QUERY_GETALL_BASE = "Module.GetAllBase";
 	public static final String QUERY_GETALL = "Module.GetAll";
 	public static final String UPDATE_ALL = "Module.UpdateAll";
+
+	@TableGenerator(name = "Module.ID", table = "LATTESEQ", pkColumnName = "KEY", valueColumnName = "VALUE")
+	@Id
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "Module.ID")
+	private Long id;
 
 	@NotNull
 	@Size(min = 1, max = 63)
@@ -79,8 +89,9 @@ public class Module extends AbstractEntity implements Serializable {
 		// jpa constructor
 	}
 
-	public Module(Long id, String name, String provider, String version, String url, int interval, ModuleStatus status, boolean enabled) {
-		super(id);
+	public Module(Long id, String name, String provider, String version, String url, int interval, ModuleStatus status,
+			boolean enabled) {
+		this.id = id;
 		this.name = name;
 		this.provider = provider;
 		this.status = status;
@@ -89,7 +100,7 @@ public class Module extends AbstractEntity implements Serializable {
 		this.interval = interval;
 		this.enabled = enabled;
 	}
-	
+
 	/**
 	 * 
 	 * used for partial updates
@@ -103,15 +114,16 @@ public class Module extends AbstractEntity implements Serializable {
 	 * @param enabled
 	 */
 	public Module(Long id, String name, String provider, String url, int interval, boolean enabled) {
-		super(id);
+		this.id = id;
 		this.name = name;
 		this.provider = provider;
 		this.url = url;
 		this.interval = interval;
 		this.enabled = enabled;
 	}
-	
-	public Module(String name, String provider, String version, String url, int interval, ModuleStatus status, boolean enabled) {
+
+	public Module(String name, String provider, String version, String url, int interval, ModuleStatus status,
+			boolean enabled) {
 		super();
 		this.name = name;
 		this.provider = provider;
@@ -123,7 +135,7 @@ public class Module extends AbstractEntity implements Serializable {
 	}
 
 	public Module(Module m) {
-		super(m.id);
+		this.id = m.id;
 		this.name = m.name;
 		this.provider = m.provider;
 		this.status = m.status;
@@ -133,7 +145,13 @@ public class Module extends AbstractEntity implements Serializable {
 		this.enabled = m.enabled;
 	}
 
-	// ------------------ helper ------------------
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	public String getName() {
 		return name;
@@ -202,9 +220,19 @@ public class Module extends AbstractEntity implements Serializable {
 	}
 
 	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof Module) {
+			Module module = (Module) obj;
+			return module.getId() == this.getId();
+		}
+
+		return false;
+	}
+
+	@Override
 	public String toString() {
-		return "Module [id=" + id + ", name=" + name + ", provider=" + provider + ", version=" + version + ", url=" + url + ", checkInterval="
-				+ interval + ", status=" + status + ", enabled=" + enabled + "]";
+		return "Module [id=" + id + ", name=" + name + ", provider=" + provider + ", version=" + version + ", url="
+				+ url + ", checkInterval=" + interval + ", status=" + status + ", enabled=" + enabled + "]";
 	}
 
 }

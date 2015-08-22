@@ -27,7 +27,7 @@ import at.arz.latte.framework.websockets.models.WebsocketMessage;
  *
  */
 @Singleton
-@DependsOn({"ModuleManagementBean","WebsocketEndpoint"})
+@DependsOn({ "ModuleManagementBean", "WebsocketEndpoint" })
 public class ModuleTimerService {
 
 	@EJB
@@ -59,17 +59,17 @@ public class ModuleTimerService {
 		try {
 			WebClient client = WebClient.create(module.getHost()).path(module.getPath() + "/status");
 			HTTPConduit conduit = WebClient.getConfig(client).getHttpConduit();
-	        conduit.getClient().setReceiveTimeout(2000);
-	        conduit.getClient().setConnectionTimeout(2000);
-	        
-	        ModulUpdateData status = client.accept(MediaType.APPLICATION_JSON).get(ModulUpdateData.class);
-	        
+			conduit.getClient().setReceiveTimeout(2000);
+			conduit.getClient().setConnectionTimeout(2000);
+
+			ModulUpdateData status = client.accept(MediaType.APPLICATION_JSON).get(ModulUpdateData.class);
+
 			// set module as active
-	        if (module.getStatus() != ModuleStatus.StartedActive) {
+			if (module.getStatus() != ModuleStatus.StartedActive) {
 				module.setStatus(ModuleStatus.StartedActive);
-				bean.updateModule(module);				
+				bean.updateModule(module);
 				websocket.chat(new WebsocketMessage("active", "server"));
-			}			
+			}
 
 		} catch (WebApplicationException | ClientWebApplicationException ex) {
 			System.out.println("WebApplicationException: " + ex.getMessage());
@@ -80,6 +80,7 @@ public class ModuleTimerService {
 				bean.updateModule(module);
 				websocket.chat(new WebsocketMessage("inactive", "server"));
 			}
+
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}

@@ -2,6 +2,7 @@ package at.arz.latte.framework.persistence.beans;
 
 import java.util.List;
 
+import javax.ejb.Stateful;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -16,9 +17,10 @@ import at.arz.latte.framework.modules.models.Module;
  *
  */
 @Stateless
+// Todo: stateful?
 public class ModuleManagementBean extends GenericManagementBean<Module> {
 
-	@PersistenceContext
+	@PersistenceContext(unitName="latte-unit")
 	private EntityManager em;
 
 	public void initAllModules() {
@@ -49,8 +51,10 @@ public class ModuleManagementBean extends GenericManagementBean<Module> {
 		Module m = getModule(module.getId());
 		m.setName(module.getName());
 		m.setProvider(module.getProvider());
+		m.setVersion(module.getVersion());
 		m.setUrl(module.getUrl());
 		m.setInterval(module.getInterval());
+		m.setStatus(module.getStatus());
 		m.setEnabled(module.getEnabled());
 		
 		if (validate(m)) {

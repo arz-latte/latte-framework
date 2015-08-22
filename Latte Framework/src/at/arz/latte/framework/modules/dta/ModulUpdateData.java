@@ -1,5 +1,7 @@
 package at.arz.latte.framework.modules.dta;
 
+import java.util.List;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -13,12 +15,15 @@ public class ModulUpdateData {
 
 	private String version;
 
+	private List<MenuItemData> menu;
+
 	public ModulUpdateData() {
 	}
 
-	public ModulUpdateData(String version) {
+	public ModulUpdateData(String version, List<MenuItemData> menu) {
 		super();
 		this.version = version;
+		this.menu = menu;
 	}
 
 	public String getVersion() {
@@ -27,6 +32,14 @@ public class ModulUpdateData {
 
 	public void setVersion(String version) {
 		this.version = version;
+	}
+
+	public List<MenuItemData> getMenu() {
+		return menu;
+	}
+
+	public void setMenu(List<MenuItemData> menu) {
+		this.menu = menu;
 	}
 
 }

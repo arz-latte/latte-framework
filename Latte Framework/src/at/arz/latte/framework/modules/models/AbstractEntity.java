@@ -2,7 +2,6 @@ package at.arz.latte.framework.modules.models;
 
 import java.util.HashMap;
 
-import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
 
@@ -14,17 +13,6 @@ import javax.persistence.Transient;
  */
 @MappedSuperclass
 public abstract class AbstractEntity {
-	
-	@Id
-	protected Long id;
-	
-	public AbstractEntity() {
-		// jpa constructor
-	}
-
-	public AbstractEntity(Long id) {
-		this.id = id;
-	}
 
 	@Transient
 	private HashMap<String, String> validation;
@@ -37,12 +25,10 @@ public abstract class AbstractEntity {
 		this.validation = validation;
 	}
 
-	public Long getId() {
-		return id;
-	}
+	public abstract Long getId();
 
 	@Override
 	public String toString() {
-		return "Entity [id=" + id + "]";
+		return "Entity [id=" + getId() + "]";
 	}
 }
