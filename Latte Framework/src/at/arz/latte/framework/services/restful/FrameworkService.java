@@ -9,7 +9,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import at.arz.latte.framework.modules.dta.MenuRootData;
+import at.arz.latte.framework.modules.dta.ModuleMenuData;
 import at.arz.latte.framework.persistence.beans.FrameworkManagementBean;
 
 /**
@@ -28,7 +28,7 @@ public class FrameworkService {
 	@GET
 	@Path("init")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<MenuRootData> getInitData() {
+	public List<ModuleMenuData> getInitData() {
 		return bean.getAll();
 	}
 
