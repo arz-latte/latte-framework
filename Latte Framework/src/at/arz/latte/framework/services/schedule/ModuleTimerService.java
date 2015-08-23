@@ -20,7 +20,7 @@ import org.apache.cxf.transport.http.HTTPConduit;
 import at.arz.latte.framework.modules.dta.MenuEntryData;
 import at.arz.latte.framework.modules.dta.MenuLeafData;
 import at.arz.latte.framework.modules.dta.MenuRootData;
-import at.arz.latte.framework.modules.dta.ModulUpdateData;
+import at.arz.latte.framework.modules.dta.ModuleUpdateData;
 import at.arz.latte.framework.modules.models.MenuRoot;
 import at.arz.latte.framework.modules.models.MenuEntry;
 import at.arz.latte.framework.modules.models.MenuLeaf;
@@ -72,7 +72,7 @@ public class ModuleTimerService {
 			conduit.getClient().setConnectionTimeout(2000);
 
 			// todo: send version and hashcode of menu to client via post...
-			ModulUpdateData resp = client.accept(MediaType.APPLICATION_JSON).get(ModulUpdateData.class);
+			ModuleUpdateData resp = client.accept(MediaType.APPLICATION_JSON).get(ModuleUpdateData.class);
 
 			// compare menu
 			List<MenuRoot> root = new ArrayList<>();

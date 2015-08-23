@@ -98,6 +98,11 @@ public class MenuEntry implements Serializable, Comparable<MenuEntry> {
 	}
 
 	@Override
+	public String toString() {
+		return "MenuEntry [value=" + value + ", url=" + url + ", position=" + position + "]";
+	}
+
+	@Override
 	public int compareTo(MenuEntry entry) {
 		return position - entry.position;
 	}

@@ -5,7 +5,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import at.arz.latte.framework.modules.dta.ModulUpdateData;
+import at.arz.latte.framework.modules.dta.ModuleUpdateData;
 import at.arz.latte.modules.services.restful.config.DemoModuleConfiguration;
 
 @Path("module")
@@ -14,7 +14,7 @@ public class DemoModuleRestfulService {
 	@GET
 	@Path("status")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public ModulUpdateData getModule() {
+	public ModuleUpdateData getModule() {
 		return DemoModuleConfiguration.MODULE;
 	}
 

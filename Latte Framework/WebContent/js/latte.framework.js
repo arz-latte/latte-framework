@@ -19,7 +19,7 @@ var app = {
 			var $modules = $("#modules");
 			$modules.find("tr:has(td)").remove(); // clear
 
-			$.each(data.module_multiple, function(index, module) {
+			$.each(data.modules, function(index, module) {
 				var $name = $("<td/>").append(module.name);
 				var $version = $("<td/>").append(module.version);
 				var $provider = $("<td/>").append(module.provider);
@@ -49,7 +49,7 @@ var app = {
 		$.getJSON(app.API_MODULES + "/" + app.currentId, function(data) {
 
 			// fill form
-			var m = data.module_single;
+			var m = data.module;
 			$('[name=input-name]').val(m.name);
 			$('[name=input-provider]').val(m.provider);
 			$('[name=input-url]').val(m.url);
@@ -73,7 +73,7 @@ var app = {
 			$.ajax({
 				url : app.API_MODULES + "/update",
 				type : "PUT",
-				data : JSON.stringify({"module_single" : m}),
+				data : JSON.stringify({"module" : m}),
 				contentType : "application/json; charset=UTF-8",
 			}).done(function(data) {
 				app.storeModuleCallback(data.result, "Modul aktualisiert");
@@ -85,7 +85,7 @@ var app = {
 			$.ajax({
 				url : app.API_MODULES + "/create",
 				type : "POST",
-				data : JSON.stringify({"module_single" : m}),
+				data : JSON.stringify({"module" : m}),
 				contentType : "application/json; charset=UTF-8",
 			}).done(function(data) {
 				app.storeModuleCallback(data.result, "Modul erstellt");

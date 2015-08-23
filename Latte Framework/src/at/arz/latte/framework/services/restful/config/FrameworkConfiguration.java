@@ -7,6 +7,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
+import at.arz.latte.framework.services.restful.FrameworkService;
 import at.arz.latte.framework.services.restful.ModuleService;
 
 /**
@@ -31,6 +32,7 @@ public class FrameworkConfiguration extends Application {
 
 	private void initApplicationClasses() {
 		applicationClasses = new HashSet<Class<?>>();
-		applicationClasses.add(ModuleService.class);		
+		applicationClasses.add(ModuleService.class);
+		applicationClasses.add(FrameworkService.class);
 	}
 }

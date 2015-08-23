@@ -11,16 +11,16 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  */
 @XmlRootElement(name = "module_update")
-public class ModulUpdateData {
+public class ModuleUpdateData {
 
 	private String version;
 
 	private List<MenuRootData> menu;
 
-	public ModulUpdateData() {
+	public ModuleUpdateData() {
 	}
 
-	public ModulUpdateData(String version, List<MenuRootData> menu) {
+	public ModuleUpdateData(String version, List<MenuRootData> menu) {
 		super();
 		this.version = version;
 		this.menu = menu;
@@ -44,6 +44,6 @@ public class ModulUpdateData {
 
 	@Override
 	public String toString() {
-		return "ModulUpdateData [version=" + version + ", menu=" + menu + "]";
+		return "ModuleUpdateData [version=" + version + ", menu=" + menu + "]";
 	}	
 }

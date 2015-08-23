@@ -12,14 +12,14 @@ import javax.ws.rs.core.Application;
 import at.arz.latte.framework.modules.dta.MenuRootData;
 import at.arz.latte.framework.modules.dta.MenuLeafData;
 import at.arz.latte.framework.modules.dta.MenuEntryData;
-import at.arz.latte.framework.modules.dta.ModulUpdateData;
+import at.arz.latte.framework.modules.dta.ModuleUpdateData;
 import at.arz.latte.modules.services.restful.service.DemoModuleRestfulService;
 
 @ApplicationScoped
 @ApplicationPath("/api/v1")
 public class DemoModuleConfiguration extends Application {
 
-	public static ModulUpdateData MODULE = null;
+	public static ModuleUpdateData MODULE = null;
 
 	static {
 		System.out.println("demo init");
@@ -37,7 +37,7 @@ public class DemoModuleConfiguration extends Application {
 		menu.add(menu1);
 		menu.add(menu2);
 
-		MODULE = new ModulUpdateData("v1.00", menu);
+		MODULE = new ModuleUpdateData("v1.00", menu);
 	}
 
 	private Set<Class<?>> applicationClasses;

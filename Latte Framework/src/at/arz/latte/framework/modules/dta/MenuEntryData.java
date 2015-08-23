@@ -1,5 +1,7 @@
 package at.arz.latte.framework.modules.dta;
 
+import at.arz.latte.framework.modules.models.MenuEntry;
+
 public class MenuEntryData {
 	private String value;
 
@@ -16,6 +18,13 @@ public class MenuEntryData {
 		this.value = value;
 		this.url = url;
 		this.position = position;
+	}
+	
+	public MenuEntryData(MenuEntry m) {
+		super();
+		this.value = m.getValue();
+		this.url = m.getUrl();
+		this.position = m.getPosition();
 	}
 
 	public String getValue() {

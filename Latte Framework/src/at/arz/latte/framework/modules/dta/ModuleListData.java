@@ -10,8 +10,8 @@ import at.arz.latte.framework.modules.models.ModuleStatus;
  * Dominik Neuner {@link "mailto:dominik@neuner-it.at"}
  *
  */
-@XmlRootElement(name = "module_multiple")
-public class ModuleMultipleData {
+@XmlRootElement(name = "modules")
+public class ModuleListData {
 
 	private Long id;
 
@@ -25,10 +25,10 @@ public class ModuleMultipleData {
 
 	private boolean enabled;
 
-	public ModuleMultipleData() {
+	public ModuleListData() {
 	}
 
-	public ModuleMultipleData(Long id, String name, String provider, String version, ModuleStatus status,
+	public ModuleListData(Long id, String name, String provider, String version, ModuleStatus status,
 			boolean enabled) {
 		super();
 		this.id = id;

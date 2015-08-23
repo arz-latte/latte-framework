@@ -74,6 +74,11 @@ public class MenuLeaf implements Comparable<MenuLeaf> {
 			return false;
 		return true;
 	}
+	
+	@Override
+	public String toString() {
+		return "MenuLeaf [entry=" + entry + ", permission=" + permission + "]";
+	}
 
 	@Override
 	public int compareTo(MenuLeaf object) {

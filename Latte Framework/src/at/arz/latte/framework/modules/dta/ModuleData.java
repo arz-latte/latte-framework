@@ -10,8 +10,8 @@ import at.arz.latte.framework.modules.models.Module;
  * Dominik Neuner {@link "mailto:dominik@neuner-it.at"}
  *
  */
-@XmlRootElement(name = "module_single")
-public class ModuleSingleData {
+@XmlRootElement(name = "module")
+public class ModuleData {
 
 	private Long id;
 
@@ -25,10 +25,10 @@ public class ModuleSingleData {
 
 	private boolean enabled;
 
-	public ModuleSingleData() {
+	public ModuleData() {
 	}
 
-	public ModuleSingleData(Long id, String name, String provider, String url, int interval, boolean enabled) {
+	public ModuleData(Long id, String name, String provider, String url, int interval, boolean enabled) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -43,7 +43,7 @@ public class ModuleSingleData {
 	 * 
 	 * @param m
 	 */
-	public ModuleSingleData(Module m) {
+	public ModuleData(Module m) {
 		this.id = m.getId();
 		this.name = m.getName();
 		this.provider = m.getProvider();

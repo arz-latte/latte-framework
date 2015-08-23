@@ -7,7 +7,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import at.arz.latte.framework.modules.dta.ModuleMultipleData;
+import at.arz.latte.framework.modules.dta.ModuleListData;
 import at.arz.latte.framework.modules.models.Module;
 
 /**
@@ -27,8 +27,8 @@ public class ModuleManagementBean extends GenericManagementBean<Module> {
 		em.createNamedQuery(Module.UPDATE_ALL).executeUpdate();
 	}
 
-	public List<ModuleMultipleData> getAllModulesBase() {
-		return em.createNamedQuery(Module.QUERY_GETALL_BASE, ModuleMultipleData.class).getResultList();
+	public List<ModuleListData> getAllModulesBase() {
+		return em.createNamedQuery(Module.QUERY_GETALL_BASE, ModuleListData.class).getResultList();
 	}
 
 	public List<Module> getAllModules() {
