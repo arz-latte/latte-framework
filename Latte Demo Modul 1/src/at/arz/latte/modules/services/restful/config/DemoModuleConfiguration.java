@@ -9,7 +9,9 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
-import at.arz.latte.framework.modules.dta.MenuItemData;
+import at.arz.latte.framework.modules.dta.MenuRootData;
+import at.arz.latte.framework.modules.dta.MenuLeafData;
+import at.arz.latte.framework.modules.dta.MenuEntryData;
 import at.arz.latte.framework.modules.dta.ModulUpdateData;
 import at.arz.latte.modules.services.restful.service.DemoModuleRestfulService;
 
@@ -22,14 +24,16 @@ public class DemoModuleConfiguration extends Application {
 	static {
 		System.out.println("demo init");
 
-		List<MenuItemData> menu = new ArrayList<>();
-		MenuItemData menu1 = new MenuItemData("Menu 1", null, 1, new ArrayList<>());
-		MenuItemData menu11 = new MenuItemData("SubMenu 1", null, 1, null);
-		MenuItemData menu12 = new MenuItemData("SubMenu 2", null, 1, null);
+		List<MenuRootData> menu = new ArrayList<>();
+		
+		MenuRootData menu1 = new MenuRootData(new MenuEntryData("Menu 1", "url", 10), new ArrayList<>());
+		MenuLeafData menu11 = new MenuLeafData(new MenuEntryData("SubMenu 1", "url", 13), "admin");
+		MenuLeafData menu12 = new MenuLeafData(new MenuEntryData("SubMenu 2", "url", 15), "admin");
 		menu1.getChildren().add(menu11);
 		menu1.getChildren().add(menu12);
-		MenuItemData menu2 = new MenuItemData("Menu 2", null, 2, null);
-
+		
+		MenuRootData menu2 = new MenuRootData(new MenuEntryData("Menu 2", "url", 20), null);
+		
 		menu.add(menu1);
 		menu.add(menu2);
 

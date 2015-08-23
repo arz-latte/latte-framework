@@ -3,21 +3,28 @@ package at.arz.latte.framework.modules.models;
 import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlRootElement;
 
 import at.arz.latte.framework.modules.models.validator.CheckUrl;
 
@@ -30,8 +37,7 @@ import at.arz.latte.framework.modules.models.validator.CheckUrl;
 @NamedQueries({
 		@NamedQuery(name = Module.QUERY_GETALL_BASE, query = "SELECT new at.arz.latte.framework.modules.dta.ModuleMultipleData(m.id, m.name, m.provider, m.version, m.status, m.enabled) FROM Module m ORDER BY m.name"),
 		@NamedQuery(name = Module.QUERY_GETALL, query = "SELECT m FROM Module m"),
-		@NamedQuery(name = Module.UPDATE_ALL, query = "UPDATE Module m SET m.status = ModuleStatus.Unknown") })
-@XmlRootElement(name = "module") // required?
+		@NamedQuery(name = Module.UPDATE_ALL, query = "UPDATE Module m SET m.status = ModuleStatus.Stopped") })
 @Entity
 @Table(name = "module")
 public class Module extends AbstractEntity implements Serializable {
@@ -42,9 +48,10 @@ public class Module extends AbstractEntity implements Serializable {
 	public static final String QUERY_GETALL = "Module.GetAll";
 	public static final String UPDATE_ALL = "Module.UpdateAll";
 
-	@TableGenerator(name = "Module.ID", table = "LATTESEQ", pkColumnName = "KEY", valueColumnName = "VALUE")
 	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE, generator = "Module.ID")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	//@GeneratedValue(strategy = GenerationType.TABLE, generator = "Module.ID")
+	//@TableGenerator(name = "Module.ID", table = "module_seq", pkColumnName = "KEY", valueColumnName = "VALUE")
 	private Long id;
 
 	@NotNull
@@ -84,65 +91,70 @@ public class Module extends AbstractEntity implements Serializable {
 
 	private boolean enabled;
 
+
+	//@OneToOne(cascade=CascadeType.ALL, orphanRemoval=true, fetch = FetchType.LAZY)
+	//@JoinColumn(name = "module_id")
+	
+	/*@OneToMany(cascade=CascadeType.ALL, orphanRemoval=true, fetch=FetchType.EAGER)
+	@JoinColumn(name = "module_id")
+	private Menu parentmenu;*/
+	
+	@OneToMany(cascade=CascadeType.ALL, orphanRemoval=true, fetch=FetchType.LAZY)
+	@JoinColumn(name = "module_id")
+	@OrderColumn(name="position")
+	private List<MenuRoot> submenu;
+
+	/**
+	 * JPA consturctor
+	 */
 	protected Module() {
 		super();
-		// jpa constructor
 	}
 
-	public Module(Long id, String name, String provider, String version, String url, int interval, ModuleStatus status,
-			boolean enabled) {
-		this.id = id;
+	/**
+	 * used for creation of new Module via REST-service
+	 * 
+	 * @param id
+	 * @param i
+	 * @param name
+	 * @param provider
+	 * @param version
+	 * @param url
+	 * @param interval
+	 * @param status
+	 * @param enabled
+	 */
+	public Module(String name, String provider, String url, int interval, boolean enabled) {
+		this();
 		this.name = name;
 		this.provider = provider;
-		this.status = status;
-		this.version = version;
+		this.version = "-";
 		this.url = url;
 		this.interval = interval;
+		this.status = ModuleStatus.Stopped;
 		this.enabled = enabled;
 	}
 
 	/**
 	 * 
-	 * used for partial updates
+	 * used for partial updates via REST-service
 	 * 
 	 * @param name
 	 * @param provider
-	 * @param version
 	 * @param url
 	 * @param checkInterval
 	 * @param status
 	 * @param enabled
 	 */
 	public Module(Long id, String name, String provider, String url, int interval, boolean enabled) {
+		this();
 		this.id = id;
 		this.name = name;
 		this.provider = provider;
 		this.url = url;
 		this.interval = interval;
+		this.status = ModuleStatus.Stopped;
 		this.enabled = enabled;
-	}
-
-	public Module(String name, String provider, String version, String url, int interval, ModuleStatus status,
-			boolean enabled) {
-		super();
-		this.name = name;
-		this.provider = provider;
-		this.status = status;
-		this.version = version;
-		this.url = url;
-		this.interval = interval;
-		this.enabled = enabled;
-	}
-
-	public Module(Module m) {
-		this.id = m.id;
-		this.name = m.name;
-		this.provider = m.provider;
-		this.status = m.status;
-		this.version = m.version;
-		this.url = m.url;
-		this.interval = m.interval;
-		this.enabled = m.enabled;
 	}
 
 	public Long getId() {
@@ -209,6 +221,18 @@ public class Module extends AbstractEntity implements Serializable {
 		this.enabled = enabled;
 	}
 
+
+	public List<MenuRoot> getSubmenu() {
+		return submenu;
+	}
+
+	public void setSubmenu(List<MenuRoot> submenu) {
+		this.submenu = submenu;
+	}
+
+
+	// ------------------- helper -------------------
+
 	public String getHost() throws MalformedURLException {
 		URL u = new URL(url);
 		return u.getProtocol() + "://" + u.getAuthority();
@@ -232,7 +256,8 @@ public class Module extends AbstractEntity implements Serializable {
 	@Override
 	public String toString() {
 		return "Module [id=" + id + ", name=" + name + ", provider=" + provider + ", version=" + version + ", url="
-				+ url + ", checkInterval=" + interval + ", status=" + status + ", enabled=" + enabled + "]";
+				+ url + ", interval=" + interval + ", status=" + status + ", enabled=" + enabled + ", submenu=" + submenu
+				+ "]";
 	}
 
 }

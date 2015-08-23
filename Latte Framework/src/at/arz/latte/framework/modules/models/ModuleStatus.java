@@ -9,19 +9,14 @@ package at.arz.latte.framework.modules.models;
 public enum ModuleStatus {
 
 	/**
-	 * unknown status, no contact to framework since start
+	 * unknown status, no contact to framework
 	 */
 	Unknown,
 
 	/**
-	 * module has lost contact to framework
-	 */
-	StartedInactive,
-
-	/**
 	 * module available and running
 	 */
-	StartedActive,
+	Started,
 
 	/**
 	 * module stopped

@@ -28,7 +28,7 @@ public class ModuleTest  {
 	public void moduleIsPersistent() {
 		em.getTransaction().begin();
 
-		Module m = new Module("Demo Modul", "ARZ", "v1.00", "http://localhost:8081/Latte_Demo_Modul_1/api/v1/module", 60, ModuleStatus.Unknown, true);
+		Module m = new Module("Demo Modul", "ARZ", "http://localhost:8081/Latte_Demo_Modul_1/api/v1/module", 60, false);
 
 		em.persist(m);
 
