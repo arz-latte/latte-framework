@@ -3,6 +3,7 @@ package at.arz.latte.framework.modules.models;
 import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
+
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -17,6 +18,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import javax.validation.constraints.Min;
@@ -34,8 +36,7 @@ import at.arz.latte.framework.modules.models.validator.CheckUrl;
 @NamedQueries({
 		@NamedQuery(name = Module.QUERY_GETALL_BASE, query = "SELECT new at.arz.latte.framework.modules.dta.ModuleListData(m.id, m.name, m.provider, m.version, m.status, m.enabled) FROM Module m ORDER BY m.name"),
 		@NamedQuery(name = Module.QUERY_GETALL, query = "SELECT m FROM Module m"),
-		@NamedQuery(name = Module.UPDATE_ALL, query = "UPDATE Module m SET m.status = ModuleStatus.Stopped")
-		})
+		@NamedQuery(name = Module.UPDATE_ALL, query = "UPDATE Module m SET m.status = ModuleStatus.Stopped"), })
 @Entity
 @Table(name = "module")
 public class Module extends AbstractEntity implements Serializable {
@@ -48,8 +49,9 @@ public class Module extends AbstractEntity implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	//@GeneratedValue(strategy = GenerationType.TABLE, generator = "Module.ID")
-	//@TableGenerator(name = "Module.ID", table = "module_seq", pkColumnName = "KEY", valueColumnName = "VALUE")
+	// @GeneratedValue(strategy = GenerationType.TABLE, generator = "Module.ID")
+	// @TableGenerator(name = "Module.ID", table = "module_seq", pkColumnName =
+	// "KEY", valueColumnName = "VALUE")
 	private Long id;
 
 	@NotNull
@@ -89,17 +91,20 @@ public class Module extends AbstractEntity implements Serializable {
 
 	private boolean enabled;
 
+	// @OneToOne(cascade=CascadeType.ALL, orphanRemoval=true, fetch =
+	// FetchType.LAZY)
+	// @JoinColumn(name = "module_id")
 
-	//@OneToOne(cascade=CascadeType.ALL, orphanRemoval=true, fetch = FetchType.LAZY)
-	//@JoinColumn(name = "module_id")
-	
-	/*@OneToMany(cascade=CascadeType.ALL, orphanRemoval=true, fetch=FetchType.EAGER)
+	/*
+	 * @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true,
+	 * fetch=FetchType.EAGER)
+	 * 
+	 * @JoinColumn(name = "module_id") private Menu parentmenu;
+	 */
+
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	@JoinColumn(name = "module_id")
-	private Menu parentmenu;*/
-	
-	@OneToMany(cascade=CascadeType.ALL, orphanRemoval=true, fetch=FetchType.LAZY)
-	@JoinColumn(name = "module_id")
-	@OrderColumn(name="position")
+	@OrderColumn(name = "position")
 	private List<MenuRoot> submenu;
 
 	/**
@@ -219,7 +224,6 @@ public class Module extends AbstractEntity implements Serializable {
 		this.enabled = enabled;
 	}
 
-
 	public List<MenuRoot> getSubmenu() {
 		return submenu;
 	}
@@ -227,7 +231,6 @@ public class Module extends AbstractEntity implements Serializable {
 	public void setSubmenu(List<MenuRoot> submenu) {
 		this.submenu = submenu;
 	}
-
 
 	// ------------------- helper -------------------
 
@@ -254,8 +257,8 @@ public class Module extends AbstractEntity implements Serializable {
 	@Override
 	public String toString() {
 		return "Module [id=" + id + ", name=" + name + ", provider=" + provider + ", version=" + version + ", url="
-				+ url + ", interval=" + interval + ", status=" + status + ", enabled=" + enabled + ", submenu=" + submenu
-				+ "]";
+				+ url + ", interval=" + interval + ", status=" + status + ", enabled=" + enabled + ", submenu="
+				+ submenu + "]";
 	}
 
 }

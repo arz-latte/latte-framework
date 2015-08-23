@@ -63,7 +63,7 @@ public class ModuleTimerService {
 	}
 
 	private void checkStatus(Module module) {
-		System.out.println("check module status: " + module.getName());
+		// System.out.println("check module status: " + module.getName());
 
 		try {
 			WebClient client = WebClient.create(module.getHost()).path(module.getPath() + "/status");

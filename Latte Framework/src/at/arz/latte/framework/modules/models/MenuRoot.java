@@ -116,7 +116,6 @@ public class MenuRoot extends AbstractEntity implements Serializable, Comparable
 		return "MenuRoot [id=" + id + ", entry=" + entry + ", submenu=" + submenu + "]";
 	}
 
-	@Override
 	public int compareTo(MenuRoot menuRoot) {
 		return entry.getPosition() - menuRoot.getEntry().getPosition();
 	}

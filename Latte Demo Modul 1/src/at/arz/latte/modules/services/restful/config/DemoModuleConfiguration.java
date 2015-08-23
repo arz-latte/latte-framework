@@ -10,9 +10,9 @@ import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
 import at.arz.latte.framework.modules.dta.MenuRootData;
+import at.arz.latte.framework.modules.dta.ModuleUpdateData;
 import at.arz.latte.framework.modules.dta.MenuLeafData;
 import at.arz.latte.framework.modules.dta.MenuEntryData;
-import at.arz.latte.framework.modules.dta.ModuleUpdateData;
 import at.arz.latte.modules.services.restful.service.DemoModuleRestfulService;
 
 @ApplicationScoped
