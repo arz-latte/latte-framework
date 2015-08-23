@@ -14,8 +14,6 @@ var app = {
 
 		$.getJSON(app.API_MODULES + "/all", function(data) {
 
-			//app.modules = data.module_base; // save result
-
 			var $modules = $("#modules");
 			$modules.find("tr:has(td)").remove(); // clear
 
@@ -26,12 +24,14 @@ var app = {
 				var $status = $("<td/>").append(module.status);
 				var $enabled = $("<td/>").append(module.enabled ? "ja" : "nein");
 
-				var $row = $('<tr/>').attr("data-id", module.id);
+				var $row = $("<tr/>").attr("data-id", module.id);
 				$row.append($name).append($provider).append($version).append(
 						$status).append($enabled);
 
 				$modules.append($row);
 			});
+			
+			$("#moduleFilter").keyup();
 		});
 	},
 
@@ -50,11 +50,11 @@ var app = {
 
 			// fill form
 			var m = data.module;
-			$('[name=input-name]').val(m.name);
-			$('[name=input-provider]').val(m.provider);
-			$('[name=input-url]').val(m.url);
-			$('[name=input-interval]').val(m.interval);
-			$('[name=input-enabled]').prop("checked", m.enabled);
+			$("[name=input-name]").val(m.name);
+			$("[name=input-provider]").val(m.provider);
+			$("[name=input-url]").val(m.url);
+			$("[name=input-interval]").val(m.interval);
+			$("[name=input-enabled]").prop("checked", m.enabled);
 		});
 	},
 
@@ -62,11 +62,11 @@ var app = {
 		// copy form to model
 		var m = {};
 		m.id = app.currentId;
-		m.name = $('[name=input-name]').val();
-		m.provider = $('[name=input-provider]').val();
-		m.url = $('[name=input-url]').val();
-		m.interval = $('[name=input-interval]').val();
-		m.enabled = $('[name=input-enabled]').prop("checked");
+		m.name = $("[name=input-name]").val();
+		m.provider = $("[name=input-provider]").val();
+		m.url = $("[name=input-url]").val();
+		m.interval = $("[name=input-interval]").val();
+		m.enabled = $("[name=input-enabled]").prop("checked");
 		
 		if (m.id > 0) {
 
@@ -99,7 +99,7 @@ var app = {
 
 	resetFormValidation : function() {
 		// reset form valid
-		$('#moduleEditArea input').each(function() {
+		$("#moduleEditArea input").each(function() {
 			$(this).closest(".form-group").removeClass("has-error");
 			$(this).next().hide(); // hide glyphicon
 
@@ -160,29 +160,41 @@ var app = {
 		app.leaveEditMode();
 		return false;
 	},
+	
+	filterModule : function() {
+        var rex = new RegExp($(this).val(), "i");
+        $("tbody tr").hide();
+        $("tbody tr").filter(function () {
+            return rex.test($(this).text());
+        }).show();
+	},
 
+	clearModuleFilter : function() {
+		$("#moduleFilter").val("");
+		$("tbody tr").show();
+	},
+	
 	// ==========================================================================
-	// helper functions
+	// websocket functions
 	// ===========================================================================
 
 	initWebSocket : function() {
 
-		var uri = "ws://" + document.location.host + "/latte/ws";
-		var websocket = new WebSocket(uri);
+		var url = "ws://" + document.location.host + "/latte/ws";
+		//var ws = new WebSocket(uri);
+		var ws = new ReconnectingWebSocket(url, null, {debug: true});
 
-		console.log("init websocket");
-
-		websocket.onmessage = function(msg) {
+		ws.onmessage = function(msg) {
 			var data = JSON.parse(msg.data);
 			console.log("onmessage" + msg.data);
 			app.showMessage(data.message);
 		};
 
-		websocket.onerror = function(evt) {
+		ws.onerror = function(evt) {
 			app.showErrorMessage(evt);
 		};
 
-		websocket.onclose = function() {
+		ws.onclose = function() {
 			app.showErrorMessage("VERBINDUNG GESCHLOSSEN");
 		};
 
@@ -191,7 +203,7 @@ var app = {
 		 * $("#name").val(), color : $("#color").val(), message :
 		 * $("#message").val() }
 		 * 
-		 * websocket.send(JSON.stringify(msg)); $("#message").val(""); });
+		 * ws.send(JSON.stringify(msg)); $("#message").val(""); });
 		 */
 	},
 
@@ -219,7 +231,7 @@ var app = {
 		$("#moduleListArea").hide();
 		$("#moduleEditArea").show();
 
-		$('#moduleEditArea form').trigger("reset");
+		$("#moduleEditArea form").trigger("reset");
 		app.currentId = null;
 	},
 
@@ -232,40 +244,12 @@ var app = {
 };
 
 // ===========================================================================
-// classes
-// ===========================================================================
-/*
-function Module() {
-	this.id = null;
-	this.name = null;
-	this.provider = null;
-	this.version = null;
-	this.status = null;
-	this.url = null;
-	this.checkInterval = null;
-	this.enabled = null;
-}
-Module.prototype.init = function(id, name, provider, version, status, url,
-		checkInterval, enabled) {
-	this.id = id;
-	this.name = name;
-	this.provider = provider;
-	this.version = version;
-	this.status = status;
-	this.url = url;
-	this.checkInterval = checkInterval;
-	this.enabled = enabled;
-};
-Module.prototype.createJSON = function() {
-	return JSON.stringify({
-		"module_single" : this
-	});
-};*/
-
-// ===========================================================================
 // ready & event handlers
 // ===========================================================================
 function initFramework() {
+
+	$("#btnClearModuleFilter").on("click", app.clearModuleFilter);
+	$("#moduleFilter").on("keyup", app.filterModule);	
 
 	$("#btnLoadModules").on("click", app.loadModules);
 	$("#btnAddNewModule").on("click", app.addNewModule);
@@ -273,8 +257,9 @@ function initFramework() {
 	$("#btnStoreModule").on("click", app.storeModule);
 	$("#btnDeleteModule").on("click", app.deleteModule);
 	$("#btnRestoreModule").on("click", app.restoreModule);
-
+	
 	$("#moduleListArea tbody").on("click", "tr", app.showModule);
+	
 
 	app.initWebSocket();
 
