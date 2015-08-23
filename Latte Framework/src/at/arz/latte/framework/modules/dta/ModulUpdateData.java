@@ -15,12 +15,12 @@ public class ModulUpdateData {
 
 	private String version;
 
-	private List<MenuItemData> menu;
+	private List<MenuRootData> menu;
 
 	public ModulUpdateData() {
 	}
 
-	public ModulUpdateData(String version, List<MenuItemData> menu) {
+	public ModulUpdateData(String version, List<MenuRootData> menu) {
 		super();
 		this.version = version;
 		this.menu = menu;
@@ -34,11 +34,11 @@ public class ModulUpdateData {
 		this.version = version;
 	}
 
-	public List<MenuItemData> getMenu() {
+	public List<MenuRootData> getMenu() {
 		return menu;
 	}
 
-	public void setMenu(List<MenuItemData> menu) {
+	public void setMenu(List<MenuRootData> menu) {
 		this.menu = menu;
 	}
 
@@ -46,5 +46,4 @@ public class ModulUpdateData {
 	public String toString() {
 		return "ModulUpdateData [version=" + version + ", menu=" + menu + "]";
 	}	
-
 }

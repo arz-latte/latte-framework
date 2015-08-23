@@ -31,4 +31,5 @@ public abstract class AbstractEntity {
 	public String toString() {
 		return "Entity [id=" + getId() + "]";
 	}
+	
 }

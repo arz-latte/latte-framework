@@ -47,6 +47,9 @@ public class ModuleManagementBean extends GenericManagementBean<Module> {
 		return module;
 	}
 	
+	/**
+	 * used for partial updates via timer-service
+	 */
 	public Module updateModule(Module module) {
 		if (validate(module)) {
 			em.merge(module);
@@ -55,6 +58,9 @@ public class ModuleManagementBean extends GenericManagementBean<Module> {
 		return module;
 	}
 
+	/**
+	 * used for partial updates via REST-service
+	 */
 	public Module updateModule(Long id, String name, String provider, String url, int interval, boolean enabled) {
 		Module m = getModule(id);
 		

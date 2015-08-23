@@ -51,8 +51,7 @@ public class ModuleService {
 	@Path("create")
 	@Produces(MediaType.APPLICATION_JSON)
 	public ResultData createModule(ModuleSingleData m) {
-		Module module = new Module(m.getId(), m.getName(), m.getProvider(), "-", m.getUrl(), m.getInterval(),
-				ModuleStatus.Unknown, m.getEnabled());
+		Module module = new Module(m.getName(), m.getProvider(), m.getUrl(), m.getInterval(), m.getEnabled());
 		return new ResultData(bean.createModule(module));
 	}
 
