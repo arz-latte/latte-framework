@@ -3,7 +3,6 @@
 	<name>Latte Demo Modul 1</name>
 	<comment></comment>
 	<projects>
-		<project>Latte Common</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

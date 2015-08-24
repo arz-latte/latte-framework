@@ -22,8 +22,6 @@ public class DemoModuleConfiguration extends Application {
 	public static ModuleUpdateData MODULE = null;
 
 	static {
-		System.out.println("demo init");
-
 		List<MenuRootData> menu = new ArrayList<>();
 		
 		MenuRootData menu1 = new MenuRootData(new MenuEntryData("Menu 1", "#", 10), new ArrayList<>());

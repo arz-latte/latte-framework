@@ -8,7 +8,7 @@ var app = {
 
 	parseMenu : function(id) {
 
-		var module = JSON.parse(localStorage['module-' + id]);
+		var module = JSON.parse(localStorage.getItem('module-' + id));
 
 		var $subMenu = $("#side-navbar");
 		$subMenu.html(""); // clear
@@ -75,7 +75,7 @@ var app = {
 				
 				// check if module is initialized and has menu entries
 				if (module.menu) {
-					localStorage['module-' + module.id] = JSON.stringify(module);
+					localStorage.setItem('module-' + module.id, JSON.stringify(module));
 	
 					// main menu (module name)
 					var $entry = $("<li/>").append($("<a/>", {
@@ -127,17 +127,17 @@ var app = {
 				$modules.append($row);
 			});
 
-			$("#moduleFilter").keyup();
+			$("#module-filter").keyup();
 		});
 	},
 
 	addNewModule : function() {
-		$("#btnDeleteModule").hide();
+		$("#btn-delete-module").hide();
 		app.enterEditMode();
 	},
 
 	showModule : function() {
-		$("#btnDeleteModule").show();
+		$("#btn-delete-module").show();
 		app.enterEditMode();
 
 		// load module details
@@ -200,7 +200,7 @@ var app = {
 
 	resetFormValidation : function() {
 		// reset form valid
-		$("#moduleEditArea input").each(function() {
+		$("#module-edit-area input").each(function() {
 			$(this).closest(".form-group").removeClass("has-error");
 			$(this).next().hide(); // hide glyphicon
 
@@ -271,7 +271,7 @@ var app = {
 	},
 
 	clearModuleFilter : function() {
-		$("#moduleFilter").val("");
+		$("#module-filter").val("");
 		$("tbody tr").show();
 	},
 
@@ -339,16 +339,16 @@ var app = {
 	enterEditMode : function() {
 		app.resetFormValidation();
 
-		$("#moduleListArea").hide();
-		$("#moduleEditArea").show();
+		$("#module-list-area").hide();
+		$("#module-edit-area").show();
 
-		$("#moduleEditArea form").trigger("reset");
+		$("#module-edit-area form").trigger("reset");
 		app.currentId = null;
 	},
 
 	leaveEditMode : function() {
-		$("#moduleEditArea").hide();
-		$("#moduleListArea").show();
+		$("#module-edit-area").hide();
+		$("#module-list-area").show();
 		app.currentId = null;
 	},
 
@@ -366,17 +366,17 @@ function initFramework() {
 
 	app.loadMenus();
 
-	$("#btnClearModuleFilter").on("click", app.clearModuleFilter);
-	$("#moduleFilter").on("keyup", app.filterModule);
+	$("#btn-clear-module-filter").on("click", app.clearModuleFilter);
+	$("#module-filter").on("keyup", app.filterModule);
 
-	$("#btnLoadModules").on("click", app.loadModules);
-	$("#btnAddNewModule").on("click", app.addNewModule);
+	$("#btn-load-modules").on("click", app.loadModules);
+	$("#btn-add-module").on("click", app.addNewModule);
 
-	$("#btnStoreModule").on("click", app.storeModule);
-	$("#btnDeleteModule").on("click", app.deleteModule);
-	$("#btnRestoreModule").on("click", app.restoreModule);
+	$("#btn-store-module").on("click", app.storeModule);
+	$("#btn-delete-module").on("click", app.deleteModule);
+	$("#btn-restore-module").on("click", app.restoreModule);
 
-	$("#moduleListArea tbody").on("click", "tr", app.showModule);
+	$("#module-list-area tbody").on("click", "tr", app.showModule);
 
 	app.initWebSocket();
 

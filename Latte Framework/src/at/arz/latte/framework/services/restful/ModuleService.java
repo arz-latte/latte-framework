@@ -14,9 +14,14 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import at.arz.latte.framework.modules.dta.ModuleListData;
+import at.arz.latte.framework.modules.dta.ModuleUpdateData;
+import at.arz.latte.framework.modules.dta.MenuEntryData;
+import at.arz.latte.framework.modules.dta.MenuLeafData;
+import at.arz.latte.framework.modules.dta.MenuRootData;
 import at.arz.latte.framework.modules.dta.ModuleData;
 import at.arz.latte.framework.modules.dta.ResultData;
 import at.arz.latte.framework.modules.models.Module;
+import at.arz.latte.framework.modules.models.ModuleStatus;
 import at.arz.latte.framework.persistence.beans.ModuleManagementBean;
 
 /**
@@ -31,7 +36,7 @@ public class ModuleService {
 
 	@EJB
 	private ModuleManagementBean bean;
-
+	
 	@GET
 	@Path("all.json")
 	@Produces(MediaType.APPLICATION_JSON)

@@ -2,10 +2,7 @@
     <wb-module deploy-name="Latte Demo Modul 1">
         <wb-resource deploy-path="/" source-path="/WebContent" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
-        <dependent-module archiveName="Latte Common.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Latte Common/Latte Common">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
-        <property name="context-root" value="Latte_Demo_Modul_1"/>
         <property name="java-output-path" value="/Latte Demo Modul 1/build/classes"/>
+        <property name="context-root" value="demo1"/>
     </wb-module>
 </project-modules>

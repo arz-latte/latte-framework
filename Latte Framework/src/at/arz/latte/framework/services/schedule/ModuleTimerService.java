@@ -66,7 +66,7 @@ public class ModuleTimerService {
 		// System.out.println("check module status: " + module.getName());
 
 		try {
-			WebClient client = WebClient.create(module.getHost()).path(module.getPath() + "/status");
+			WebClient client = WebClient.create(module.getHost()).path(module.getPath() + "/status.json");
 			HTTPConduit conduit = WebClient.getConfig(client).getHttpConduit();
 			conduit.getClient().setReceiveTimeout(2000);
 			conduit.getClient().setConnectionTimeout(2000);
