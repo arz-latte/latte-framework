@@ -1,12 +1,73 @@
 var app = {
 
+	// ===========================================================================
+	// menu
+	// ===========================================================================
+
+	API_FRAMEWORK : 'api/v1/framework',
+
+	loadMenus : function() {
+		console.log("load menus");
+		
+		$.getJSON(app.API_FRAMEWORK + "/init.json", function(data) {
+
+			var $mainMenuLeft = $("#main-navbar-left");
+			var $subMenu = $("#main-navbar-right");
+			$mainMenuLeft.html(""); // clear
+
+			$.each(data.module, function(index, module) {
+
+				// main menu (module name)
+				var $entry = $("<li/>").append($("<a/>").attr("href", "#").append(module.name));
+				$mainMenuLeft.append($entry);
+				
+				// sub menu
+				$.each(module.menu, function(index, menu) {
+					console.log(menu);
+					
+					if (menu.children && menu.children.length >= 0) {
+						var e = menu.entry; 					// todo position...
+						var $entry = $("<li/>").append($("<a/>", { href: e.url, text: e.value }));
+
+						var $a = $("<a/>", {
+							href: "#",
+							'class' : "dropdown-toogle",
+							'data-toggle' : "dropdown",
+							role : "button",
+							'aria-haspopup' : "true",
+							'aria-expanded' :"false",
+							'text' : e.value + " "
+						}).append($("<span/>", {'class':"caret"}));
+						
+						var $ul = $("<ul/>", { 'class' : "dropdown-menu" });
+						
+						$.each(menu.children, function(index, submenu) {
+							var e = submenu.entry;
+							var $entry = $("<li/>").append($("<a/>", { href: e.url, text: e.value }));	
+							$ul.append($entry);
+						});
+						
+						var $dropdown = $("<li/>", { 'class' : "dropdown" }).append($a, $ul);
+
+						$subMenu.append($dropdown);
+
+					} else {
+						var e = menu.entry; 					// todo position...
+						var $entry = $("<li/>").append($("<a/>", { href: e.url, text: e.value }));
+						$subMenu.append($entry);
+					}
+					
+				});
+			});
+		});
+		
+	},
+		
 	// ==========================================================================
 	// module
 	// ===========================================================================
 
 	API_MODULES : 'api/v1/modules',
-	//modules : [],
-	//currentModule : null,
 	currentId : null,
 
 	loadModules : function() {
@@ -212,14 +273,14 @@ var app = {
 	// ===========================================================================
 
 	showMessage : function(msg) {
-		var $box = $("#messageBox");
+		var $box = $("#message-box");
 		$box.removeClass("error");
 		$box.html(msg);
 		$box.show(100).delay(2000).hide(100);
 	},
 
 	showErrorMessage : function(msg) {
-		var $box = $("#messageBox");
+		var $box = $("#message-box");
 		$box.addClass("error");
 		$box.html(msg);
 		$box.show(100).delay(2000).hide(100);
@@ -247,6 +308,8 @@ var app = {
 // ready & event handlers
 // ===========================================================================
 function initFramework() {
+	
+	app.loadMenus();
 
 	$("#btnClearModuleFilter").on("click", app.clearModuleFilter);
 	$("#moduleFilter").on("keyup", app.filterModule);	
@@ -263,7 +326,8 @@ function initFramework() {
 
 	app.initWebSocket();
 
-	app.loadModules();
+	app.loadModules();	
+	
 }
 
 $(initFramework);

@@ -3,7 +3,6 @@ package at.arz.latte.framework.persistence.beans;
 import java.util.HashMap;
 import java.util.Set;
 
-import javax.ejb.Stateful;
 import javax.ejb.Stateless;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -16,8 +15,7 @@ import javax.validation.Validator;
  *
  * @param <AbstractEntity>
  */
-@Stateful
-//Todo:  @Stateless & abstract	// stateful?
+@Stateless
 public class GenericManagementBean<AbstractEntity> {
 
 	/**

@@ -22,6 +22,17 @@ public class MenuLeafData {
 		this.permission = permission;
 	}
 
+	/**
+	 * constructor for transmitting data to client (ignore permission)
+	 * 
+	 * @param entry
+	 * @param permission
+	 */
+	public MenuLeafData(MenuEntryData entry) {
+		super();
+		this.entry = entry;
+	}
+
 	public MenuEntryData getEntry() {
 		return entry;
 	}

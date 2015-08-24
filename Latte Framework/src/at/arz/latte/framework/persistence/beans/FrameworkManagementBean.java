@@ -22,7 +22,6 @@ import at.arz.latte.framework.modules.models.Module;
  *
  */
 @Stateless
-// Todo: stateful?
 public class FrameworkManagementBean extends GenericManagementBean<Module> {
 
 	@PersistenceContext(unitName = "latte-unit")
@@ -50,7 +49,7 @@ public class FrameworkManagementBean extends GenericManagementBean<Module> {
 				for(MenuLeaf l : m.getSubmenu()) {
 					MenuEntryData leafEntry = new MenuEntryData(l.getEntry());	// bottom level entry (leaf)
 					
-					MenuLeafData leaf = new MenuLeafData(leafEntry, l.getPermission());
+					MenuLeafData leaf = new MenuLeafData(leafEntry);
 					leafs.add(leaf);
 				}
 						

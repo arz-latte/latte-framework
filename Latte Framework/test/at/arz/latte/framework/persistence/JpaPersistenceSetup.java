@@ -8,6 +8,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
 import org.apache.derby.jdbc.EmbeddedDataSource;
+import org.postgresql.ds.PGSimpleDataSource;
 
 public class JpaPersistenceSetup {
 
@@ -25,7 +26,7 @@ public class JpaPersistenceSetup {
 	}
 
 	private static void initDerbyEntityManagerFactory() {
-		Properties properties = loadJpaPersistenceSetupProperties("persistence-derby-test.properties");
+		Properties properties = loadJpaPersistenceSetupProperties();
 		EmbeddedDataSource dataSource = createDerbyDB();
 		properties.put("openjpa.ConnectionFactory", dataSource);
 		properties.put("openjpa.ConnectionFactory2", dataSource);
@@ -40,14 +41,27 @@ public class JpaPersistenceSetup {
 	}
 
 	private static void initPostgreEntityManagerFactory() {
-		Properties properties = loadJpaPersistenceSetupProperties("persistence-postgre-test.properties");
+		Properties properties = loadJpaPersistenceSetupProperties();		
+		PGSimpleDataSource dataSource = createPostgreDB();
+		properties.put("openjpa.ConnectionFactory", dataSource);
+		properties.put("openjpa.ConnectionFactory2", dataSource);
 		entityMangerFactory = Persistence.createEntityManagerFactory("latte-unit", properties);
+		
+	}
+	
+	private static PGSimpleDataSource createPostgreDB() {
+		PGSimpleDataSource dataSource = new PGSimpleDataSource();
+		dataSource.setServerName("localhost");
+		dataSource.setDatabaseName("latte");
+		dataSource.setUser("latte");
+		dataSource.setPassword("latte");
+		return dataSource;
 	}
 
-	private static Properties loadJpaPersistenceSetupProperties(String filename) {
+	private static Properties loadJpaPersistenceSetupProperties() {
 		Properties persistenceProperties = new Properties();
 		try {
-			persistenceProperties.load(ModuleTest.class.getResourceAsStream(filename));
+			persistenceProperties.load(ModuleTest.class.getResourceAsStream("persistence-test.properties"));
 			return persistenceProperties;
 		} catch (IOException e) {
 			throw new RuntimeException("could not load jpaPersistenceSetupProperties", e);

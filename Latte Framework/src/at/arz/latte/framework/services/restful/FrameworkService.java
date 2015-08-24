@@ -26,7 +26,7 @@ public class FrameworkService {
 	private FrameworkManagementBean bean;
 
 	@GET
-	@Path("init")
+	@Path("init.json")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<ModuleMenuData> getInitData() {
 		return bean.getAll();
