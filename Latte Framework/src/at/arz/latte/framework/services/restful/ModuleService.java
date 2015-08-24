@@ -33,21 +33,21 @@ public class ModuleService {
 	private ModuleManagementBean bean;
 
 	@GET
-	@Path("all")
+	@Path("all.json")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<ModuleListData> getAllModules() {
 		return bean.getAllModulesBase();
 	}
 
 	@GET
-	@Path("{id}")
+	@Path("get.json/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public ModuleData getModule(@PathParam("id") Long id) {
 		return new ModuleData(bean.getModule(id));
 	}
 
 	@POST
-	@Path("create")
+	@Path("create.json")
 	@Produces(MediaType.APPLICATION_JSON)
 	public ResultData createModule(ModuleData m) {
 		Module module = new Module(m.getName(), m.getProvider(), m.getUrl(), m.getInterval(), m.getEnabled());
@@ -55,14 +55,14 @@ public class ModuleService {
 	}
 
 	@PUT
-	@Path("update")
+	@Path("update.json")
 	@Produces(MediaType.APPLICATION_JSON)
 	public ResultData updateModule(ModuleData m) {
 		return new ResultData(bean.updateModule(m.getId(), m.getName(), m.getProvider(), m.getUrl(), m.getInterval(), m.getEnabled()));
 	}
 
 	@DELETE
-	@Path("delete/{id}")
+	@Path("delete.json/{id}")
 	public void deleteModule(@PathParam("id") Long moduleId) {
 		bean.deleteModule(moduleId);
 	}

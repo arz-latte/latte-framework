@@ -26,13 +26,13 @@ public class DemoModuleConfiguration extends Application {
 
 		List<MenuRootData> menu = new ArrayList<>();
 		
-		MenuRootData menu1 = new MenuRootData(new MenuEntryData("Menu 1", "url", 10), new ArrayList<>());
-		MenuLeafData menu11 = new MenuLeafData(new MenuEntryData("SubMenu 1", "url", 13), "admin");
-		MenuLeafData menu12 = new MenuLeafData(new MenuEntryData("SubMenu 2", "url", 15), "admin");
+		MenuRootData menu1 = new MenuRootData(new MenuEntryData("Menu 1", "#", 10), new ArrayList<>());
+		MenuLeafData menu11 = new MenuLeafData(new MenuEntryData("SubMenu 1", "#", 13), "admin");
+		MenuLeafData menu12 = new MenuLeafData(new MenuEntryData("SubMenu 2", "#", 15), "admin");
 		menu1.getChildren().add(menu11);
 		menu1.getChildren().add(menu12);
 		
-		MenuRootData menu2 = new MenuRootData(new MenuEntryData("Menu 2", "url", 20), null);
+		MenuRootData menu2 = new MenuRootData(new MenuEntryData("Menu 2", "#", 20), null);
 		
 		menu.add(menu1);
 		menu.add(menu2);

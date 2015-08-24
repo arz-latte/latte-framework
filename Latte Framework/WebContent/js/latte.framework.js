@@ -12,8 +12,9 @@ var app = {
 		$.getJSON(app.API_FRAMEWORK + "/init.json", function(data) {
 
 			var $mainMenuLeft = $("#main-navbar-left");
-			var $subMenu = $("#main-navbar-right");
+			var $subMenu = $("#side-navbar");
 			$mainMenuLeft.html(""); // clear
+			$subMenu.html(""); // clear
 
 			$.each(data.module, function(index, module) {
 
@@ -73,7 +74,7 @@ var app = {
 	loadModules : function() {
 		app.leaveEditMode();
 
-		$.getJSON(app.API_MODULES + "/all", function(data) {
+		$.getJSON(app.API_MODULES + "/all.json", function(data) {
 
 			var $modules = $("#modules");
 			$modules.find("tr:has(td)").remove(); // clear
@@ -107,8 +108,8 @@ var app = {
 
 		// load module details
 		app.currentId = $(this).attr("data-id");
-		$.getJSON(app.API_MODULES + "/" + app.currentId, function(data) {
-
+		$.getJSON(app.API_MODULES + "/get.json/" + app.currentId, function(data) {
+			
 			// fill form
 			var m = data.module;
 			$("[name=input-name]").val(m.name);
@@ -132,7 +133,7 @@ var app = {
 		if (m.id > 0) {
 
 			$.ajax({
-				url : app.API_MODULES + "/update",
+				url : app.API_MODULES + "/update.json",
 				type : "PUT",
 				data : JSON.stringify({"module" : m}),
 				contentType : "application/json; charset=UTF-8",
@@ -144,7 +145,7 @@ var app = {
 		} else {
 
 			$.ajax({
-				url : app.API_MODULES + "/create",
+				url : app.API_MODULES + "/create.json",
 				type : "POST",
 				data : JSON.stringify({"module" : m}),
 				contentType : "application/json; charset=UTF-8",
@@ -204,7 +205,7 @@ var app = {
 		var choice = confirm("Sind Sie sicher?");
 		if (choice == true) {
 			$.ajax({
-				url : app.API_MODULES + "/delete/" + app.currentId,
+				url : app.API_MODULES + "/delete.json/" + app.currentId,
 				type : "DELETE",
 			}).done(function(data) {
 				app.showMessage("Modul gel&ouml;scht");
