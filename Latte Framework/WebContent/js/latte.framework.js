@@ -6,64 +6,97 @@ var app = {
 
 	API_FRAMEWORK : 'api/v1/framework',
 
+	parseMenu : function(id) {
+
+		var module = JSON.parse(localStorage['module-' + id]);
+
+		var $subMenu = $("#side-navbar");
+		$subMenu.html(""); // clear
+
+		// side menu
+		$.each(module.menu, function(index, menu) {
+
+			// menu (root)
+			var e = menu.entry;
+			var $entry = $("<li/>").append($("<a/>", {
+				href : e.url,
+				text : e.value
+			}));
+			$subMenu.append($entry);
+
+			if (menu.children && menu.children.length >= 0) {
+
+				// menu (leaf)
+				$.each(menu.children, function(index, submenu) {
+					var e = submenu.entry;
+					var $entry = $("<li/>", {
+						'class' : "submenu"
+					}).append($("<a/>", {
+						href : e.url,
+						text : e.value
+					}));
+					$subMenu.append($entry);
+				});
+
+				/*
+				 * todo, maybe remove, dropdown for submenu??
+				 * 
+				 * var $a = $("<a/>", { href: "#", 'class' : "dropdown-toogle",
+				 * 'data-toggle' : "dropdown", role : "button", 'aria-haspopup' :
+				 * "true", 'aria-expanded' :"false", 'text' : e.value + " "
+				 * }).append($("<span/>", {'class':"caret"}));
+				 * 
+				 * var $ul = $("<ul/>", { 'class' : "dropdown-menu" });
+				 * 
+				 * $.each(menu.children, function(index, submenu) { var e =
+				 * submenu.entry; var $entry = $("<li/>").append($("<a/>", {
+				 * href: e.url, text: e.value })); $ul.append($entry); });
+				 * 
+				 * var $dropdown = $("<li/>", { 'class' : "dropdown"
+				 * }).append($a, $ul);
+				 * 
+				 * $subMenu.append($dropdown);
+				 * 
+				 */
+			}
+		});
+	},
+
 	loadMenus : function() {
-		console.log("load menus");
-		
 		$.getJSON(app.API_FRAMEWORK + "/init.json", function(data) {
 
+			localStorage.clear();
+
 			var $mainMenuLeft = $("#main-navbar-left");
-			var $subMenu = $("#side-navbar");
 			$mainMenuLeft.html(""); // clear
-			$subMenu.html(""); // clear
 
+			// store each module separate
 			$.each(data.module, function(index, module) {
-
-				// main menu (module name)
-				var $entry = $("<li/>").append($("<a/>").attr("href", "#").append(module.name));
-				$mainMenuLeft.append($entry);
 				
-				// sub menu
-				$.each(module.menu, function(index, menu) {
-					console.log(menu);
-					
-					if (menu.children && menu.children.length >= 0) {
-						var e = menu.entry; 					// todo position...
-						var $entry = $("<li/>").append($("<a/>", { href: e.url, text: e.value }));
-
-						var $a = $("<a/>", {
-							href: "#",
-							'class' : "dropdown-toogle",
-							'data-toggle' : "dropdown",
-							role : "button",
-							'aria-haspopup' : "true",
-							'aria-expanded' :"false",
-							'text' : e.value + " "
-						}).append($("<span/>", {'class':"caret"}));
-						
-						var $ul = $("<ul/>", { 'class' : "dropdown-menu" });
-						
-						$.each(menu.children, function(index, submenu) {
-							var e = submenu.entry;
-							var $entry = $("<li/>").append($("<a/>", { href: e.url, text: e.value }));	
-							$ul.append($entry);
-						});
-						
-						var $dropdown = $("<li/>", { 'class' : "dropdown" }).append($a, $ul);
-
-						$subMenu.append($dropdown);
-
-					} else {
-						var e = menu.entry; 					// todo position...
-						var $entry = $("<li/>").append($("<a/>", { href: e.url, text: e.value }));
-						$subMenu.append($entry);
-					}
-					
-				});
+				// check if module is initialized and has menu entries
+				if (module.menu) {
+					localStorage['module-' + module.id] = JSON.stringify(module);
+	
+					// main menu (module name)
+					var $entry = $("<li/>").append($("<a/>", {
+						href : "#",
+						text : module.name,
+						'data-id' : module.id,
+						on : {
+							click : function() {
+								app.parseMenu($(this).attr("data-id"));
+							}
+						}
+					}));
+					$mainMenuLeft.append($entry);
+				}
 			});
+
+		}).fail(function() {
+			app.showErrorMessage("Fehler beim Initialisieren");
 		});
-		
 	},
-		
+
 	// ==========================================================================
 	// module
 	// ===========================================================================
@@ -84,7 +117,8 @@ var app = {
 				var $version = $("<td/>").append(module.version);
 				var $provider = $("<td/>").append(module.provider);
 				var $status = $("<td/>").append(module.status);
-				var $enabled = $("<td/>").append(module.enabled ? "ja" : "nein");
+				var $enabled = $("<td/>")
+						.append(module.enabled ? "ja" : "nein");
 
 				var $row = $("<tr/>").attr("data-id", module.id);
 				$row.append($name).append($provider).append($version).append(
@@ -92,7 +126,7 @@ var app = {
 
 				$modules.append($row);
 			});
-			
+
 			$("#moduleFilter").keyup();
 		});
 	},
@@ -108,16 +142,17 @@ var app = {
 
 		// load module details
 		app.currentId = $(this).attr("data-id");
-		$.getJSON(app.API_MODULES + "/get.json/" + app.currentId, function(data) {
-			
-			// fill form
-			var m = data.module;
-			$("[name=input-name]").val(m.name);
-			$("[name=input-provider]").val(m.provider);
-			$("[name=input-url]").val(m.url);
-			$("[name=input-interval]").val(m.interval);
-			$("[name=input-enabled]").prop("checked", m.enabled);
-		});
+		$.getJSON(app.API_MODULES + "/get.json/" + app.currentId,
+				function(data) {
+
+					// fill form
+					var m = data.module;
+					$("[name=input-name]").val(m.name);
+					$("[name=input-provider]").val(m.provider);
+					$("[name=input-url]").val(m.url);
+					$("[name=input-interval]").val(m.interval);
+					$("[name=input-enabled]").prop("checked", m.enabled);
+				});
 	},
 
 	storeModule : function() {
@@ -129,13 +164,15 @@ var app = {
 		m.url = $("[name=input-url]").val();
 		m.interval = $("[name=input-interval]").val();
 		m.enabled = $("[name=input-enabled]").prop("checked");
-		
+
 		if (m.id > 0) {
 
 			$.ajax({
 				url : app.API_MODULES + "/update.json",
 				type : "PUT",
-				data : JSON.stringify({"module" : m}),
+				data : JSON.stringify({
+					"module" : m
+				}),
 				contentType : "application/json; charset=UTF-8",
 			}).done(function(data) {
 				app.storeModuleCallback(data.result, "Modul aktualisiert");
@@ -147,7 +184,9 @@ var app = {
 			$.ajax({
 				url : app.API_MODULES + "/create.json",
 				type : "POST",
-				data : JSON.stringify({"module" : m}),
+				data : JSON.stringify({
+					"module" : m
+				}),
 				contentType : "application/json; charset=UTF-8",
 			}).done(function(data) {
 				app.storeModuleCallback(data.result, "Modul erstellt");
@@ -222,20 +261,20 @@ var app = {
 		app.leaveEditMode();
 		return false;
 	},
-	
+
 	filterModule : function() {
-        var rex = new RegExp($(this).val(), "i");
-        $("tbody tr").hide();
-        $("tbody tr").filter(function () {
-            return rex.test($(this).text());
-        }).show();
+		var rex = new RegExp($(this).val(), "i");
+		$("tbody tr").hide();
+		$("tbody tr").filter(function() {
+			return rex.test($(this).text());
+		}).show();
 	},
 
 	clearModuleFilter : function() {
 		$("#moduleFilter").val("");
 		$("tbody tr").show();
 	},
-	
+
 	// ==========================================================================
 	// websocket functions
 	// ===========================================================================
@@ -243,8 +282,10 @@ var app = {
 	initWebSocket : function() {
 
 		var url = "ws://" + document.location.host + "/latte/ws";
-		//var ws = new WebSocket(uri);
-		var ws = new ReconnectingWebSocket(url, null, {debug: true});
+		// var ws = new WebSocket(uri);
+		var ws = new ReconnectingWebSocket(url, null, {
+			debug : true
+		});
 
 		ws.onmessage = function(msg) {
 			var data = JSON.parse(msg.data);
@@ -272,6 +313,14 @@ var app = {
 	// ==========================================================================
 	// helper functions
 	// ===========================================================================
+
+	supportsStorage : function() {
+		try {
+			return 'localStorage' in window && window['localStorage'] !== null;
+		} catch (e) {
+			return false;
+		}
+	},
 
 	showMessage : function(msg) {
 		var $box = $("#message-box");
@@ -309,11 +358,16 @@ var app = {
 // ready & event handlers
 // ===========================================================================
 function initFramework() {
-	
+
+	if (!app.supportsStorage()) {
+		alert("Inkompatibler Browser, kein localStorage-Support");
+		return;
+	}
+
 	app.loadMenus();
 
 	$("#btnClearModuleFilter").on("click", app.clearModuleFilter);
-	$("#moduleFilter").on("keyup", app.filterModule);	
+	$("#moduleFilter").on("keyup", app.filterModule);
 
 	$("#btnLoadModules").on("click", app.loadModules);
 	$("#btnAddNewModule").on("click", app.addNewModule);
@@ -321,14 +375,13 @@ function initFramework() {
 	$("#btnStoreModule").on("click", app.storeModule);
 	$("#btnDeleteModule").on("click", app.deleteModule);
 	$("#btnRestoreModule").on("click", app.restoreModule);
-	
+
 	$("#moduleListArea tbody").on("click", "tr", app.showModule);
-	
 
 	app.initWebSocket();
 
-	app.loadModules();	
-	
+	app.loadModules();
+
 }
 
 $(initFramework);

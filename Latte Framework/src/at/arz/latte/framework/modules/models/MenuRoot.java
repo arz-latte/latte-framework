@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.TableGenerator;
 
 /**
  * Entity implementation class for Entity: MenuRoot, represents a single top menu
@@ -25,10 +26,9 @@ public class MenuRoot extends AbstractEntity implements Serializable, Comparable
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	// @GeneratedValue(strategy = GenerationType.TABLE, generator = "Menu.ID")
-	// @TableGenerator(name = "Menu.ID", table = "menu_seq", pkColumnName =
-	// "KEY", valueColumnName = "VALUE")
+	//@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "Menu.ID")
+	@TableGenerator(name = "Menu.ID", table = "latte_seq", pkColumnName = "KEY", valueColumnName = "VALUE")
 	private Long id;
 
 	@Embedded

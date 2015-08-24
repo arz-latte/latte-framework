@@ -42,7 +42,7 @@ public class FrameworkManagementBean extends GenericManagementBean<Module> {
 			
 			// menu for single module
 			List<MenuRootData> menuData = new ArrayList<>();
-			for(MenuRoot m : module.getSubmenu()) {
+			for(MenuRoot m : module.getMenu()) {
 				MenuEntryData rootEntry = new MenuEntryData(m.getEntry());	// top level entry (root)
 				
 				List<MenuLeafData> leafs = new ArrayList<>();
@@ -57,7 +57,7 @@ public class FrameworkManagementBean extends GenericManagementBean<Module> {
 				menuData.add(root);
 			}
 			
-			ModuleMenuData moduleData = new ModuleMenuData(module.getName(), menuData);
+			ModuleMenuData moduleData = new ModuleMenuData(module.getId(), module.getName(), menuData);
 			modulesData.add(moduleData);
 		}
 		

@@ -28,7 +28,7 @@ public class DemoModuleConfiguration extends Application {
 		
 		MenuRootData menu1 = new MenuRootData(new MenuEntryData("Menu 1", "#", 10), new ArrayList<>());
 		MenuLeafData menu11 = new MenuLeafData(new MenuEntryData("SubMenu 1", "#", 13), "admin");
-		MenuLeafData menu12 = new MenuLeafData(new MenuEntryData("SubMenu 2", "#", 15), "admin");
+		MenuLeafData menu12 = new MenuLeafData(new MenuEntryData("SubMenu 2", "#", 17), "admin");
 		menu1.getChildren().add(menu11);
 		menu1.getChildren().add(menu12);
 		

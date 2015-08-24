@@ -99,18 +99,18 @@ public class ModuleTimerService {
 
 			Collections.sort(root);
 
-			if (root.hashCode() != module.getSubmenu().hashCode()) {
+			if (root.hashCode() != module.getMenu().hashCode()) {
 				System.out.println("menu changed");
 				System.out.println("mo: " + root.hashCode());
-				System.out.println("db: " + module.getSubmenu().hashCode());
+				System.out.println("db: " + module.getMenu().hashCode());
 				System.out.println(root);
-				System.out.println(module.getSubmenu());
-				module.setSubmenu(root);
+				System.out.println(module.getMenu());
+				module.setMenu(root);
 			}
 
 			// set module as active
 			if (module.getStatus() != ModuleStatus.Started || !module.getVersion().equals(resp.getVersion())
-					|| root.hashCode() != module.getSubmenu().hashCode()) {
+					|| root.hashCode() != module.getMenu().hashCode()) {
 				module.setStatus(ModuleStatus.Started);
 				module.setVersion(resp.getVersion());
 

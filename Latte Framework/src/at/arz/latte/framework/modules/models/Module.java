@@ -21,6 +21,7 @@ import javax.persistence.OneToMany;
 
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
+import javax.persistence.TableGenerator;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -48,10 +49,9 @@ public class Module extends AbstractEntity implements Serializable {
 	public static final String UPDATE_ALL = "Module.UpdateAll";
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	// @GeneratedValue(strategy = GenerationType.TABLE, generator = "Module.ID")
-	// @TableGenerator(name = "Module.ID", table = "module_seq", pkColumnName =
-	// "KEY", valueColumnName = "VALUE")
+	// @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "Module.ID")
+	@TableGenerator(name = "Module.ID", table = "latte_seq", pkColumnName = "KEY", valueColumnName = "VALUE")
 	private Long id;
 
 	@NotNull
@@ -91,21 +91,10 @@ public class Module extends AbstractEntity implements Serializable {
 
 	private boolean enabled;
 
-	// @OneToOne(cascade=CascadeType.ALL, orphanRemoval=true, fetch =
-	// FetchType.LAZY)
-	// @JoinColumn(name = "module_id")
-
-	/*
-	 * @OneToMany(cascade=CascadeType.ALL, orphanRemoval=true,
-	 * fetch=FetchType.EAGER)
-	 * 
-	 * @JoinColumn(name = "module_id") private Menu parentmenu;
-	 */
-
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	@JoinColumn(name = "module_id")
 	@OrderColumn(name = "position")
-	private List<MenuRoot> submenu;
+	private List<MenuRoot> menu;
 
 	/**
 	 * JPA consturctor
@@ -224,12 +213,12 @@ public class Module extends AbstractEntity implements Serializable {
 		this.enabled = enabled;
 	}
 
-	public List<MenuRoot> getSubmenu() {
-		return submenu;
+	public List<MenuRoot> getMenu() {
+		return menu;
 	}
 
-	public void setSubmenu(List<MenuRoot> submenu) {
-		this.submenu = submenu;
+	public void setMenu(List<MenuRoot> menu) {
+		this.menu = menu;
 	}
 
 	// ------------------- helper -------------------
@@ -257,8 +246,8 @@ public class Module extends AbstractEntity implements Serializable {
 	@Override
 	public String toString() {
 		return "Module [id=" + id + ", name=" + name + ", provider=" + provider + ", version=" + version + ", url="
-				+ url + ", interval=" + interval + ", status=" + status + ", enabled=" + enabled + ", submenu="
-				+ submenu + "]";
+				+ url + ", interval=" + interval + ", status=" + status + ", enabled=" + enabled + ", menu=" + menu
+				+ "]";
 	}
 
 }

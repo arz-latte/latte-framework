@@ -24,6 +24,14 @@
   }
 }
 
+.submenu {
+    background-color: #f0f0f0;
+}
+
+.submenu > a {
+    padding: 12px 10px 12px 20px !important;
+}
+
 /* -------------------------------------------------------------------- */
 /* content area															*/
 /* -------------------------------------------------------------------- */
@@ -34,7 +42,7 @@
 }
 
 .jumbotron {
-    padding: 5px 0 0 0;
+    padding: 5px 0 15px 0;
 }
 
 @media screen and (min-width: 768px) {
