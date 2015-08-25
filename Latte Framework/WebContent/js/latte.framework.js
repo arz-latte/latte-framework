@@ -5,7 +5,8 @@ var app = {
 	// ===========================================================================
 
 	API_FRAMEWORK : 'http://localhost:8080/latte/api/v1/framework',
-
+	API_WEBSOCKET : 'ws://localhost:8080/latte/ws',
+	
 	/**
 	 * create side bar with menu
 	 */
@@ -59,17 +60,20 @@ var app = {
 	 */
 	loadModules : function() {
 
-		if (!localStorage.getItem("initialized")) {
+		// todo remove, testing
+		if (true || !localStorage.getItem("initialized")) {
 
 			console.log("load modules from framework");
-
+			
 			$.ajax({
-				dataType : "json",
-				url : app.API_FRAMEWORK + "/init.json",
+				url : app.API_FRAMEWORK + "/init.json?callback=?",
 				async : false,
+			    contentType: "application/json",
+			    dataType: 'jsonp',
 			}).done(function(data) {
+				console.log(data);
 
-				localStorage.clear();
+				//localStorage.clear();
 				localStorage.setItem("initialized", true);
 
 				// store each module separate
@@ -223,9 +227,8 @@ var app = {
 	// ===========================================================================
 
 	initWebSocket : function() {
-
-		var url = "ws://" + document.location.host + "/latte/ws";
-		var ws = new ReconnectingWebSocket(url, null, {
+		
+		var ws = new ReconnectingWebSocket(app.API_WEBSOCKET, null, {
 			debug : false
 		});
 

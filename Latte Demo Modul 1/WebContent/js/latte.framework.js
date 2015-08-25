@@ -5,7 +5,8 @@ var app = {
 	// ===========================================================================
 
 	API_FRAMEWORK : 'http://localhost:8080/latte/api/v1/framework',
-
+	API_WEBSOCKET : 'ws://localhost:8080/latte/ws',
+	
 	/**
 	 * create side bar with menu
 	 */
@@ -59,37 +60,18 @@ var app = {
 	 */
 	loadModules : function() {
 
-		if (!localStorage.getItem("initialized")) {
+		// todo remove, testing
+		if (true || !localStorage.getItem("initialized")) {
 
 			console.log("load modules from framework");
-
-			
-			// test
 			
 			$.ajax({
-				crossDomain: true,
-				   type: 'GET',
-				    url: "http://www.geonames.org/postalCodeLookupJSON?postalcode=10504&country=US&callback=?",
-				    async: false,
-				    contentType: "application/json",
-				    dataType: 'jsonp',
-			}).done(function(data) {
-				console.log("done: " + data);
-				console.log(data);
-
-			}).fail(function(data) {
-				console.log("fail: " + data);
-			});
-			
-			
-			
-			
-			$.ajax({
-				dataType : "json",
-				url : app.API_FRAMEWORK + "/init.json",
+				url : app.API_FRAMEWORK + "/init.json?callback=?",
 				async : false,
+			    contentType: "application/json",
+			    dataType: 'jsonp',
 			}).done(function(data) {
-				console.log("data: " + data);
+				console.log(data);
 
 				localStorage.clear();
 				localStorage.setItem("initialized", true);
@@ -245,9 +227,8 @@ var app = {
 	// ===========================================================================
 
 	initWebSocket : function() {
-
-		var url = "ws://" + document.location.host + "/latte/ws";
-		var ws = new ReconnectingWebSocket(url, null, {
+		
+		var ws = new ReconnectingWebSocket(app.API_WEBSOCKET, null, {
 			debug : false
 		});
 
