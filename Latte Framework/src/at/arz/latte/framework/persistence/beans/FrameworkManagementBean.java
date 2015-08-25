@@ -57,7 +57,7 @@ public class FrameworkManagementBean extends GenericManagementBean<Module> {
 				menuData.add(root);
 			}
 			
-			ModuleMenuData moduleData = new ModuleMenuData(module.getId(), module.getName(), menuData);
+			ModuleMenuData moduleData = new ModuleMenuData(module.getId(), module.getName(), module.getUrlIndex(), menuData);
 			modulesData.add(moduleData);
 		}
 		

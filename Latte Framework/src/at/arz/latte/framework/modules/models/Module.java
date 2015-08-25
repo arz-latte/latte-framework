@@ -49,7 +49,6 @@ public class Module extends AbstractEntity implements Serializable {
 	public static final String UPDATE_ALL = "Module.UpdateAll";
 
 	@Id
-	// @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "Module.ID")
 	@TableGenerator(name = "Module.ID", table = "latte_seq", pkColumnName = "KEY", valueColumnName = "VALUE")
 	private Long id;
@@ -70,13 +69,21 @@ public class Module extends AbstractEntity implements Serializable {
 	private String version;
 
 	/**
-	 * address of the module, used for checking module status, e.g.
-	 * http://localhost:8080/Modul1/api/v1/module
+	 * address of the REST-service of the module, used for checking module
+	 * status, e.g. http://localhost:8080/Modul1/api/v1/module
 	 */
 	@NotNull
 	@Size(min = 1, max = 255)
 	@CheckUrl
-	private String url;
+	private String urlStatus;
+
+	/**
+	 * address of the startpage http://localhost:8080/Modul1/index.html
+	 */
+	@NotNull
+	@Size(min = 1, max = 255)
+	@CheckUrl
+	private String urlIndex;
 
 	/**
 	 * time in seconds for checking if module available, default 60s, if is set
@@ -105,23 +112,14 @@ public class Module extends AbstractEntity implements Serializable {
 
 	/**
 	 * used for creation of new Module via REST-service
-	 * 
-	 * @param id
-	 * @param i
-	 * @param name
-	 * @param provider
-	 * @param version
-	 * @param url
-	 * @param interval
-	 * @param status
-	 * @param enabled
 	 */
-	public Module(String name, String provider, String url, int interval, boolean enabled) {
+	public Module(String name, String provider, String urlStatus, String urlIndex, int interval, boolean enabled) {
 		this();
 		this.name = name;
 		this.provider = provider;
 		this.version = "-";
-		this.url = url;
+		this.urlStatus = urlStatus;
+		this.urlIndex = urlIndex;
 		this.interval = interval;
 		this.status = ModuleStatus.Stopped;
 		this.enabled = enabled;
@@ -131,19 +129,15 @@ public class Module extends AbstractEntity implements Serializable {
 	 * 
 	 * used for partial updates via REST-service
 	 * 
-	 * @param name
-	 * @param provider
-	 * @param url
-	 * @param checkInterval
-	 * @param status
-	 * @param enabled
 	 */
-	public Module(Long id, String name, String provider, String url, int interval, boolean enabled) {
+	public Module(Long id, String name, String provider, String urlStatus, String urlIndex, int interval,
+			boolean enabled) {
 		this();
 		this.id = id;
 		this.name = name;
 		this.provider = provider;
-		this.url = url;
+		this.urlStatus = urlStatus;
+		this.urlIndex = urlIndex;
 		this.interval = interval;
 		this.status = ModuleStatus.Stopped;
 		this.enabled = enabled;
@@ -181,12 +175,20 @@ public class Module extends AbstractEntity implements Serializable {
 		this.version = version;
 	}
 
-	public String getUrl() {
-		return url;
+	public String getUrlStatus() {
+		return urlStatus;
 	}
 
-	public void setUrl(String url) {
-		this.url = url;
+	public void setUrlStatus(String urlStatus) {
+		this.urlStatus = urlStatus;
+	}
+
+	public String getUrlIndex() {
+		return urlIndex;
+	}
+
+	public void setUrlIndex(String urlIndex) {
+		this.urlIndex = urlIndex;
 	}
 
 	public int getInterval() {
@@ -223,13 +225,13 @@ public class Module extends AbstractEntity implements Serializable {
 
 	// ------------------- helper -------------------
 
-	public String getHost() throws MalformedURLException {
-		URL u = new URL(url);
+	public String getUrlStatusHost() throws MalformedURLException {
+		URL u = new URL(urlStatus);
 		return u.getProtocol() + "://" + u.getAuthority();
 	}
 
-	public String getPath() throws MalformedURLException {
-		URL u = new URL(url);
+	public String getUrlStatusPath() throws MalformedURLException {
+		URL u = new URL(urlStatus);
 		return u.getPath();
 	}
 
@@ -245,9 +247,9 @@ public class Module extends AbstractEntity implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Module [id=" + id + ", name=" + name + ", provider=" + provider + ", version=" + version + ", url="
-				+ url + ", interval=" + interval + ", status=" + status + ", enabled=" + enabled + ", menu=" + menu
-				+ "]";
+		return "Module [id=" + id + ", name=" + name + ", provider=" + provider + ", version=" + version
+				+ ", urlStatus=" + urlStatus + ", urlIndex=" + urlIndex + ", interval=" + interval + ", status="
+				+ status + ", enabled=" + enabled + ", menu=" + menu + "]";
 	}
 
 }

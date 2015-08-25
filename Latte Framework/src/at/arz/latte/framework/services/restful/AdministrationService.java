@@ -34,7 +34,7 @@ public class AdministrationService {
 	public ModuleUpdateData getModule() {
 		List<MenuRootData> menu = new ArrayList<>();
 		
-		MenuRootData menu1 = new MenuRootData(new MenuEntryData("Module", "#", 10), new ArrayList<>());		
+		MenuRootData menu1 = new MenuRootData(new MenuEntryData("Module", "http://localhost:8080/latte/module.html", 10), new ArrayList<>());		
 		MenuRootData menu2 = new MenuRootData(new MenuEntryData("Benutzer", "#", 20), null);
 		MenuRootData menu3 = new MenuRootData(new MenuEntryData("Rollen", "#", 30), null);
 

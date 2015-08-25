@@ -5,7 +5,7 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * used to transmit module update data to the client
+ * used to transmit module update data to the server
  * 
  * Dominik Neuner {@link "mailto:dominik@neuner-it.at"}
  *

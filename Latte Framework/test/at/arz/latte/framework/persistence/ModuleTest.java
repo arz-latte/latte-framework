@@ -7,7 +7,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import at.arz.latte.framework.modules.models.Module;
-import at.arz.latte.framework.modules.models.ModuleStatus;
 import at.arz.latte.framework.persistence.JpaPersistenceSetup;
 
 public class ModuleTest  {
@@ -28,7 +27,7 @@ public class ModuleTest  {
 	public void moduleIsPersistent() {
 		em.getTransaction().begin();
 
-		Module m = new Module("Demo Modul 1", "ARZ", "http://localhost:8080/Latte_Demo_Modul_1/api/v1/module", 10, true);
+		Module m = new Module("Demo Modul 1", "ARZ", "http://localhost:8080/demo1/api/v1/demo", "http://localhost:8080/demo1/index.html", 10, true);
 
 		em.persist(m);
 

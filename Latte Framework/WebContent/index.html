@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html data-ng-app="modules" data-ng-controller="start">
+<html>
 <head>
-<title>Modulverwaltung</title>
+<title>Latte Framework</title>
 
 <link rel="stylesheet" href="css/bootstrap.min.css" />
 <link rel="stylesheet" href="css/latte.framework.css" />
@@ -11,29 +11,21 @@
 <script type="text/javascript" src="js/reconnecting-websocket.js"></script>
 <script type="text/javascript" src="js/bootstrap.min.js"></script>
 <script type="text/javascript" src="js/latte.framework.js"></script>
-
-<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-<!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
 </head>
 <body>
 
 	<!-- main/top menu navbar -->
 	<nav class="navbar navbar-default">
 		<div class="container-fluid">
-			
+
 			<!-- Brand and toggle get grouped for better mobile display -->
 			<div class="navbar-header">
 				<button type="button" class="navbar-toggle collapsed"
 					data-toggle="collapse" data-target="#main-navbar-collapse"
 					aria-expanded="false">
-					<span class="sr-only">Toggle navigation</span> 
-					<span class="icon-bar"></span> 
-					<span class="icon-bar"></span>
-					<span class="icon-bar"></span>
+					<span class="sr-only">Menü umschalten</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
 				</button>
 				<a class="navbar-brand" href="#">Latte</a>
 			</div>
@@ -54,139 +46,20 @@
 
 	<!-- sidebar with submenu, content area -->
 	<div class="container-fluid">
+
 		<div class="row">
 			<!-- sidebar -->
-			<div class="col-sm-3">
-			
-				<div class="sidebar-nav">
-					<div class="navbar navbar-default" role="navigation">
-
-						<!-- Brand and toggle get grouped for better mobile display -->
-						<div class="navbar-header">
-							<button type="button" class="navbar-toggle"
-								data-toggle="collapse" data-target="#side-navbar-collapse">
-								<span class="sr-only">Toggle navigation</span> 
-								<span class="icon-bar"></span> 
-								<span class="icon-bar"></span>
-								<span class="icon-bar"></span>
-							</button>
-							<span class="visible-xs navbar-brand">Sidebar menu</span>
-						</div>
-			
-						<!-- Collect the nav links, forms, and other content for toggling -->			
-						<div class="navbar-collapse collapse" id="side-navbar-collapse">
-							<ul class="nav navbar-nav" id="side-navbar">
-								<!-- space for sidemenu -->
-							</ul>
-						</div>
-						<!--/.nav-collapse -->
-					</div>
-				</div>
+			<div class="col-sm-3" id="sidebar">
+				<!-- sidebar -->
 			</div>
 			<!-- /sidebar -->
 
-			<!-- content area -->
+			<!-- content -->
 			<div class="col-sm-9" id="content">
-
-				<!-- Header -->
-				<div class="jumbotron">
-					<div class="row content-row">
-						<div class="col-sm-12">
-							<h3>Modulverwaltung</h3>
-						</div>
-					</div>
-					<div class="row content-row">
-						<div class="col-sm-12" id="message-box"></div>
-					</div>
-				</div>
-
-				<!-- Modul-Overview -->
-				<div id="module-list-area">
-					<div class="input-group">
-						<input id="module-filter" type="text" class="form-control"
-							placeholder="Modul filtern..."> <span
-							class="input-group-btn"> <a role="button"
-							class="btn btn-default" id="btn-clear-module-filter">X</a>
-						</span>
-					</div>
-					<div class="row content-row">
-						<table class="col-sm-12 table table-hover table-striped" id="modules">
-							<thead>
-								<tr>
-									<th>Name</th>
-									<th>Provider</th>
-									<th>Version</th>
-									<th>Status</th>
-									<th>Aktiv</th>
-								</tr>
-							</thead>
-							<tbody>
-							</tbody>
-						</table>
-					</div>
-					<div class="row content-row">
-						<div class="col-sm-12">
-							<a role="button" class="btn btn-success" id="btn-add-module">+</a>
-							<a role="button" class="btn btn-default" id="btn-load-modules">Neu
-								laden</a>
-						</div>
-					</div>
-				</div>
-
-
-				<!-- Modul-Edit-Area -->
-				<div id="module-edit-area">
-
-					<form class="form-horizontal" role="form">
-						<div class="form-group">
-							<label class="control-label col-sm-2" for="input-name">Name</label>
-							<div class="col-sm-10">
-								<input type="text" class="form-control" name="input-name">
-								<span class="glyphicon glyphicon-remove form-control-feedback"></span>
-							</div>
-						</div>
-						<div class="form-group">
-							<label class="control-label col-sm-2" for="input-provider">Provider</label>
-							<div class="col-sm-10">
-								<input type="text" class="form-control" name="input-provider">
-								<span class="glyphicon glyphicon-remove form-control-feedback"></span>
-							</div>
-						</div>
-						<div class="form-group">
-							<label class="control-label col-sm-2" for="input-url">URL</label>
-							<div class="col-sm-10">
-								<input type="text" class="form-control" name="input-url">
-								<span class="glyphicon glyphicon-remove form-control-feedback"></span>
-							</div>
-						</div>
-						<div class="form-group">
-							<label class="control-label col-sm-2" for="input-interval">Pr&uuml;fintervall</label>
-							<div class="col-sm-10">
-								<input type="text" class="form-control" name="input-interval"
-									value="60"> <span
-									class="glyphicon glyphicon-remove form-control-feedback"></span>
-							</div>
-						</div>
-						<div class="form-group">
-							<label class="control-label col-sm-2" for="input-enabled">Aktiv</label>
-							<div class="col-sm-10">
-								<input type="checkbox" class="form-control" name="input-enabled">
-								<span class="glyphicon glyphicon-remove form-control-feedback"></span>
-							</div>
-						</div>
-						<div class="row">&#160;</div>
-						<div class="row">
-							<div class="col-sm-12">
-								<button class="btn btn-success" id="btn-store-module">Speichern</button>
-								<button class="btn btn-danger" id="btn-delete-module">L&ouml;schen</button>
-								<button class="btn btn-default" id="btn-restore-module">Abbrechen</button>
-							</div>
-						</div>
-					</form>
-				
-				</div>
-
+				demo framework index.html
+				<!-- content -->
 			</div>
+			<!-- /content -->
 		</div>
 	</div>
 

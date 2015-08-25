@@ -2,6 +2,7 @@ package at.arz.latte.framework.services.schedule;
 
 import java.awt.MenuItem;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -63,10 +64,8 @@ public class ModuleTimerService {
 	}
 
 	private void checkStatus(Module module) {
-		// System.out.println("check module status: " + module.getName());
-
-		try {
-			WebClient client = WebClient.create(module.getHost()).path(module.getPath() + "/status.json");
+		try {			
+			WebClient client = WebClient.create(module.getUrlStatusHost()).path(module.getUrlStatusPath() + "/status.json");
 			HTTPConduit conduit = WebClient.getConfig(client).getHttpConduit();
 			conduit.getClient().setReceiveTimeout(2000);
 			conduit.getClient().setConnectionTimeout(2000);
@@ -119,6 +118,7 @@ public class ModuleTimerService {
 			}
 
 		} catch (WebApplicationException | ClientWebApplicationException ex) {
+			System.out.println("Check module: " + module);
 			System.out.println("WebApplicationException: " + ex.getMessage());
 
 			// set module as inactive

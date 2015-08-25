@@ -1,48 +1,45 @@
-
 /* -------------------------------------------------------------------- */
 /* sidebar, vertical nav												*/
 /* -------------------------------------------------------------------- */
- 
-@media (min-width: 768px) {
-  .sidebar-nav .navbar .navbar-collapse {
-    padding: 0;
-    max-height: none;
-  }
-  .sidebar-nav .navbar ul {
-    float: none;
-  }
-  .sidebar-nav .navbar ul:not {
-    display: block;
-  }
-  .sidebar-nav .navbar li {
-    float: none;
-    display: block;
-  }
-  .sidebar-nav .navbar li a {
-    padding-top: 12px;
-    padding-bottom: 12px;
-  }
+@media ( min-width : 768px) {
+
+	.col-sm-3 {
+	    max-width: 250px !important;
+	}
+	    
+	#sidebar .navbar .navbar-collapse {
+		padding: 0;
+		max-height: none;
+	}
+	#sidebar .navbar ul {
+		float: none;
+	}
+	#sidebar .navbar ul:not {
+		display: block;
+	}
+	#sidebar .navbar li {
+		float: none;
+		display: block;
+	}
+	#sidebar .navbar li.submenu>a {
+		padding: 15px 20px !important;
+	}
 }
 
-.submenu {
-    background-color: #f0f0f0;
-}
-
-.submenu > a {
-    padding: 12px 10px 12px 20px !important;
+#sidebar .navbar li.submenu {
+	background-color: #f0f0f0;
 }
 
 /* -------------------------------------------------------------------- */
 /* content area															*/
 /* -------------------------------------------------------------------- */
-
 .content-row {
-    margin-right: 0;
-    margin-left: 0;
+	margin-right: 0;
+	margin-left: 0;
 }
 
 .jumbotron {
-    padding: 5px 0 15px 0;
+	padding: 5px 0 15px 0;
 }
 
 @media screen and (min-width: 768px) {
@@ -54,20 +51,17 @@
 /* -------------------------------------------------------------------- */
 /* mesage box															*/
 /* -------------------------------------------------------------------- */
-
-#message-box { 
+#message-box {
 	color: green;
 }
 
-#message-box.error { 
+#message-box.error {
 	color: red;
 }
 
 /* -------------------------------------------------------------------- */
 /* form / validation glyphicons...										*/
 /* -------------------------------------------------------------------- */
-
 form span {
 	visibility: hidden;
 }
-

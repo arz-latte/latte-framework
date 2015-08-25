@@ -17,15 +17,18 @@ public class ModuleMenuData {
 
 	private String name;
 
+	private String url;
+
 	private List<MenuRootData> menu;
 
 	public ModuleMenuData() {
 	}
 
-	public ModuleMenuData(Long id, String name, List<MenuRootData> menu) {
+	public ModuleMenuData(Long id, String name, String url, List<MenuRootData> menu) {
 		super();
 		this.id = id;
 		this.name = name;
+		this.url = url;
 		this.menu = menu;
 	}
 
@@ -43,6 +46,14 @@ public class ModuleMenuData {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
 	}
 
 	public List<MenuRootData> getMenu() {

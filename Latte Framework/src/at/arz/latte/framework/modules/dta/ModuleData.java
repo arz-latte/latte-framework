@@ -19,7 +19,9 @@ public class ModuleData {
 
 	private String provider;
 
-	private String url;
+	private String urlStatus;
+
+	private String urlIndex;
 
 	private int interval;
 
@@ -28,12 +30,14 @@ public class ModuleData {
 	public ModuleData() {
 	}
 
-	public ModuleData(Long id, String name, String provider, String url, int interval, boolean enabled) {
+	public ModuleData(Long id, String name, String provider, String urlStatus, String urlIndex, int interval,
+			boolean enabled) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.provider = provider;
-		this.url = url;
+		this.urlStatus = urlStatus;
+		this.urlIndex = urlIndex;
 		this.interval = interval;
 		this.enabled = enabled;
 	}
@@ -47,7 +51,8 @@ public class ModuleData {
 		this.id = m.getId();
 		this.name = m.getName();
 		this.provider = m.getProvider();
-		this.url = m.getUrl();
+		this.urlStatus = m.getUrlStatus();
+		this.urlIndex = m.getUrlIndex();
 		this.interval = m.getInterval();
 		this.enabled = m.getEnabled();
 	}
@@ -76,12 +81,20 @@ public class ModuleData {
 		this.provider = provider;
 	}
 
-	public String getUrl() {
-		return url;
+	public String getUrlStatus() {
+		return urlStatus;
 	}
 
-	public void setUrl(String url) {
-		this.url = url;
+	public void setUrlStatus(String urlStatus) {
+		this.urlStatus = urlStatus;
+	}
+
+	public String getUrlIndex() {
+		return urlIndex;
+	}
+
+	public void setUrlIndex(String urlIndex) {
+		this.urlIndex = urlIndex;
 	}
 
 	public int getInterval() {

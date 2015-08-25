@@ -4,275 +4,215 @@ var app = {
 	// menu
 	// ===========================================================================
 
-	API_FRAMEWORK : 'api/v1/framework',
+	API_FRAMEWORK : 'http://localhost:8080/latte/api/v1/framework',
 
-	parseMenu : function(id) {
+	/**
+	 * create side bar with menu
+	 */
+	initSideBar : function() {
 
-		var module = JSON.parse(localStorage.getItem('module-' + id));
+		var $menu = $("<div/>", {
+			'class' : "navbar navbar-default",
+			role : "navigation"
+		});
 
+		var $button = $("<button/>", {
+			type : "button",
+			'class' : "navbar-toggle",
+			'data-toggle' : "collapse",
+			'data-target' : "#side-navbar-collapse"
+		}).append($("<span/>", {
+			'class' : "sr-only",
+			text : "Menü umschalten"
+		}), $("<span/>", {
+			'class' : "icon-bar"
+		}), $("<span/>", {
+			'class' : "icon-bar"
+		}), $("<span/>", {
+			'class' : "icon-bar"
+		}));
+
+		var $navbarHeader = $("<div/>", {
+			'class' : "navbar-header",
+			role : "navigation"
+		}).append($button, $("<span/>", {
+			'class' : "visible-xs navbar-brand",
+			html : "Men&uuml;"
+		}));
+
+		var $navbarCollapse = $("<div/>", {
+			'class' : "navbar-collapse collapse",
+			id : "side-navbar-collapse"
+		}).append($("<ul/>", {
+			'class' : "nav navbar-nav",
+			id : "side-navbar"
+		}));
+
+		$menu.append($navbarHeader, $navbarCollapse);
+
+		$("#sidebar").append($menu);
+		app.hideSideBar();
+	},
+
+	/**
+	 * load all menus from server and store them in localStorage
+	 */
+	loadModules : function() {
+		if (!localStorage.getItem("initialized")) {
+			console.log("load modules from framework");
+
+			$.ajax({
+				dataType : "json",
+				url : app.API_FRAMEWORK + "/init.json",
+				async : false,
+			}).done(function(data) {
+
+				localStorage.clear();
+				localStorage.setItem("initialized", true);
+				localStorage.setItem("currentModuleId", 0);
+
+				// store each module separate
+				$.each(data.module, function(index, m) {
+					localStorage.setItem('module-' + m.id, JSON.stringify(m));
+					delete m.menu;
+				});
+
+				// store list of modules
+				localStorage.setItem('modules', JSON.stringify(data.module));
+
+			}).fail(function() {
+				app.showErrorMessage("Fehler beim Initialisieren");
+			});
+		}
+	},
+
+	/**
+	 * initialize main menu from localStorage
+	 * 
+	 * @returns
+	 */
+	initMainMenu : function() {
+
+		var $mainMenuLeft = $("#main-navbar-left");
+		$mainMenuLeft.html(""); // clear
+
+		var modules = JSON.parse(localStorage.getItem('modules'));
+		$.each(modules, function(index, m) {
+
+			// main menu (module name)
+			var $entry = $("<li/>").append($("<a/>", {
+				href : "#",// module.url, todo change
+				text : m.name,
+				'data-id' : m.id,
+				on : {
+					click : function() {
+						localStorage.setItem("currentModuleId", m.id);
+						app.initSubMenu();
+					}
+				}
+			}));
+
+			$mainMenuLeft.append($entry);
+			
+			// mark current active module
+			if (localStorage.getItem("currentModuleId") == m.id) {
+				app.initSubMenu();
+			}
+		});
+	},
+
+	/**
+	 * parse menu for single module
+	 * 
+	 * @param id
+	 *            module-id
+	 */
+	initSubMenu : function() {
+
+		var id = localStorage.getItem("currentModuleId");
+		var module = JSON.parse(localStorage.getItem("module-" + id));
+		
+		var loc = window.location.href.split('#')[0];
+		
+		// main menu
+		var $mainMenuLeft = $("#main-navbar-left");
+		$mainMenuLeft.find("a").parent().removeClass("active");
+		$mainMenuLeft.find("a[data-id=" + module.id + "]").parent().addClass("active");
+		
+		// side menu
 		var $subMenu = $("#side-navbar");
 		$subMenu.html(""); // clear
 
-		// side menu
-		$.each(module.menu, function(index, menu) {
+		if (module.menu) {
 
-			// menu (root)
-			var e = menu.entry;
-			var $entry = $("<li/>").append($("<a/>", {
-				href : e.url,
-				text : e.value
-			}));
-			$subMenu.append($entry);
+			$.each(module.menu, function(index, menu) {
 
-			if (menu.children && menu.children.length >= 0) {
+				// menu (root)
+				var e = menu.entry;
+				var $entry = $("<li/>").append($("<a/>", {
+					href : e.url,
+					text : e.value
+				}));
 
-				// menu (leaf)
-				$.each(menu.children, function(index, submenu) {
-					var e = submenu.entry;
-					var $entry = $("<li/>", {
-						'class' : "submenu"
-					}).append($("<a/>", {
-						href : e.url,
-						text : e.value
-					}));
-					$subMenu.append($entry);
-				});
-
-				/*
-				 * todo, maybe remove, dropdown for submenu??
-				 * 
-				 * var $a = $("<a/>", { href: "#", 'class' : "dropdown-toogle",
-				 * 'data-toggle' : "dropdown", role : "button", 'aria-haspopup' :
-				 * "true", 'aria-expanded' :"false", 'text' : e.value + " "
-				 * }).append($("<span/>", {'class':"caret"}));
-				 * 
-				 * var $ul = $("<ul/>", { 'class' : "dropdown-menu" });
-				 * 
-				 * $.each(menu.children, function(index, submenu) { var e =
-				 * submenu.entry; var $entry = $("<li/>").append($("<a/>", {
-				 * href: e.url, text: e.value })); $ul.append($entry); });
-				 * 
-				 * var $dropdown = $("<li/>", { 'class' : "dropdown"
-				 * }).append($a, $ul);
-				 * 
-				 * $subMenu.append($dropdown);
-				 * 
-				 */
-			}
-		});
-	},
-
-	loadMenus : function() {
-		$.getJSON(app.API_FRAMEWORK + "/init.json", function(data) {
-
-			localStorage.clear();
-
-			var $mainMenuLeft = $("#main-navbar-left");
-			$mainMenuLeft.html(""); // clear
-
-			// store each module separate
-			$.each(data.module, function(index, module) {
+				// mark current active menu
+				if (e.url == loc) {
+					$entry.addClass("active");
+				}
 				
-				// check if module is initialized and has menu entries
-				if (module.menu) {
-					localStorage.setItem('module-' + module.id, JSON.stringify(module));
-	
-					// main menu (module name)
-					var $entry = $("<li/>").append($("<a/>", {
-						href : "#",
-						text : module.name,
-						'data-id' : module.id,
-						on : {
-							click : function() {
-								app.parseMenu($(this).attr("data-id"));
-							}
+				$subMenu.append($entry);
+
+				if (menu.children && menu.children.length >= 0) {
+
+					// menu (leaf)
+					$.each(menu.children, function(index, submenu) {
+						var e = submenu.entry;
+						var $entry = $("<li/>", {
+							'class' : "submenu"
+						}).append($("<a/>", {
+							href : e.url,
+							text : e.value
+						}));
+						
+						// mark current active menu
+						if (e.url == loc) {
+							$entry.addClass("active");
 						}
-					}));
-					$mainMenuLeft.append($entry);
+						
+						$subMenu.append($entry);
+					});
 				}
 			});
-
-		}).fail(function() {
-			app.showErrorMessage("Fehler beim Initialisieren");
-		});
-	},
-
-	// ==========================================================================
-	// module
-	// ===========================================================================
-
-	API_MODULES : 'api/v1/modules',
-	currentId : null,
-
-	loadModules : function() {
-		app.leaveEditMode();
-
-		$.getJSON(app.API_MODULES + "/all.json", function(data) {
-
-			var $modules = $("#modules");
-			$modules.find("tr:has(td)").remove(); // clear
-
-			$.each(data.modules, function(index, module) {
-				var $name = $("<td/>").append(module.name);
-				var $version = $("<td/>").append(module.version);
-				var $provider = $("<td/>").append(module.provider);
-				var $status = $("<td/>").append(module.status);
-				var $enabled = $("<td/>")
-						.append(module.enabled ? "ja" : "nein");
-
-				var $row = $("<tr/>").attr("data-id", module.id);
-				$row.append($name).append($provider).append($version).append(
-						$status).append($enabled);
-
-				$modules.append($row);
-			});
-
-			$("#module-filter").keyup();
-		});
-	},
-
-	addNewModule : function() {
-		$("#btn-delete-module").hide();
-		app.enterEditMode();
-	},
-
-	showModule : function() {
-		$("#btn-delete-module").show();
-		app.enterEditMode();
-
-		// load module details
-		app.currentId = $(this).attr("data-id");
-		$.getJSON(app.API_MODULES + "/get.json/" + app.currentId,
-				function(data) {
-
-					// fill form
-					var m = data.module;
-					$("[name=input-name]").val(m.name);
-					$("[name=input-provider]").val(m.provider);
-					$("[name=input-url]").val(m.url);
-					$("[name=input-interval]").val(m.interval);
-					$("[name=input-enabled]").prop("checked", m.enabled);
-				});
-	},
-
-	storeModule : function() {
-		// copy form to model
-		var m = {};
-		m.id = app.currentId;
-		m.name = $("[name=input-name]").val();
-		m.provider = $("[name=input-provider]").val();
-		m.url = $("[name=input-url]").val();
-		m.interval = $("[name=input-interval]").val();
-		m.enabled = $("[name=input-enabled]").prop("checked");
-
-		if (m.id > 0) {
-
-			$.ajax({
-				url : app.API_MODULES + "/update.json",
-				type : "PUT",
-				data : JSON.stringify({
-					"module" : m
-				}),
-				contentType : "application/json; charset=UTF-8",
-			}).done(function(data) {
-				app.storeModuleCallback(data.result, "Modul aktualisiert");
-			}).fail(function() {
-				app.showErrorMessage("Fehler");
-			});
+			app.showSideBar();
 		} else {
-
-			$.ajax({
-				url : app.API_MODULES + "/create.json",
-				type : "POST",
-				data : JSON.stringify({
-					"module" : m
-				}),
-				contentType : "application/json; charset=UTF-8",
-			}).done(function(data) {
-				app.storeModuleCallback(data.result, "Modul erstellt");
-			}).fail(function() {
-				app.showErrorMessage("Fehler");
-			});
-		}
-
-		return false;
-	},
-
-	resetFormValidation : function() {
-		// reset form valid
-		$("#module-edit-area input").each(function() {
-			$(this).closest(".form-group").removeClass("has-error");
-			$(this).next().hide(); // hide glyphicon
-
-			var text = $(this).parent().prev().text();
-			$(this).parent().prev().text(text.split(": ")[0]);
-		})
-	},
-
-	storeModuleCallback : function(data, msg) {
-
-		if (data.validation) {
-			app.showErrorMessage("Fehler beim Speichern");
-			app.resetFormValidation();
-
-			// mark invalid
-			var entries = [];
-			if ($.isArray(data.validation.entry)) {
-				$.merge(entries, data.validation.entry);
-			} else {
-				entries.push(data.validation.entry);
-			}
-			$.each(entries, function(i, e) {
-				// mark input as invalid
-				var $input = $("[name=input-" + e.key + "]");
-				$input.closest(".form-group").addClass("has-error");
-
-				$input.next().show(); // show glyphicon
-
-				// set label text
-				var text = $input.parent().prev().text();
-				$input.parent().prev().text(text + ": " + e.value);
-			});
-
-		} else {
-			app.showMessage(msg);
-			app.loadModules();
+			// no side menu for this module
+			app.hideSideBar();
 		}
 	},
 
-	deleteModule : function() {
-		var choice = confirm("Sind Sie sicher?");
-		if (choice == true) {
-			$.ajax({
-				url : app.API_MODULES + "/delete.json/" + app.currentId,
-				type : "DELETE",
-			}).done(function(data) {
-				app.showMessage("Modul gel&ouml;scht");
-				app.loadModules();
-			}).fail(function() {
-				app.showErrorMessage("Fehler");
-			});
-		}
-
-		return false;
+	hideSideBar : function() {
+		$("#sidebar").hide();
+		$("#content").removeClass("col-sm-9");
+		$("#content").addClass("col-sm-12");
 	},
 
-	restoreModule : function() {
-		app.leaveEditMode();
-		return false;
+	showSideBar : function() {
+		$("#sidebar").show();
+		$("#content").removeClass("col-sm-12");
+		$("#content").addClass("col-sm-9");
 	},
 
-	filterModule : function() {
-		var rex = new RegExp($(this).val(), "i");
-		$("tbody tr").hide();
-		$("tbody tr").filter(function() {
-			return rex.test($(this).text());
-		}).show();
+	showMessage : function(msg) {
+		var $box = $("#message-box");
+		$box.removeClass("error");
+		$box.html(msg);
+		$box.show(100).delay(2000).hide(100);
 	},
 
-	clearModuleFilter : function() {
-		$("#module-filter").val("");
-		$("tbody tr").show();
+	showErrorMessage : function(msg) {
+		var $box = $("#message-box");
+		$box.addClass("error");
+		$box.html(msg);
+		$box.show(100).delay(2000).hide(100);
 	},
 
 	// ==========================================================================
@@ -284,7 +224,7 @@ var app = {
 		var url = "ws://" + document.location.host + "/latte/ws";
 		// var ws = new WebSocket(uri);
 		var ws = new ReconnectingWebSocket(url, null, {
-			debug : true
+			debug : false
 		});
 
 		ws.onmessage = function(msg) {
@@ -310,78 +250,32 @@ var app = {
 		 */
 	},
 
-	// ==========================================================================
-	// helper functions
-	// ===========================================================================
-
-	supportsStorage : function() {
-		try {
-			return 'localStorage' in window && window['localStorage'] !== null;
-		} catch (e) {
-			return false;
-		}
-	},
-
-	showMessage : function(msg) {
-		var $box = $("#message-box");
-		$box.removeClass("error");
-		$box.html(msg);
-		$box.show(100).delay(2000).hide(100);
-	},
-
-	showErrorMessage : function(msg) {
-		var $box = $("#message-box");
-		$box.addClass("error");
-		$box.html(msg);
-		$box.show(100).delay(2000).hide(100);
-	},
-
-	enterEditMode : function() {
-		app.resetFormValidation();
-
-		$("#module-list-area").hide();
-		$("#module-edit-area").show();
-
-		$("#module-edit-area form").trigger("reset");
-		app.currentId = null;
-	},
-
-	leaveEditMode : function() {
-		$("#module-edit-area").hide();
-		$("#module-list-area").show();
-		app.currentId = null;
-	},
-
 };
 
 // ===========================================================================
 // ready & event handlers
 // ===========================================================================
+
 function initFramework() {
 
-	if (!app.supportsStorage()) {
-		alert("Inkompatibler Browser, kein localStorage-Support");
-		return;
-	}
+	app.initSideBar();
 
-	app.loadMenus();
-
-	$("#btn-clear-module-filter").on("click", app.clearModuleFilter);
-	$("#module-filter").on("keyup", app.filterModule);
-
-	$("#btn-load-modules").on("click", app.loadModules);
-	$("#btn-add-module").on("click", app.addNewModule);
-
-	$("#btn-store-module").on("click", app.storeModule);
-	$("#btn-delete-module").on("click", app.deleteModule);
-	$("#btn-restore-module").on("click", app.restoreModule);
-
-	$("#module-list-area tbody").on("click", "tr", app.showModule);
+	app.loadModules();
+	app.initMainMenu();
 
 	app.initWebSocket();
 
-	app.loadModules();
-
 }
+
+(function() {
+	try {
+		support = 'localStorage' in window && window['localStorage'] !== null;
+	} catch (e) {
+		support = false;
+	}
+	if (!support) {
+		alert("Inkompatibler Browser");
+	}
+})();
 
 $(initFramework);

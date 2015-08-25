@@ -61,12 +61,13 @@ public class ModuleManagementBean extends GenericManagementBean<Module> {
 	/**
 	 * used for partial updates via REST-service
 	 */
-	public Module updateModule(Long id, String name, String provider, String url, int interval, boolean enabled) {
+	public Module updateModule(Long id, String name, String provider, String urlStatus, String urlIndex, int interval, boolean enabled) {
 		Module m = getModule(id);
 		
 		m.setName(name);
 		m.setProvider(provider);
-		m.setUrl(url);
+		m.setUrlStatus(urlStatus);
+		m.setUrlIndex(urlIndex);
 		m.setInterval(interval);
 		m.setEnabled(enabled);
 		
