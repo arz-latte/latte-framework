@@ -3,16 +3,13 @@ package at.arz.latte.framework.modules.dta;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * represents a single top menu with attached submenu-entries
- * 
- * Dominik Neuner {@link "mailto:dominik@neuner-it.at"}
- *
- */
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement(name = "menu")
 public class MenuRootData {
 
 	private MenuEntryData entry;
-
+	
 	private List<MenuLeafData> children;
 
 	public MenuRootData() {
@@ -46,7 +43,5 @@ public class MenuRootData {
 	public String toString() {
 		return "MenuRootData [entry=" + entry + ", children=" + children + "]";
 	}
-
-	
 
 }

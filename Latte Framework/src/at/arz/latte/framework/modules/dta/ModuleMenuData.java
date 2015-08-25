@@ -13,23 +13,29 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "module")
 public class ModuleMenuData {
 
+	/**
+	 * module id
+	 */
 	private Long id;
 
-	private String name;
+	/**
+	 * single main menu entry
+	 */
+	private MenuLeafData mainMenu;
 
-	private String url;
-
-	private List<MenuRootData> menu;
+	/**
+	 * list of sub menu entries
+	 */
+	private List<MenuRootData> subMenu;
 
 	public ModuleMenuData() {
 	}
 
-	public ModuleMenuData(Long id, String name, String url, List<MenuRootData> menu) {
+	public ModuleMenuData(Long id, MenuLeafData mainMenu, List<MenuRootData> subMenu) {
 		super();
 		this.id = id;
-		this.name = name;
-		this.url = url;
-		this.menu = menu;
+		this.mainMenu = mainMenu;
+		this.subMenu = subMenu;
 	}
 
 	public Long getId() {
@@ -40,28 +46,20 @@ public class ModuleMenuData {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
+	public MenuLeafData getMainMenu() {
+		return mainMenu;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setMainMenu(MenuLeafData mainMenu) {
+		this.mainMenu = mainMenu;
 	}
 
-	public String getUrl() {
-		return url;
+	public List<MenuRootData> getSubMenu() {
+		return subMenu;
 	}
 
-	public void setUrl(String url) {
-		this.url = url;
-	}
-
-	public List<MenuRootData> getMenu() {
-		return menu;
-	}
-
-	public void setMenu(List<MenuRootData> menu) {
-		this.menu = menu;
+	public void setSubMenu(List<MenuRootData> subMenu) {
+		this.subMenu = subMenu;
 	}
 
 }

@@ -11,6 +11,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import at.arz.latte.framework.modules.dta.MenuEntryData;
+import at.arz.latte.framework.modules.dta.MenuLeafData;
 import at.arz.latte.framework.modules.dta.MenuRootData;
 import at.arz.latte.framework.modules.dta.ModuleUpdateData;
 import at.arz.latte.framework.persistence.beans.ModuleManagementBean;
@@ -32,17 +33,19 @@ public class AdministrationService {
 	@Path("status.json")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public ModuleUpdateData getModule() {
-		List<MenuRootData> menu = new ArrayList<>();
+		List<MenuRootData> subMenu = new ArrayList<>();
 		
 		MenuRootData menu1 = new MenuRootData(new MenuEntryData("Module", "http://localhost:8080/latte/module.html", 10), new ArrayList<>());		
 		MenuRootData menu2 = new MenuRootData(new MenuEntryData("Benutzer", "#", 20), null);
 		MenuRootData menu3 = new MenuRootData(new MenuEntryData("Rollen", "#", 30), null);
 
-		menu.add(menu1);
-		menu.add(menu2);
-		menu.add(menu3);
+		subMenu.add(menu1);
+		subMenu.add(menu2);
+		subMenu.add(menu3);
 		
-		return new ModuleUpdateData("v1.00", menu);
+		MenuLeafData mainMenu = new MenuLeafData(new MenuEntryData("Administration", "http://localhost:8080/latte/module.html", 3), "admin");
+		
+		return new ModuleUpdateData("v1.00", mainMenu, subMenu);
 	}
 	
 }

@@ -5,6 +5,10 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import at.arz.latte.framework.modules.dta.MenuEntryData;
+import at.arz.latte.framework.modules.dta.MenuLeafData;
+import at.arz.latte.framework.modules.models.validator.CheckUrl;
+
 /**
  * Entity implementation class for Entity: MenuEntry, represents a single menu
  * entry with url
@@ -24,7 +28,8 @@ public class MenuEntry implements Serializable, Comparable<MenuEntry> {
 	@Size(min = 1, max = 63)
 	private String value;
 
-	private String url;
+	@CheckUrl
+	private String href;
 
 	private int position;
 
@@ -32,11 +37,18 @@ public class MenuEntry implements Serializable, Comparable<MenuEntry> {
 		super();
 	}
 
-	public MenuEntry(String value, String url, int position) {
+	public MenuEntry(String value, String href, int position) {
 		super();
 		this.value = value;
-		this.url = url;
+		this.href = href;
 		this.position = position;
+	}
+
+	public MenuEntry(MenuEntryData entry) {
+		super();
+		this.value = entry.getValue();
+		this.href = entry.getHref();
+		this.position = entry.getPosition();
 	}
 
 	public String getValue() {
@@ -47,12 +59,12 @@ public class MenuEntry implements Serializable, Comparable<MenuEntry> {
 		this.value = value;
 	}
 
-	public String getUrl() {
-		return url;
+	public String getHref() {
+		return href;
 	}
 
-	public void setUrl(String url) {
-		this.url = url;
+	public void setHref(String href) {
+		this.href = href;
 	}
 
 	public int getPosition() {
@@ -68,7 +80,7 @@ public class MenuEntry implements Serializable, Comparable<MenuEntry> {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + position;
-		result = prime * result + ((url == null) ? 0 : url.hashCode());
+		result = prime * result + ((href == null) ? 0 : href.hashCode());
 		result = prime * result + ((value == null) ? 0 : value.hashCode());
 		return result;
 	}
@@ -84,10 +96,10 @@ public class MenuEntry implements Serializable, Comparable<MenuEntry> {
 		MenuEntry other = (MenuEntry) obj;
 		if (position != other.position)
 			return false;
-		if (url == null) {
-			if (other.url != null)
+		if (href == null) {
+			if (other.href != null)
 				return false;
-		} else if (!url.equals(other.url))
+		} else if (!href.equals(other.href))
 			return false;
 		if (value == null) {
 			if (other.value != null)
@@ -99,12 +111,16 @@ public class MenuEntry implements Serializable, Comparable<MenuEntry> {
 
 	@Override
 	public String toString() {
-		return "MenuEntry [value=" + value + ", url=" + url + ", position=" + position + "]";
+		return "MenuEntry [value=" + value + ", href=" + href + ", position=" + position + "]";
 	}
 
 	@Override
 	public int compareTo(MenuEntry entry) {
 		return position - entry.position;
+	}
+	
+	public MenuEntryData toMenuEntryData() {
+		return new MenuEntryData(value, href, position);
 	}
 
 }

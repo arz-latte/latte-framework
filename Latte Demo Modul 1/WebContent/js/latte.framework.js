@@ -63,11 +63,33 @@ var app = {
 
 			console.log("load modules from framework");
 
+			
+			// test
+			
+			$.ajax({
+				crossDomain: true,
+				   type: 'GET',
+				    url: "http://www.geonames.org/postalCodeLookupJSON?postalcode=10504&country=US&callback=?",
+				    async: false,
+				    contentType: "application/json",
+				    dataType: 'jsonp',
+			}).done(function(data) {
+				console.log("done: " + data);
+				console.log(data);
+
+			}).fail(function(data) {
+				console.log("fail: " + data);
+			});
+			
+			
+			
+			
 			$.ajax({
 				dataType : "json",
 				url : app.API_FRAMEWORK + "/init.json",
 				async : false,
 			}).done(function(data) {
+				console.log("data: " + data);
 
 				localStorage.clear();
 				localStorage.setItem("initialized", true);

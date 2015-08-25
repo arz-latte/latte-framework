@@ -26,7 +26,6 @@ public class MenuRoot extends AbstractEntity implements Serializable, Comparable
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	//@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "Menu.ID")
 	@TableGenerator(name = "Menu.ID", table = "latte_seq", pkColumnName = "KEY", valueColumnName = "VALUE")
 	private Long id;

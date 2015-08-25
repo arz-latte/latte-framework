@@ -17,7 +17,10 @@ import at.arz.latte.framework.modules.dta.ModuleData;
 import at.arz.latte.framework.modules.dta.ModuleListData;
 import at.arz.latte.framework.modules.dta.ResultData;
 import at.arz.latte.framework.modules.models.Module;
+import at.arz.latte.framework.modules.models.ModuleStatus;
 import at.arz.latte.framework.persistence.beans.ModuleManagementBean;
+import at.arz.latte.framework.websockets.WebsocketEndpoint;
+import at.arz.latte.framework.websockets.models.WebsocketMessage;
 
 /**
  * RESTful service for module management
@@ -31,6 +34,9 @@ public class ModuleService {
 
 	@EJB
 	private ModuleManagementBean bean;
+	
+	@EJB
+	private WebsocketEndpoint websocket;
 	
 	@GET
 	@Path("all.json")
@@ -50,7 +56,9 @@ public class ModuleService {
 	@Path("create.json")
 	@Produces(MediaType.APPLICATION_JSON)
 	public ResultData createModule(ModuleData m) {
-		Module module = new Module(m.getName(), m.getProvider(), m.getUrlStatus(), m.getUrlIndex(), m.getInterval(), m.getEnabled());
+		Module module = new Module(m);
+		module.setVersion("-");
+		module.setStatus(ModuleStatus.Stopped);
 		return new ResultData(bean.createModule(module));
 	}
 
@@ -58,7 +66,20 @@ public class ModuleService {
 	@Path("update.json")
 	@Produces(MediaType.APPLICATION_JSON)
 	public ResultData updateModule(ModuleData m) {
-		return new ResultData(bean.updateModule(m.getId(), m.getName(), m.getProvider(), m.getUrlStatus(), m.getUrlIndex(), m.getInterval(), m.getEnabled()));
+		Module module = bean.getModule(m.getId());
+		
+		boolean urlChanged = !module.getUrl().equals(m.getUrl());
+		boolean disabled = module.getEnabled() && !m.getEnabled();
+		
+		Module changed = bean.updateModule(m);
+		
+		// notify clients if urlchanged or module was disabled
+		if (urlChanged || disabled) {
+			System.out.println("websocket update");
+			websocket.chat(new WebsocketMessage("update", "server"));
+		}
+		
+		return new ResultData(changed);
 	}
 
 	@DELETE

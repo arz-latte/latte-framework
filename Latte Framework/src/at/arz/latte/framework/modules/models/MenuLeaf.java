@@ -3,6 +3,9 @@ package at.arz.latte.framework.modules.models;
 import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
 
+import at.arz.latte.framework.modules.dta.MenuEntryData;
+import at.arz.latte.framework.modules.dta.MenuLeafData;
+
 /**
  * Entity implementation class for Entity: MenuLeaf, represents a single bottom
  * menu with permission
@@ -26,6 +29,12 @@ public class MenuLeaf implements Comparable<MenuLeaf> {
 		super();
 		this.entry = entry;
 		this.permission = permission;
+	}
+	
+	public MenuLeaf(MenuLeafData data) {
+		super();
+		this.entry = new MenuEntry(data.getEntry());
+		this.permission = data.getPermission();
 	}
 
 	public MenuEntry getEntry() {
@@ -84,5 +93,5 @@ public class MenuLeaf implements Comparable<MenuLeaf> {
 	public int compareTo(MenuLeaf object) {
 		return entry.getPosition() - object.getEntry().getPosition();
 	}
-
+	
 }

@@ -2,13 +2,14 @@ package at.arz.latte.framework.persistence.beans;
 
 import java.util.List;
 
-import javax.ejb.Stateful;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import at.arz.latte.framework.modules.dta.ModuleData;
 import at.arz.latte.framework.modules.dta.ModuleListData;
 import at.arz.latte.framework.modules.models.Module;
+import at.arz.latte.framework.modules.models.ModuleStatus;
 
 /**
  * bean for module management
@@ -17,7 +18,6 @@ import at.arz.latte.framework.modules.models.Module;
  *
  */
 @Stateless
-// Todo: stateful?
 public class ModuleManagementBean extends GenericManagementBean<Module> {
 
 	@PersistenceContext(unitName="latte-unit")
@@ -50,7 +50,7 @@ public class ModuleManagementBean extends GenericManagementBean<Module> {
 	/**
 	 * used for partial updates via timer-service
 	 */
-	public Module updateModule(Module module) {
+	public Module updateModule(Module module) {		
 		if (validate(module)) {
 			em.merge(module);
 		}
@@ -61,25 +61,30 @@ public class ModuleManagementBean extends GenericManagementBean<Module> {
 	/**
 	 * used for partial updates via REST-service
 	 */
-	public Module updateModule(Long id, String name, String provider, String urlStatus, String urlIndex, int interval, boolean enabled) {
-		Module m = getModule(id);
+	public Module updateModule(ModuleData moduleData) {
+		Module module = getModule(moduleData.getId());
+
+		module.setName(moduleData.getName());
+		module.setProvider(moduleData.getProvider());
+		module.setUrl(moduleData.getUrl());
+		module.setInterval(moduleData.getInterval());
+		module.setEnabled(moduleData.getEnabled());
 		
-		m.setName(name);
-		m.setProvider(provider);
-		m.setUrlStatus(urlStatus);
-		m.setUrlIndex(urlIndex);
-		m.setInterval(interval);
-		m.setEnabled(enabled);
+		// set status to stopped if module gets disabled
+		if (!module.getEnabled()) {
+			module.setStatus(ModuleStatus.Stopped);
+		}
 		
-		if (validate(m)) {
-			em.merge(m);
+		if (validate(module)) {
+			em.merge(module);
 		}
 
-		return m;
+		return module;
 	}
 
 	public void deleteModule(Long moduleId) {
-		em.remove(getModule(moduleId));
+		Module toBeDeleted = getModule(moduleId);
+		em.remove(toBeDeleted);
 
 	}
 

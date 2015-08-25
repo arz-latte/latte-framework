@@ -15,15 +15,18 @@ public class ModuleUpdateData {
 
 	private String version;
 
-	private List<MenuRootData> menu;
+	private MenuLeafData mainMenu;
+
+	private List<MenuRootData> subMenu;
 
 	public ModuleUpdateData() {
 	}
 
-	public ModuleUpdateData(String version, List<MenuRootData> menu) {
+	public ModuleUpdateData(String version, MenuLeafData mainMenu, List<MenuRootData> subMenu) {
 		super();
 		this.version = version;
-		this.menu = menu;
+		this.mainMenu = mainMenu;
+		this.subMenu = subMenu;
 	}
 
 	public String getVersion() {
@@ -34,16 +37,25 @@ public class ModuleUpdateData {
 		this.version = version;
 	}
 
-	public List<MenuRootData> getMenu() {
-		return menu;
+	public MenuLeafData getMainMenu() {
+		return mainMenu;
 	}
 
-	public void setMenu(List<MenuRootData> menu) {
-		this.menu = menu;
+	public void setMainMenu(MenuLeafData mainMenu) {
+		this.mainMenu = mainMenu;
+	}
+
+	public List<MenuRootData> getSubMenu() {
+		return subMenu;
+	}
+
+	public void setSubMenu(List<MenuRootData> subMenu) {
+		this.subMenu = subMenu;
 	}
 
 	@Override
 	public String toString() {
-		return "ModuleUpdateData [version=" + version + ", menu=" + menu + "]";
-	}	
+		return "ModuleUpdateData [version=" + version + ", mainMenu=" + mainMenu + ", subMenu=" + subMenu + "]";
+	}
+
 }

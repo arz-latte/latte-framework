@@ -3,7 +3,7 @@ package at.arz.latte.framework.modules.dta;
 public class MenuEntryData {
 	private String value;
 
-	private String url;
+	private String href;
 
 	private int position;
 
@@ -11,10 +11,10 @@ public class MenuEntryData {
 		super();
 	}
 
-	public MenuEntryData(String value, String url, int position) {
+	public MenuEntryData(String value, String href, int position) {
 		super();
 		this.value = value;
-		this.url = url;
+		this.href = href;
 		this.position = position;
 	}
 
@@ -26,12 +26,12 @@ public class MenuEntryData {
 		this.value = value;
 	}
 
-	public String getUrl() {
-		return url;
+	public String getHref() {
+		return href;
 	}
 
-	public void setUrl(String url) {
-		this.url = url;
+	public void setHref(String href) {
+		this.href = href;
 	}
 
 	public int getPosition() {
@@ -44,7 +44,7 @@ public class MenuEntryData {
 
 	@Override
 	public String toString() {
-		return "MenuEntryData [value=" + value + ", url=" + url + ", position=" + position + "]";
+		return "MenuEntryData [value=" + value + ", href=" + href + ", position=" + position + "]";
 	}
 
 }

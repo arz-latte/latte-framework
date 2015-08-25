@@ -27,8 +27,7 @@ public class ModuleTest  {
 	public void moduleIsPersistent() {
 		em.getTransaction().begin();
 
-		Module m = new Module("Demo Modul 1", "ARZ", "http://localhost:8080/demo1/api/v1/demo", "http://localhost:8080/demo1/index.html", 10, true);
-
+		Module m = new Module("Administration", "ARZ", "http://localhost:8080/latte/api/v1/administration", 10, true);
 		em.persist(m);
 
 		em.getTransaction().commit();

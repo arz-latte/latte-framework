@@ -49,8 +49,7 @@ var appModule = {
 					var m = data.module;
 					$("[name=input-name]").val(m.name);
 					$("[name=input-provider]").val(m.provider);
-					$("[name=input-url-status]").val(m.urlStatus);
-					$("[name=input-url-index]").val(m.urlIndex);
+					$("[name=input-url]").val(m.url);
 					$("[name=input-interval]").val(m.interval);
 					$("[name=input-enabled]").prop("checked", m.enabled);
 				});
@@ -62,8 +61,7 @@ var appModule = {
 		m.id = appModule.currentId;
 		m.name = $("[name=input-name]").val();
 		m.provider = $("[name=input-provider]").val();
-		m.urlStatus = $("[name=input-url-status]").val();
-		m.urlIndex = $("[name=input-url-index]").val();
+		m.url = $("[name=input-url]").val();
 		m.interval = $("[name=input-interval]").val();
 		m.enabled = $("[name=input-enabled]").prop("checked");
 
@@ -200,8 +198,6 @@ var appModule = {
 // ===========================================================================
 function initModule() {
 
-	// init module
-
 	$("#btn-clear-module-filter").on("click", appModule.clearModuleFilter);
 	$("#module-filter").on("keyup", appModule.filterModule);
 
@@ -215,7 +211,6 @@ function initModule() {
 	$("#module-list-area tbody").on("click", "tr", appModule.showModule);
 	
 	appModule.loadModules();
-
 }
 
 $(initModule);

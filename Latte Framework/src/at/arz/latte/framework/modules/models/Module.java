@@ -7,6 +7,7 @@ import java.net.URL;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -18,7 +19,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-
+import javax.persistence.OneToOne;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
@@ -26,6 +27,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import at.arz.latte.framework.modules.dta.ModuleData;
 import at.arz.latte.framework.modules.models.validator.CheckUrl;
 
 /**
@@ -75,22 +77,14 @@ public class Module extends AbstractEntity implements Serializable {
 	@NotNull
 	@Size(min = 1, max = 255)
 	@CheckUrl
-	private String urlStatus;
-
-	/**
-	 * address of the startpage http://localhost:8080/Modul1/index.html
-	 */
-	@NotNull
-	@Size(min = 1, max = 255)
-	@CheckUrl
-	private String urlIndex;
+	private String url;
 
 	/**
 	 * time in seconds for checking if module available, default 60s, if is set
 	 * to 0s - checking is disabled
 	 */
 	@NotNull
-	@Min(0)
+	@Min(1)
 	private int interval;
 
 	@Enumerated(EnumType.STRING)
@@ -98,10 +92,13 @@ public class Module extends AbstractEntity implements Serializable {
 
 	private boolean enabled;
 
+	@Embedded
+	private MenuLeaf mainMenu;
+
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	@JoinColumn(name = "module_id")
 	@OrderColumn(name = "position")
-	private List<MenuRoot> menu;
+	private List<MenuRoot> subMenu;
 
 	/**
 	 * JPA consturctor
@@ -113,13 +110,12 @@ public class Module extends AbstractEntity implements Serializable {
 	/**
 	 * used for creation of new Module via REST-service
 	 */
-	public Module(String name, String provider, String urlStatus, String urlIndex, int interval, boolean enabled) {
+	public Module(String name, String provider, String url, int interval, boolean enabled) {
 		this();
 		this.name = name;
 		this.provider = provider;
 		this.version = "-";
-		this.urlStatus = urlStatus;
-		this.urlIndex = urlIndex;
+		this.url = url;
 		this.interval = interval;
 		this.status = ModuleStatus.Stopped;
 		this.enabled = enabled;
@@ -130,17 +126,13 @@ public class Module extends AbstractEntity implements Serializable {
 	 * used for partial updates via REST-service
 	 * 
 	 */
-	public Module(Long id, String name, String provider, String urlStatus, String urlIndex, int interval,
-			boolean enabled) {
+	public Module(ModuleData m) {
 		this();
-		this.id = id;
-		this.name = name;
-		this.provider = provider;
-		this.urlStatus = urlStatus;
-		this.urlIndex = urlIndex;
-		this.interval = interval;
-		this.status = ModuleStatus.Stopped;
-		this.enabled = enabled;
+		this.setName(m.getName());
+		this.setProvider(m.getProvider());
+		this.setUrl(m.getUrl());
+		this.setInterval(m.getInterval());
+		this.setEnabled(m.getEnabled());
 	}
 
 	public Long getId() {
@@ -175,20 +167,12 @@ public class Module extends AbstractEntity implements Serializable {
 		this.version = version;
 	}
 
-	public String getUrlStatus() {
-		return urlStatus;
+	public String getUrl() {
+		return url;
 	}
 
-	public void setUrlStatus(String urlStatus) {
-		this.urlStatus = urlStatus;
-	}
-
-	public String getUrlIndex() {
-		return urlIndex;
-	}
-
-	public void setUrlIndex(String urlIndex) {
-		this.urlIndex = urlIndex;
+	public void setUrl(String url) {
+		this.url = url;
 	}
 
 	public int getInterval() {
@@ -215,23 +199,31 @@ public class Module extends AbstractEntity implements Serializable {
 		this.enabled = enabled;
 	}
 
-	public List<MenuRoot> getMenu() {
-		return menu;
+	public MenuLeaf getMainMenu() {
+		return mainMenu;
 	}
 
-	public void setMenu(List<MenuRoot> menu) {
-		this.menu = menu;
+	public void setMainMenu(MenuLeaf mainMenu) {
+		this.mainMenu = mainMenu;
+	}
+
+	public List<MenuRoot> getSubMenu() {
+		return subMenu;
+	}
+
+	public void setSubMenu(List<MenuRoot> subMenu) {
+		this.subMenu = subMenu;
 	}
 
 	// ------------------- helper -------------------
 
-	public String getUrlStatusHost() throws MalformedURLException {
-		URL u = new URL(urlStatus);
+	public String getUrlHost() throws MalformedURLException {
+		URL u = new URL(url);
 		return u.getProtocol() + "://" + u.getAuthority();
 	}
 
-	public String getUrlStatusPath() throws MalformedURLException {
-		URL u = new URL(urlStatus);
+	public String getUrlPath() throws MalformedURLException {
+		URL u = new URL(url);
 		return u.getPath();
 	}
 
@@ -247,9 +239,9 @@ public class Module extends AbstractEntity implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Module [id=" + id + ", name=" + name + ", provider=" + provider + ", version=" + version
-				+ ", urlStatus=" + urlStatus + ", urlIndex=" + urlIndex + ", interval=" + interval + ", status="
-				+ status + ", enabled=" + enabled + ", menu=" + menu + "]";
+		return "Module [id=" + id + ", name=" + name + ", provider=" + provider + ", version=" + version + ", url="
+				+ url + ", interval=" + interval + ", status=" + status + ", enabled=" + enabled + ", mainMenu="
+				+ mainMenu + ", subMenu=" + subMenu + "]";
 	}
 
 }

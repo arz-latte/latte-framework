@@ -1,8 +1,6 @@
 package at.arz.latte.framework.services.schedule;
 
-import java.awt.MenuItem;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -18,13 +16,12 @@ import org.apache.cxf.jaxrs.client.ClientWebApplicationException;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.apache.cxf.transport.http.HTTPConduit;
 
-import at.arz.latte.framework.modules.dta.MenuEntryData;
 import at.arz.latte.framework.modules.dta.MenuLeafData;
 import at.arz.latte.framework.modules.dta.MenuRootData;
 import at.arz.latte.framework.modules.dta.ModuleUpdateData;
-import at.arz.latte.framework.modules.models.MenuRoot;
 import at.arz.latte.framework.modules.models.MenuEntry;
 import at.arz.latte.framework.modules.models.MenuLeaf;
+import at.arz.latte.framework.modules.models.MenuRoot;
 import at.arz.latte.framework.modules.models.Module;
 import at.arz.latte.framework.modules.models.ModuleStatus;
 import at.arz.latte.framework.persistence.beans.ModuleManagementBean;
@@ -64,8 +61,8 @@ public class ModuleTimerService {
 	}
 
 	private void checkStatus(Module module) {
-		try {			
-			WebClient client = WebClient.create(module.getUrlStatusHost()).path(module.getUrlStatusPath() + "/status.json");
+		try {
+			WebClient client = WebClient.create(module.getUrlHost()).path(module.getUrlPath() + "/status.json");
 			HTTPConduit conduit = WebClient.getConfig(client).getHttpConduit();
 			conduit.getClient().setReceiveTimeout(2000);
 			conduit.getClient().setConnectionTimeout(2000);
@@ -73,49 +70,119 @@ public class ModuleTimerService {
 			// todo: send version and hashcode of menu to client via post...
 			ModuleUpdateData resp = client.accept(MediaType.APPLICATION_JSON).get(ModuleUpdateData.class);
 
-			// compare menu
-			List<MenuRoot> root = new ArrayList<>();
+			// set module as active
+			if (module.getStatus() != ModuleStatus.Started || !module.getVersion().equals(resp.getVersion())) {
+											
+				module.setStatus(ModuleStatus.Started);
+				module.setVersion(resp.getVersion());
+				
+				// get main menu
+				MenuLeaf mainMenu = new MenuLeaf(resp.getMainMenu());
 
-			for (MenuRootData r : resp.getMenu()) {
+				// get sub menu
+				List<MenuRoot> subMenu = new ArrayList<>();
+				for (MenuRootData menuRootData : resp.getSubMenu()) {
 
-				// leafs
-				List<MenuLeaf> leaf = new ArrayList<>();
-				for (MenuLeafData tmp : r.getChildren()) {
-					MenuEntryData e = tmp.getEntry();
-					MenuEntry entry = new MenuEntry(e.getValue(), e.getUrl(), e.getPosition());
-					MenuLeaf L = new MenuLeaf(entry, tmp.getPermission());
-					leaf.add(L);
+					// sub menu - bottom menu entries (leafs)
+					List<MenuLeaf> leafs = new ArrayList<>();
+					for (MenuLeafData menuLeafData : menuRootData.getChildren()) {
+						MenuLeaf L = new MenuLeaf(menuLeafData);
+						leafs.add(L);
+					}
+					Collections.sort(leafs);
+
+					// sub menu - top menu entry (root)
+					MenuEntry e = new MenuEntry(menuRootData.getEntry());
+					subMenu.add(new MenuRoot(e, leafs));
+				}
+				Collections.sort(subMenu);
+
+				// compare stored version of main menu with response
+				if (mainMenu.hashCode() != module.getMainMenu().hashCode()) {
+					System.out.println("main menu changed");
+					System.out.println("mo: " + mainMenu.hashCode());
+					System.out.println("db: " + module.getMainMenu().hashCode());
+					System.out.println(mainMenu);
+					System.out.println(module.getMainMenu());
+					module.setMainMenu(mainMenu);
 				}
 
-				Collections.sort(leaf);
+				// compare stored version of sub menu with response
+				//System.out.println(module.getSubMenu());		eager nullpointer ejb...
+				if (subMenu.hashCode() != module.getSubMenu().hashCode()) {
+					System.out.println("sub menu changed");
+					System.out.println("mo: " + subMenu.hashCode());
+					System.out.println("db: " + module.getSubMenu().hashCode());
+					System.out.println(subMenu);
+					System.out.println(module.getSubMenu());
+					module.setSubMenu(subMenu);
+				}
+				
+				bean.updateModule(module);
+				
+				websocket.chat(new WebsocketMessage("update", "server"));
+			}
+			
+			/* todo inklusive menü??
+			// get main menu
+			MenuLeaf mainMenu = new MenuLeaf(resp.getMainMenu());
 
-				// root menu entry
-				MenuEntryData tmp = r.getEntry();
-				MenuEntry entry = new MenuEntry(tmp.getValue(), tmp.getUrl(), tmp.getPosition());
-				MenuRoot rootEntry = new MenuRoot(entry, leaf);
-				root.add(rootEntry);
+			// get sub menu
+			List<MenuRoot> subMenu = new ArrayList<>();
+			for (MenuRootData menuRootData : resp.getSubMenu()) {
+
+				// sub menu - bottom menu entries (leafs)
+				List<MenuLeaf> leafs = new ArrayList<>();
+				for (MenuLeafData menuLeafData : menuRootData.getChildren()) {
+					MenuLeaf L = new MenuLeaf(menuLeafData);
+					leafs.add(L);
+				}
+				Collections.sort(leafs);
+
+				// sub menu - top menu entry (root)
+				MenuEntry e = new MenuEntry(menuRootData.getEntry());
+				subMenu.add(new MenuRoot(e, leafs));
+			}
+			Collections.sort(subMenu);
+
+			boolean changed = false;
+
+			// compare stored version of main menu with response
+			if (mainMenu.hashCode() != module.getMainMenu().hashCode()) {
+				System.out.println("main menu changed");
+				System.out.println("mo: " + mainMenu.hashCode());
+				System.out.println("db: " + module.getMainMenu().hashCode());
+				System.out.println(mainMenu);
+				System.out.println(module.getMainMenu());
+				module.setMainMenu(mainMenu);
+				changed = true;
 			}
 
-			Collections.sort(root);
-
-			if (root.hashCode() != module.getMenu().hashCode()) {
-				System.out.println("menu changed");
-				System.out.println("mo: " + root.hashCode());
-				System.out.println("db: " + module.getMenu().hashCode());
-				System.out.println(root);
-				System.out.println(module.getMenu());
-				module.setMenu(root);
+			// compare stored version of sub menu with response
+			//System.out.println(module.getSubMenu());		eager nullpointer ejb...
+			if (subMenu.hashCode() != module.getSubMenu().hashCode()) {
+				System.out.println("sub menu changed");
+				System.out.println("mo: " + subMenu.hashCode());
+				System.out.println("db: " + module.getSubMenu().hashCode());
+				System.out.println(subMenu);
+				System.out.println(module.getSubMenu());
+				module.setSubMenu(subMenu);
+				changed = true;
 			}
 
 			// set module as active
 			if (module.getStatus() != ModuleStatus.Started || !module.getVersion().equals(resp.getVersion())
-					|| root.hashCode() != module.getMenu().hashCode()) {
+					|| changed) {
+							
 				module.setStatus(ModuleStatus.Started);
 				module.setVersion(resp.getVersion());
 
 				bean.updateModule(module);
-				websocket.chat(new WebsocketMessage("active", "server"));
+				
+				websocket.chat(new WebsocketMessage("update", "server"));
 			}
+			
+			*/
 
 		} catch (WebApplicationException | ClientWebApplicationException ex) {
 			System.out.println("Check module: " + module);
@@ -125,6 +192,7 @@ public class ModuleTimerService {
 			if (module.getStatus() == ModuleStatus.Started) {
 				module.setStatus(ModuleStatus.Unknown);
 				bean.updateModule(module);
+				
 				websocket.chat(new WebsocketMessage("inactive", "server"));
 			}
 

@@ -5,7 +5,6 @@
 
 <link rel="stylesheet" href="css/bootstrap.min.css" />
 <link rel="stylesheet" href="css/latte.framework.css" />
-<!-- <link rel="stylesheet" href="css/simple-sidebar.css" />-->
 
 <script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
 <script type="text/javascript" src="js/reconnecting-websocket.js"></script>
@@ -28,7 +27,7 @@
 						class="icon-bar"></span> <span class="icon-bar"></span> <span
 						class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="#">Latte</a>
+				<a class="navbar-brand">Latte</a>
 			</div>
 
 			<!-- Collect the nav links, forms, and other content for toggling -->
@@ -47,7 +46,11 @@
 
 	<!-- sidebar with submenu, content area -->
 	<div class="container-fluid">
-
+	
+		<div class="row">
+			<div class="col-sm-12" id="message-box"></div>
+		</div>
+		
 		<div class="row">
 			<!-- sidebar -->
 			<div class="col-sm-3" id="sidebar">
@@ -63,9 +66,6 @@
 						<div class="col-sm-12">
 							<h3>Modulverwaltung</h3>
 						</div>
-					</div>
-					<div class="row content-row">
-						<div class="col-sm-12" id="message-box"></div>
 					</div>
 				</div>
 
@@ -123,18 +123,9 @@
 							</div>
 						</div>
 						<div class="form-group">
-							<label class="control-label col-sm-2" for="input-url-status">URL
-								Status</label>
+							<label class="control-label col-sm-2" for="input-url">URL</label>
 							<div class="col-sm-10">
-								<input type="text" class="form-control" name="input-url-status">
-								<span class="glyphicon glyphicon-remove form-control-feedback"></span>
-							</div>
-						</div>
-						<div class="form-group">
-							<label class="control-label col-sm-2" for="input-url-index">URL
-								Index</label>
-							<div class="col-sm-10">
-								<input type="text" class="form-control" name="input-url-index">
+								<input type="text" class="form-control" name="input-url">
 								<span class="glyphicon glyphicon-remove form-control-feedback"></span>
 							</div>
 						</div>

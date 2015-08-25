@@ -22,20 +22,22 @@ public class DemoModuleConfiguration extends Application {
 	public static ModuleUpdateData MODULE = null;
 
 	static {
-		List<MenuRootData> menu = new ArrayList<>();
+		List<MenuRootData> subMenu = new ArrayList<>();
 		
 		MenuRootData menu1 = new MenuRootData(new MenuEntryData("Menu 1", "#", 10), new ArrayList<>());
-		MenuLeafData menu11 = new MenuLeafData(new MenuEntryData("SubMenu 1", "#", 13), "admin");
-		MenuLeafData menu12 = new MenuLeafData(new MenuEntryData("SubMenu 2", "#", 17), "admin");
+		MenuLeafData menu11 = new MenuLeafData(new MenuEntryData("SubMenu 1", "#", 13), "user");
+		MenuLeafData menu12 = new MenuLeafData(new MenuEntryData("SubMenu 2", "#", 17), "user");
 		menu1.getChildren().add(menu11);
 		menu1.getChildren().add(menu12);
 		
 		MenuRootData menu2 = new MenuRootData(new MenuEntryData("Menu 2", "#", 20), null);
 		
-		menu.add(menu1);
-		menu.add(menu2);
+		subMenu.add(menu1);
+		subMenu.add(menu2);
 
-		MODULE = new ModuleUpdateData("v1.00", menu);
+		MenuLeafData mainMenu = new MenuLeafData(new MenuEntryData("Demo Modul 1", "http://localhost:8081/demo1/index.html", 3), "user");
+		
+		MODULE = new ModuleUpdateData("v1.00", mainMenu, subMenu);
 	}
 
 	private Set<Class<?>> applicationClasses;

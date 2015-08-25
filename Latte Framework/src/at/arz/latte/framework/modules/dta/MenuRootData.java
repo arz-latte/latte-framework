@@ -9,7 +9,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class MenuRootData {
 
 	private MenuEntryData entry;
-
+	
 	private List<MenuLeafData> children;
 
 	public MenuRootData() {
