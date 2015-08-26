@@ -60,8 +60,7 @@ var app = {
 	 */
 	loadModules : function() {
 
-		// todo remove, testing
-		if (true || !localStorage.getItem("initialized")) {
+		if (!localStorage.getItem("initialized")) {
 
 			console.log("load modules from framework");
 			
@@ -73,7 +72,7 @@ var app = {
 			}).done(function(data) {
 				console.log(data);
 
-				localStorage.clear();
+				//localStorage.clear();
 				localStorage.setItem("initialized", true);
 
 				// store each module separate
@@ -126,6 +125,14 @@ var app = {
 				app.initSubMenu();
 			}
 		});
+		
+		// logout button
+		$("#main-navbar-right").find("a").on("click", function() {
+			localStorage.clear();
+			app.ws
+			alert("storage cleared");
+		});
+		
 	},
 
 	/**
@@ -226,13 +233,15 @@ var app = {
 	// websocket functions
 	// ===========================================================================
 
+	ws : null,
+	
 	initWebSocket : function() {
 		
-		var ws = new ReconnectingWebSocket(app.API_WEBSOCKET, null, {
+		app.ws = new ReconnectingWebSocket(app.API_WEBSOCKET, null, {
 			debug : false
 		});
 
-		ws.onmessage = function(msg) {
+		app.ws.onmessage = function(msg) {
 			console.log("onmessage" + msg.data);
 			
 			var data = JSON.parse(msg.data);
@@ -252,11 +261,11 @@ var app = {
 			}
 		};
 
-		ws.onerror = function(evt) {
+		app.ws.onerror = function(evt) {
 			app.showErrorMessage(evt);
 		};
 
-		ws.onclose = function() {
+		app.ws.onclose = function() {
 			app.showErrorMessage("VERBINDUNG GESCHLOSSEN");
 		};
 	},
