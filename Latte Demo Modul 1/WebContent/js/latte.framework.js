@@ -4,13 +4,15 @@ var app = {
 	// menu
 	// ===========================================================================
 
-	API_FRAMEWORK : 'http://localhost:8080/latte/api/v1/framework',
+	API_LATTE : 'http://localhost:8080',
+	PATH_FRAMEWORK : '/latte/api/v1/framework',
+
 	API_WEBSOCKET : 'ws://localhost:8080/latte/ws',
-	
+
 	/**
 	 * create side bar with menu
 	 */
-	initSideBar : function() {
+	createSideBar : function() {
 
 		var $menu = $("<div/>", {
 			'class' : "navbar navbar-default",
@@ -56,6 +58,65 @@ var app = {
 	},
 
 	/**
+	 * initialize iframe (only on non latte server)
+	 */
+	initIframe : function() {
+
+		// check if file is not from latte server (cross domain)
+		if (window.location.origin != app.API_LATTE
+				&& document.getElementById("latteIframe")) {
+
+			window.onmessage = function(e) {
+				console.log(e);
+				if (e.origin != app.API_LATTE) {
+					return;
+				}
+
+				var payload = JSON.parse(e.data);
+				switch (payload.method) {
+				case 'get':
+					localStorage.setItem(payload.key, payload.data);
+					break;
+				case 'all':
+					for ( var i in payload.data) {
+						localStorage.setItem(i, payload.data[i]);
+					}
+					
+					// data from main server loaded
+					$( document ).trigger( "initFrameworkData" );					
+					break;
+				}
+			};
+		}
+
+	},
+
+	/**
+	 * initialize localStorage, get data from latte server
+	 */
+	initLocalStorage : function() {
+
+		console.log("initLocalStorage");
+
+		// check if another domain
+		if (window.location.origin != app.API_LATTE
+				&& document.getElementById("latteIframe")) {
+
+			localStorage.clear();
+
+			// get localStorage from latte server
+			var iframe = document.getElementById("latteIframe").contentWindow;
+			iframe.postMessage(JSON.stringify({
+				method : "all"
+			}), "*");
+		} else {
+			
+			// main server (no cross domain)
+			$( document ).trigger( "initFrameworkData" );
+		}
+	},
+
+	/**
 	 * load all menus from server and store them in localStorage
 	 */
 	loadModules : function() {
@@ -63,23 +124,26 @@ var app = {
 		if (!localStorage.getItem("initialized")) {
 
 			console.log("load modules from framework");
-			
-			$.ajax({
-				url : app.API_FRAMEWORK + "/init.json?callback=?",
-				async : false,
-			    contentType: "application/json",
-			    dataType: 'jsonp',
-			}).done(function(data) {
+
+			$.ajax(
+					{
+						url : app.API_LATTE + app.PATH_FRAMEWORK
+								+ "/init.json?callback=?",
+						async : false,
+						contentType : "application/json",
+						dataType : 'jsonp',
+					}).done(function(data) {
 				console.log(data);
 
-				//localStorage.clear();
+				// localStorage.clear();
 				localStorage.setItem("initialized", true);
 
 				// store each module separate
 				$.each(data.module, function(index, m) {
 					localStorage.setItem('module-' + m.id, JSON.stringify(m));
 
-					// remove sub menu for storing list of modules (without sub menus)
+					// remove sub menu for storing list of modules (without sub
+					// menus)
 					delete m.subMenu;
 				});
 
@@ -113,7 +177,17 @@ var app = {
 				on : {
 					click : function() {
 						localStorage.setItem("currentModuleId", m.id);
-					//	app.initSubMenu();
+						
+						
+						// todo own function...
+						var iframe = document.getElementById("latteIframe").contentWindow;
+						iframe.postMessage(JSON.stringify({
+							method : "set",
+							key : "currentModuleId",
+							data : m.id,
+						}), "*");
+						
+						// app.initSubMenu();
 					}
 				}
 			}));
@@ -125,14 +199,14 @@ var app = {
 				app.initSubMenu();
 			}
 		});
-		
+
 		// logout button
 		$("#main-navbar-right").find("a").on("click", function() {
 			localStorage.clear();
 			app.ws
 			alert("storage cleared");
 		});
-		
+
 	},
 
 	/**
@@ -234,28 +308,28 @@ var app = {
 	// ===========================================================================
 
 	ws : null,
-	
+
 	initWebSocket : function() {
-		
+
 		app.ws = new ReconnectingWebSocket(app.API_WEBSOCKET, null, {
 			debug : false
 		});
 
 		app.ws.onmessage = function(msg) {
 			console.log("onmessage" + msg.data);
-			
+
 			var data = JSON.parse(msg.data);
 			app.showMessage(data.message);
-			
+
 			if (data.message == "update") {
 				localStorage.removeItem("initialized");
 				app.loadModules();
 				app.initMainMenu();
 			}
-			
-			if (data.message == "inactive") {				
-				//app.loadModules();
-			//	app.initMainMenu();
+
+			if (data.message == "inactive") {
+				// app.loadModules();
+				// app.initMainMenu();
 				// get list with menu status...
 				// todo disable
 			}
@@ -277,15 +351,31 @@ var app = {
 // ===========================================================================
 
 function initFramework() {
+	console.log("window ready");
 
-	app.initSideBar();
+	app.createSideBar();
+	// create navbar
 
+	app.initIframe();
+}
+
+$(window).load(function() {
+	console.log("window load");
+
+	app.initLocalStorage();
+});
+
+
+$(document).on("initFrameworkData", function(event) {
+	console.log("initFrameworkData");
+		
 	app.loadModules();
-	
+
 	app.initMainMenu();
 
 	app.initWebSocket();
-}
+
+});
 
 (function() {
 	try {
