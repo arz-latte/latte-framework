@@ -1,5 +1,7 @@
 package at.arz.latte.framework.modules.dta;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import at.arz.latte.framework.modules.models.Module;
@@ -15,8 +17,11 @@ public class ModuleData {
 
 	private Long id;
 
+	@NotNull
+	@Size(min=5, max=255)
 	private String name;
 
+	@NotNull
 	private String provider;
 
 	private String url;

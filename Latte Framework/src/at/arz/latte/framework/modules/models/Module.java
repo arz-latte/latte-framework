@@ -6,6 +6,7 @@ import java.net.URL;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -225,15 +226,6 @@ public class Module extends AbstractEntity implements Serializable {
 		return u.getPath();
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (obj instanceof Module) {
-			Module module = (Module) obj;
-			return module.getId() == this.getId();
-		}
-
-		return false;
-	}
 
 	@Override
 	public String toString() {

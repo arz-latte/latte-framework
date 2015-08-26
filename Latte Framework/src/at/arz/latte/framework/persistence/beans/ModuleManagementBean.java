@@ -1,10 +1,16 @@
 package at.arz.latte.framework.persistence.beans;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Validator;
 
 import at.arz.latte.framework.modules.dta.ModuleData;
 import at.arz.latte.framework.modules.dta.ModuleListData;
@@ -22,6 +28,9 @@ public class ModuleManagementBean extends GenericManagementBean<Module> {
 
 	@PersistenceContext(unitName="latte-unit")
 	private EntityManager em;
+	
+	@Inject
+	private Validator validator;
 
 	public void initAllModules() {
 		em.createNamedQuery(Module.UPDATE_ALL).executeUpdate();
@@ -62,6 +71,11 @@ public class ModuleManagementBean extends GenericManagementBean<Module> {
 	 * used for partial updates via REST-service
 	 */
 	public Module updateModule(ModuleData moduleData) {
+		Set<ConstraintViolation<Object>> violations = requestValidation(moduleData);
+		if(!violations.isEmpty()){
+			throw new LatteValidationException("invalid moduleData");
+		}
+		System.out.println("update module ");
 		Module module = getModule(moduleData.getId());
 
 		module.setName(moduleData.getName());
@@ -75,17 +89,25 @@ public class ModuleManagementBean extends GenericManagementBean<Module> {
 			module.setStatus(ModuleStatus.Stopped);
 		}
 		
-		if (validate(module)) {
-			em.merge(module);
-		}
+//		if (validate(module)) {
+//			em.merge(module);
+//		}
 
 		return module;
+	}
+
+	private Set<ConstraintViolation<Object>> requestValidation(Object moduleData) {
+		return validator.validate(moduleData);
 	}
 
 	public void deleteModule(Long moduleId) {
 		Module toBeDeleted = getModule(moduleId);
 		em.remove(toBeDeleted);
 
+	}
+
+	public void sample() {
+		throw new LatteValidationException("something happened");
 	}
 
 }
