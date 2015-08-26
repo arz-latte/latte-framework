@@ -9,6 +9,7 @@
 		<conf name="default"/>
 		<conf name="compile"/>
 		<conf name="provided"/>
+		<conf name="war-lib"/>
 		<conf name="test" visibility="private"/>
 	</configurations>
 	
@@ -16,13 +17,9 @@
 		<dependency org="org.codehaus.jettison" name="jettison" rev="1.3.7" conf="compile->default"/>
 		<dependency org="org.apache.cxf" name="cxf-rt-frontend-jaxrs" rev="2.6.16" conf="compile->default"/>
 
-		<dependency org="org.apache.tomcat" name="tomcat-websocket-api" rev="7.0.50"/>
+		<dependency org="org.apache.tomcat" name="tomcat-websocket-api" rev="7.0.50" conf="provided->default"/>
 
-
-<!-- todo conf, deploy to server, required -->
-		<dependency org="org.glassfish" name="javax.json" rev="1.0.4"/>
-		
-		
+		<dependency org="org.glassfish" name="javax.json" rev="1.0.4" conf="war-lib->default"/>
 
 		<dependency org="org.postgresql" name="postgresql" rev="9.4-1201-jdbc41" conf="provided->default"/>
 		<dependency org="org.apache.derby" name="derby" rev="10.11.1.1" conf="test->default"/>
