@@ -1,3 +1,6 @@
+/**
+ * version 26.08.2015
+ */
 var app = {
 
 	// ===========================================================================
@@ -10,20 +13,76 @@ var app = {
 	API_WEBSOCKET : 'ws://localhost:8080/latte/ws',
 
 	/**
+	 * create nav bar with main menu
+	 */
+	createMainNavBar : function() {
+		
+		var $menu = $("<nav/>", {
+			'class' : "navbar navbar-default"
+		});
+		
+		var $div = $("<div/>", {
+			'class' : "container-fluid"
+		});
+		
+		var $button = $("<button/>", {
+			type : "button",
+			'class' : "navbar-toggle collapsed",
+			'data-toggle' : "collapse",
+			'data-target' : "#main-navbar-collapse",
+			'aria-expanded' : "false"
+		}).append($("<span/>", {
+			'class' : "sr-only",
+			text : "Menü umschalten"
+		}), $("<span/>", {
+			'class' : "icon-bar"
+		}), $("<span/>", {
+			'class' : "icon-bar"
+		}), $("<span/>", {
+			'class' : "icon-bar"
+		}));
+
+		var $navbarHeader = $("<div/>", {
+			'class' : "navbar-header"
+		}).append($button, $("<a/>", {
+			'class' : "navbar-brand",
+			href : "#",
+			text : "Latte"
+		}));
+		
+		var $navbarCollapse = $("<div/>", {
+			'class' : "navbar-collapse collapse",
+			id : "main-navbar-collapse"
+		}).append($("<ul/>", {
+			'class' : "nav navbar-nav",
+			id : "main-navbar-left"
+		}), $("<ul/>", {
+			'class' : "nav navbar-nav navbar-right",
+			id : "main-navbar-right"
+		}).append($("<li/>").append($("<a/>", { href : "#", text : "Logout"})) ) );
+		
+		$div.append($navbarHeader, $navbarCollapse);
+		
+		$menu.append($div);
+		
+		$("#main-navbar").append($menu);
+	},
+	
+	/**
 	 * create side bar with menu
 	 */
 	createSideBar : function() {
 
 		var $menu = $("<div/>", {
-			'class' : "navbar navbar-default",
-			role : "navigation"
+			'class' : "navbar navbar-default"
 		});
 
 		var $button = $("<button/>", {
 			type : "button",
-			'class' : "navbar-toggle",
+			'class' : "navbar-toggle collapsed",
 			'data-toggle' : "collapse",
-			'data-target' : "#side-navbar-collapse"
+			'data-target' : "#side-navbar-collapse",
+			'aria-expanded' : "false"
 		}).append($("<span/>", {
 			'class' : "sr-only",
 			text : "Menü umschalten"
@@ -284,7 +343,7 @@ function initFramework() {
 	console.log("window ready");
 
 	app.createSideBar();
-	// create navbar
+	app.createMainNavBar();
 
 	app.loadModules();
 

@@ -22,7 +22,7 @@ import at.arz.latte.framework.modules.models.Module;
  *
  */
 @Stateless
-public class FrameworkManagementBean extends GenericManagementBean<Module> {
+public class FrameworkManagementBean {
 
 	@PersistenceContext(unitName = "latte-unit")
 	private EntityManager em;

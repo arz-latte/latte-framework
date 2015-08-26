@@ -22,7 +22,7 @@ import at.arz.latte.framework.modules.models.ModuleStatus;
  *
  */
 @Stateless
-public class ModuleManagementBean extends GenericManagementBean<Module> {
+public class ModuleManagementBean {
 
 	@PersistenceContext(unitName="latte-unit")
 	private EntityManager em;
@@ -58,10 +58,7 @@ public class ModuleManagementBean extends GenericManagementBean<Module> {
 	 * used for partial updates via timer-service
 	 */
 	public Module updateModule(Module module) {		
-		if (validate(module)) {
-			em.merge(module);
-		}
-
+		em.merge(module);
 		return module;
 	}
 

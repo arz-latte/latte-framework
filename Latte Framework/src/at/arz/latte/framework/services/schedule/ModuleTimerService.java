@@ -118,6 +118,8 @@ public class ModuleTimerService {
 					module.setSubMenu(subMenu);
 				}
 				
+				// todo validate 
+				
 				bean.updateModule(module);
 				
 				websocket.chat(new WebsocketMessage("update", "server"));

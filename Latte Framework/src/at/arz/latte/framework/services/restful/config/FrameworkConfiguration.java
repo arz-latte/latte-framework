@@ -7,7 +7,6 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
-import at.arz.latte.framework.persistence.beans.GenericManagementBean;
 import at.arz.latte.framework.services.restful.AdministrationService;
 import at.arz.latte.framework.services.restful.FrameworkService;
 import at.arz.latte.framework.services.restful.ModuleService;

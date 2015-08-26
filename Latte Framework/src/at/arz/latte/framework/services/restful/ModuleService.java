@@ -20,7 +20,6 @@ import javax.ws.rs.core.MediaType;
 import at.arz.latte.framework.modules.dta.ModuleData;
 import at.arz.latte.framework.modules.dta.ModuleListData;
 import at.arz.latte.framework.modules.models.Module;
-import at.arz.latte.framework.persistence.beans.LatteValidationException;
 import at.arz.latte.framework.persistence.beans.ModuleManagementBean;
 import at.arz.latte.framework.websockets.WebsocketEndpoint;
 import at.arz.latte.framework.websockets.models.WebsocketMessage;

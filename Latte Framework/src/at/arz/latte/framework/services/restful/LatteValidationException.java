@@ -1,4 +1,4 @@
-package at.arz.latte.framework.persistence.beans;
+package at.arz.latte.framework.services.restful;
 
 import java.util.HashMap;
 import java.util.Set;
