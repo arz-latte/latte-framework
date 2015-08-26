@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tomee>
+
+	<Resource id="latte" type="DataSource">
+		JdbcDriver org.postgresql.Driver
+		JdbcUrl jdbc:postgresql://localhost/latte
+		UserName latte
+		Password latte
+	</Resource>
+
+</tomee>

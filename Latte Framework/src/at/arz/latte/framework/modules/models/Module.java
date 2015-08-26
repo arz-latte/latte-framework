@@ -3,7 +3,6 @@ package at.arz.latte.framework.modules.models;
 import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
-
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -19,7 +18,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
@@ -52,7 +50,7 @@ public class Module extends AbstractEntity implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "Module.ID")
-	@TableGenerator(name = "Module.ID", table = "latte_seq", pkColumnName = "KEY", valueColumnName = "VALUE")
+	@TableGenerator(name = "Module.ID", table = "latte_seq", pkColumnName = "KEY", pkColumnValue="Module.ID", valueColumnName = "VALUE")
 	private Long id;
 
 	@NotNull

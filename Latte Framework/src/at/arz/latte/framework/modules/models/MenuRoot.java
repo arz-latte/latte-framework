@@ -27,7 +27,7 @@ public class MenuRoot extends AbstractEntity implements Serializable, Comparable
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "Menu.ID")
-	@TableGenerator(name = "Menu.ID", table = "latte_seq", pkColumnName = "KEY", valueColumnName = "VALUE")
+	@TableGenerator(name = "Menu.ID", table = "latte_seq", pkColumnName = "KEY", valueColumnName = "VALUE", pkColumnValue="Menu.ID")
 	private Long id;
 
 	@Embedded
