@@ -176,7 +176,7 @@ var app = {
 				'data-id' : m.id,
 				on : {
 					click : function() {
-						localStorage.setItem("currentModuleId", m.id);
+						localStorage.setItem("currentModuleId", m.id);						
 						// app.initSubMenu();
 					}
 				}

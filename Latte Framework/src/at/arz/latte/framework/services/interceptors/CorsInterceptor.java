@@ -20,39 +20,40 @@ public class CorsInterceptor implements Filter {
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
-		
+
 		HttpServletRequest httpRequest = (HttpServletRequest) request;
-        HttpServletResponse httpResponse = (HttpServletResponse) response;
- 
-        Map<String, String[]> parms = httpRequest.getParameterMap();
- 
-        if(parms.containsKey("callback")) {
-            OutputStream out = httpResponse.getOutputStream();
- 
-            GenericResponseWrapper wrapper = new GenericResponseWrapper(httpResponse);
- 
-            chain.doFilter(request, wrapper);
- 
-            out.write(new String(parms.get("callback")[0] + "(").getBytes());
-            out.write(wrapper.getData());
-            out.write(new String(");").getBytes());
- 
-            wrapper.setContentType("text/javascript;charset=UTF-8");
- 
-            out.close();
-        } else {
-            chain.doFilter(request, response);
-        }
-        /*
-		if (response instanceof HttpServletResponse) {
-			HttpServletResponse http = (HttpServletResponse) response;
-			http.addHeader("Access-Control-Allow-Origin", "*");
-			http.addHeader("Access-Control-Allow-Credentials", "true");
-			http.addHeader("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT");
+		HttpServletResponse httpResponse = (HttpServletResponse) response;
+
+		Map<String, String[]> parms = httpRequest.getParameterMap();
+
+		if (parms.containsKey("callback")) {
+			OutputStream out = httpResponse.getOutputStream();
+
+			GenericResponseWrapper wrapper = new GenericResponseWrapper(httpResponse);
+
+			chain.doFilter(request, wrapper);
+
+			out.write(new String(parms.get("callback")[0] + "(").getBytes());
+			out.write(wrapper.getData());
+			out.write(new String(");").getBytes());
+
+			wrapper.setContentType("text/javascript;charset=UTF-8");
+
+			out.close();
+		} else {
+			chain.doFilter(request, response);
 		}
-		System.out.println(response.getWriter().toString());
-		
-		chain.doFilter(request, response);*/
+		/*
+		 * if (response instanceof HttpServletResponse) { HttpServletResponse
+		 * http = (HttpServletResponse) response;
+		 * http.addHeader("Access-Control-Allow-Origin", "*");
+		 * http.addHeader("Access-Control-Allow-Credentials", "true");
+		 * http.addHeader("Access-Control-Allow-Methods",
+		 * "GET, POST, DELETE, PUT"); }
+		 * System.out.println(response.getWriter().toString());
+		 * 
+		 * chain.doFilter(request, response);
+		 */
 	}
 
 	@Override
