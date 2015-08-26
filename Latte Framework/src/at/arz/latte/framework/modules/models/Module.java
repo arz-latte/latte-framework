@@ -6,7 +6,6 @@ import java.net.URL;
 import java.util.List;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -89,6 +88,7 @@ public class Module extends AbstractEntity implements Serializable {
 	@Enumerated(EnumType.STRING)
 	private ModuleStatus status;
 
+	@NotNull
 	private boolean enabled;
 
 	@Embedded
@@ -122,7 +122,7 @@ public class Module extends AbstractEntity implements Serializable {
 
 	/**
 	 * 
-	 * used for partial updates via REST-service
+	 * used for creation and updates via REST-service
 	 * 
 	 */
 	public Module(ModuleData m) {
@@ -132,6 +132,8 @@ public class Module extends AbstractEntity implements Serializable {
 		this.setUrl(m.getUrl());
 		this.setInterval(m.getInterval());
 		this.setEnabled(m.getEnabled());
+		this.version = "-";
+		this.status = ModuleStatus.Stopped;		
 	}
 
 	public Long getId() {

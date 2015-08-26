@@ -1,6 +1,5 @@
 package at.arz.latte.framework.persistence.beans;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -9,7 +8,6 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
 
 import at.arz.latte.framework.modules.dta.ModuleData;
@@ -48,11 +46,11 @@ public class ModuleManagementBean extends GenericManagementBean<Module> {
 		return em.find(Module.class, moduleId);
 	}
 
-	public Module createModule(Module module) {
-		if (validate(module)) {
-			em.persist(module);
-		}
-
+	/**
+	 * used for creation via REST-service
+	 */
+	public Module createModule(Module module) {	
+		em.persist(module);
 		return module;
 	}
 	
@@ -71,16 +69,11 @@ public class ModuleManagementBean extends GenericManagementBean<Module> {
 	 * used for partial updates via REST-service
 	 */
 	public Module updateModule(ModuleData moduleData) {
-		Set<ConstraintViolation<Object>> violations = requestValidation(moduleData);
-		if(!violations.isEmpty()){
-			throw new LatteValidationException("invalid moduleData");
-		}
-		System.out.println("update module ");
 		Module module = getModule(moduleData.getId());
 
 		module.setName(moduleData.getName());
 		module.setProvider(moduleData.getProvider());
-		module.setUrl(moduleData.getUrl());
+		module.setUrl(moduleData.getUrl().toString());
 		module.setInterval(moduleData.getInterval());
 		module.setEnabled(moduleData.getEnabled());
 		
@@ -88,26 +81,13 @@ public class ModuleManagementBean extends GenericManagementBean<Module> {
 		if (!module.getEnabled()) {
 			module.setStatus(ModuleStatus.Stopped);
 		}
-		
-//		if (validate(module)) {
-//			em.merge(module);
-//		}
 
 		return module;
-	}
-
-	private Set<ConstraintViolation<Object>> requestValidation(Object moduleData) {
-		return validator.validate(moduleData);
 	}
 
 	public void deleteModule(Long moduleId) {
 		Module toBeDeleted = getModule(moduleId);
 		em.remove(toBeDeleted);
-
-	}
-
-	public void sample() {
-		throw new LatteValidationException("something happened");
 	}
 
 }

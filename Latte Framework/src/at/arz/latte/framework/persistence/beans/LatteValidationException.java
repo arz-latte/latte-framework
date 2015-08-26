@@ -1,36 +1,39 @@
 package at.arz.latte.framework.persistence.beans;
 
-import javax.ejb.ApplicationException;
+import java.util.HashMap;
+import java.util.Set;
 
-@ApplicationException(rollback=true)
-public class LatteValidationException extends RuntimeException{
+import javax.ejb.ApplicationException;
+import javax.validation.ConstraintViolation;
+
+@ApplicationException(rollback = true)
+public class LatteValidationException extends RuntimeException {
 	private static final long serialVersionUID = 1L;
 
-	public LatteValidationException() {
+	private HashMap<String, String> validation;
+
+	public LatteValidationException(Set<ConstraintViolation<Object>> violations) {
 		super();
-		// TODO Auto-generated constructor stub
+		convertToMap(violations);
 	}
 
-	public LatteValidationException(String message, Throwable cause,
-			boolean enableSuppression, boolean writableStackTrace) {
-		super(message, cause, enableSuppression, writableStackTrace);
-		// TODO Auto-generated constructor stub
+	private void convertToMap(Set<ConstraintViolation<Object>> violations) {
+
+		if (violations.size() > 0) {
+			validation = new HashMap<String, String>();
+
+			for (ConstraintViolation<Object> cv : violations) {
+				validation.put(cv.getPropertyPath().toString(), cv.getMessage());
+			}
+		}
 	}
 
-	public LatteValidationException(String message, Throwable cause) {
-		super(message, cause);
-		// TODO Auto-generated constructor stub
+	public HashMap<String, String> getValidation() {
+		return validation;
 	}
 
-	public LatteValidationException(String message) {
-		super(message);
-		// TODO Auto-generated constructor stub
+	public void setValidation(HashMap<String, String> validation) {
+		this.validation = validation;
 	}
 
-	public LatteValidationException(Throwable cause) {
-		super(cause);
-		// TODO Auto-generated constructor stub
-	}
-
-	
 }

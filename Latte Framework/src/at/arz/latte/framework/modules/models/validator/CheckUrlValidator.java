@@ -14,7 +14,6 @@ import javax.validation.ConstraintValidatorContext;
  */
 public class CheckUrlValidator implements ConstraintValidator<CheckUrl, String> {
 
-
 	@Override
 	public void initialize(CheckUrl constraintAnnotation) {
 	}

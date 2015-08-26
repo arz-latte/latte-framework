@@ -58,65 +58,6 @@ var app = {
 	},
 
 	/**
-	 * initialize iframe (only on non latte server)
-	 */
-	initIframe : function() {
-
-		// check if file is not from latte server (cross domain)
-		if (window.location.origin != app.API_LATTE
-				&& document.getElementById("latteIframe")) {
-
-			window.onmessage = function(e) {
-				console.log(e);
-				if (e.origin != app.API_LATTE) {
-					return;
-				}
-
-				var payload = JSON.parse(e.data);
-				switch (payload.method) {
-				case 'get':
-					localStorage.setItem(payload.key, payload.data);
-					break;
-				case 'all':
-					for ( var i in payload.data) {
-						localStorage.setItem(i, payload.data[i]);
-					}
-					
-					// data from main server loaded
-					$( document ).trigger( "initFrameworkData" );					
-					break;
-				}
-			};
-		}
-
-	},
-
-	/**
-	 * initialize localStorage, get data from latte server
-	 */
-	initLocalStorage : function() {
-
-		console.log("initLocalStorage");
-
-		// check if another domain
-		if (window.location.origin != app.API_LATTE
-				&& document.getElementById("latteIframe")) {
-
-			localStorage.clear();
-
-			// get localStorage from latte server
-			var iframe = document.getElementById("latteIframe").contentWindow;
-			iframe.postMessage(JSON.stringify({
-				method : "all"
-			}), "*");
-		} else {
-			
-			// main server (no cross domain)
-			$( document ).trigger( "initFrameworkData" );
-		}
-	},
-
-	/**
 	 * load all menus from server and store them in localStorage
 	 */
 	loadModules : function() {
@@ -133,9 +74,8 @@ var app = {
 						contentType : "application/json",
 						dataType : 'jsonp',
 					}).done(function(data) {
-				console.log(data);
 
-				// localStorage.clear();
+				localStorage.clear();
 				localStorage.setItem("initialized", true);
 
 				// store each module separate
@@ -176,7 +116,7 @@ var app = {
 				'data-id' : m.id,
 				on : {
 					click : function() {
-						localStorage.setItem("currentModuleId", m.id);						
+						localStorage.setItem("currentModuleId", m.id);
 						// app.initSubMenu();
 					}
 				}
@@ -346,26 +286,13 @@ function initFramework() {
 	app.createSideBar();
 	// create navbar
 
-	app.initIframe();
-}
-
-$(window).load(function() {
-	console.log("window load");
-
-	app.initLocalStorage();
-});
-
-
-$(document).on("initFrameworkData", function(event) {
-	console.log("initFrameworkData");
-		
 	app.loadModules();
 
 	app.initMainMenu();
 
 	app.initWebSocket();
 
-});
+}
 
 (function() {
 	try {

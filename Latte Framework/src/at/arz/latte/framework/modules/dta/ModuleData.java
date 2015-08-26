@@ -1,10 +1,19 @@
 package at.arz.latte.framework.modules.dta;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import at.arz.latte.framework.modules.models.Module;
+import at.arz.latte.framework.modules.models.ModuleStatus;
+import at.arz.latte.framework.modules.models.validator.CheckUrl;
+import at.arz.latte.framework.modules.models.validator.CheckUrl;
 
 /**
  * used to transmit module data to the client, for single view or update
@@ -18,16 +27,26 @@ public class ModuleData {
 	private Long id;
 
 	@NotNull
-	@Size(min=5, max=255)
+	@Size(min = 1, max = 63)
 	private String name;
 
 	@NotNull
+	@Size(min = 1, max = 63)
 	private String provider;
 
+	@NotNull
+	@CheckUrl
 	private String url;
 
+	/**
+	 * time in seconds for checking if module available, default 60s, if is set
+	 * to 0s - checking is disabled
+	 */
+	@NotNull
+	@Min(1)
 	private int interval;
 
+	@NotNull
 	private boolean enabled;
 
 	public ModuleData() {
@@ -47,6 +66,7 @@ public class ModuleData {
 	 * convert persistent module entity to REST entity
 	 * 
 	 * @param m
+	 * @throws MalformedURLException 
 	 */
 	public ModuleData(Module m) {
 		this.id = m.getId();

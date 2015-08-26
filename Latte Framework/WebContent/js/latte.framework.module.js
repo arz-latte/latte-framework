@@ -75,9 +75,10 @@ var appModule = {
 				}),
 				contentType : "application/json; charset=UTF-8",
 			}).done(function(data) {
-				appModule.storeModuleCallback(data.result, "Modul aktualisiert");
-			}).fail(function() {
-				app.showErrorMessage("Fehler");
+				app.showMessage("Modul aktualisiert");
+				appModule.loadModules();
+			}).fail(function(error) {
+				appModule.validateModule(error);
 			});
 		} else {
 
@@ -89,9 +90,10 @@ var appModule = {
 				}),
 				contentType : "application/json; charset=UTF-8",
 			}).done(function(data) {
-				appModule.storeModuleCallback(data.result, "Modul erstellt");
-			}).fail(function() {
-				app.showErrorMessage("Fehler");
+				app.showMessage("Modul erstellt");
+				appModule.loadModules();				
+			}).fail(function(error) {
+				appModule.validateModule(error);
 			});
 		}
 
@@ -109,36 +111,34 @@ var appModule = {
 		})
 	},
 
-	storeModuleCallback : function(data, msg) {
-
-		if (data.validation) {
-			app.showErrorMessage("Fehler beim Speichern");
+	validateModule : function(error) {
+		app.showErrorMessage("Fehler beim Speichern");
+		
+		if (error.status == 400) {
 			appModule.resetFormValidation();
 
-			// mark invalid
+			var validation = error.responseJSON.response.validation;
+	
+			// mark inputs as invalid
 			var entries = [];
-			if ($.isArray(data.validation.entry)) {
-				$.merge(entries, data.validation.entry);
+			if ($.isArray(validation.entry)) {
+				$.merge(entries, validation.entry);
 			} else {
-				entries.push(data.validation.entry);
+				entries.push(validation.entry);
 			}
 			$.each(entries, function(i, e) {
 				// mark input as invalid
 				var $input = $("[name=input-" + e.key + "]");
 				$input.closest(".form-group").addClass("has-error");
-
+	
 				$input.next().show(); // show glyphicon
-
+	
 				// set label text
 				var text = $input.parent().prev().text();
 				$input.parent().prev().text(text + ": " + e.value);
 			});
-
-		} else {
-			app.showMessage(msg);
-			appModule.loadModules();
 		}
-	},
+	},	
 
 	deleteModule : function() {
 		var choice = confirm("Sind Sie sicher?");
