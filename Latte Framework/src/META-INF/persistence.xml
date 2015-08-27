@@ -11,6 +11,7 @@
 		<class>at.arz.latte.framework.modules.models.MenuLeaf</class>
 		<class>at.arz.latte.framework.modules.models.Module</class>
 		<class>at.arz.latte.framework.modules.models.MenuEntry</class>
+		<class>at.arz.latte.framework.modules.models.TestE</class>
 
 		<properties>
 			<property name="openjpa.DynamicEnhancementAgent" value="true" />
