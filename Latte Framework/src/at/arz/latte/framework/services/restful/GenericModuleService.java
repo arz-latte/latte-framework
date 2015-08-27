@@ -27,7 +27,7 @@ import at.arz.latte.framework.dta.SubMenuData;
 public abstract class GenericModuleService {
 
 	@Inject
-	private Validator validator;	
+	private Validator validator;
 
 	/**
 	 * validate menu data structure
@@ -69,13 +69,14 @@ public abstract class GenericModuleService {
 			}
 		}
 	}
-	
+
 	private Set<ConstraintViolation<Object>> requestValidation(Object moduleData) {
 		return validator.validate(moduleData);
 	}
 
 	/**
 	 * load and validate configuration file of a service
+	 * 
 	 * @param filename
 	 * @return
 	 * @throws JAXBException
