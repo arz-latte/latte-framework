@@ -1,12 +1,18 @@
 package at.arz.latte.framework.services.restful;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -16,6 +22,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
+import at.arz.latte.framework.modules.dta.MenuData;
 import at.arz.latte.framework.modules.dta.MenuEntryData;
 import at.arz.latte.framework.modules.dta.MenuLeafData;
 import at.arz.latte.framework.modules.dta.MenuRootData;
@@ -35,6 +42,9 @@ public class AdministrationService {
 
 	@EJB
 	private ModuleManagementBean bean;
+
+	@Inject
+	private Validator validator;
 
 	@GET
 	@Path("status.json")
@@ -58,15 +68,38 @@ public class AdministrationService {
 		return new ModuleUpdateData("v1.00", mainMenu, subMenu);
 	}
 	
+	private Set<ConstraintViolation<Object>> requestValidation(Object moduleData) {
+		return validator.validate(moduleData);
+	}
+
+	
 	private void loadServiceConfig(String filename) throws JAXBException {
 		
-		URL url = getClass().getResource(filename);
-		File file = new File(url.getPath());
+		try {
+			URL url = getClass().getResource(filename);
+			SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");		
+			System.out.println(sdf.format(url.openConnection().getLastModified()));
 
-		JAXBContext jaxbContext = JAXBContext.newInstance(ModuleData.class);
-		Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-		ModuleData m = (ModuleData) unmarshaller.unmarshal(file);
-		System.out.println(m.getName());
+			File file = new File(url.getPath());
+
+			JAXBContext jaxbContext = JAXBContext.newInstance(MenuData.class);
+			Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+
+			MenuData m = (MenuData) unmarshaller.unmarshal(file);
+			
+			Set<ConstraintViolation<Object>> violations = requestValidation(m);
+			if(!violations.isEmpty()){
+				throw new RuntimeException(violations.toString());
+			}	
+
+			System.out.println(m.getUrl());
+			//System.out.println(m.getSubmenu().get(1).getUrl());
+
+		} catch (IOException e) {
+			e.printStackTrace();
+			// TODO Auto-generated catch block
+		}
+		
 	}
 	
 }
