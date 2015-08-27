@@ -3,21 +3,19 @@
     <name>Administration</name>
     <url>http://localhost:8080/latte/index.html</url>
     <order>20</order>
-    <submenus>
-        <submenu>
-            <name>Module</name>
-            <url>http://localhost:8080/latte/module.html</url>
-            <permission>admin</permission>
-        </submenu>
-        <submenu>
-            <name>Benutzer</name>
-            <url>#</url>
-            <permission>admin</permission>
-        </submenu>
-        <submenu>
-            <name>Rollen</name>
-            <url>#</url>
-            <permission>admin</permission>
-        </submenu>
-    </submenus>
+    <submenu>
+        <name>Module</name>
+        <url>http://localhost:8080/latte/module.html</url>
+        <permission>admin</permission>
+    </submenu>
+    <submenu>
+        <name>Benutzer</name>
+        <url>#</url>
+        <permission>admin</permission>
+    </submenu>
+    <submenu>
+        <name>Rollen</name>
+        <url>#</url>
+        <permission>admin</permission>
+    </submenu>
 </menu>
