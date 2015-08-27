@@ -64,7 +64,7 @@ public class ModuleService {
 				
 		Set<ConstraintViolation<Object>> violations = requestValidation(moduleData);
 		if(!violations.isEmpty()){
-			throw new LatteValidationException(violations);
+			throw new LatteValidationException(400, violations);
 		}
 
 		Module module = new Module(moduleData);	
@@ -78,7 +78,7 @@ public class ModuleService {
 				
 		Set<ConstraintViolation<Object>> violations = requestValidation(moduleData);
 		if(!violations.isEmpty()){
-			throw new LatteValidationException(violations);
+			throw new LatteValidationException(400, violations);
 		}	
 
 		// notify clients if urlchanged or module was disabled

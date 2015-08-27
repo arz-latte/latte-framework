@@ -1,4 +1,4 @@
-package at.arz.latte.framework.modules.dta;
+package at.arz.latte.framework.dta;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -8,6 +8,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import at.arz.latte.framework.modules.models.validator.CheckUrl;
@@ -38,11 +39,12 @@ public class SubMenuData implements Serializable {
 
 	private Boolean denied;
 
-	private List<SubMenuData> children;
+	@XmlElement(name="submenu")
+	private List<SubMenuData> submenus;
 
 	public SubMenuData() {
 		super();
-		this.children = new ArrayList<>();
+		this.submenus = new ArrayList<>();
 	}
 
 	public SubMenuData(String name, String url, String permission) {
@@ -106,16 +108,16 @@ public class SubMenuData implements Serializable {
 		this.denied = denied;
 	}
 
-	public List<SubMenuData> getChildren() {
-		return children;
+	public List<SubMenuData> getSubmenus() {
+		return submenus;
 	}
 
-	public void setChildren(List<SubMenuData> children) {
-		this.children = children;
+	public void setSubmenus(List<SubMenuData> submenus) {
+		this.submenus = submenus;
 	}
 
-	public void addChild(SubMenuData child) {
-		this.children.add(child);
+	public void addSubMenu(SubMenuData submenu) {
+		this.submenus.add(submenu);
 	}
 
 }

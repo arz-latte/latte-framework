@@ -11,9 +11,9 @@ import at.arz.latte.framework.modules.dta.ResponseData;
 public class LatteValidationExceptionMapper implements ExceptionMapper<LatteValidationException>{
 
 	@Override
-	public Response toResponse(LatteValidationException exception) {		
-		ResponseData responseData = new ResponseData(exception.getValidation());
-		return Response.status(400).type(MediaType.APPLICATION_JSON).entity(responseData).build();
+	public Response toResponse(LatteValidationException ex) {		
+		ResponseData responseData = new ResponseData(ex.getValidation());
+		return Response.status(ex.getStatus()).type(MediaType.APPLICATION_JSON).entity(responseData).build();
 	}
 
 }

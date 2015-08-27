@@ -2,20 +2,14 @@ package at.arz.latte.framework.persistence;
 
 import java.io.File;
 
-import javax.persistence.EntityManager;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
-import at.arz.latte.framework.modules.dta.MenuData;
-import at.arz.latte.framework.modules.dta.ModuleData;
-import at.arz.latte.framework.modules.dta.SubMenuData;
-import at.arz.latte.framework.modules.dta.SubMenusData;
-import at.arz.latte.framework.modules.models.TestE;
+import at.arz.latte.framework.dta.MenuData;
+import at.arz.latte.framework.dta.SubMenuData;
 
 public class ConfigFileTest {
 
@@ -26,13 +20,10 @@ public class ConfigFileTest {
 		SubMenuData sub1 = new SubMenuData("Module", "http://localhost:8080/latte/module.html", "admin"); 
 		SubMenuData sub2 = new SubMenuData("Benutzer", "#", "admin"); 
 		SubMenuData sub3 = new SubMenuData("Rollen", "#", "admin"); 
-		SubMenusData sub = new SubMenusData();
 		
-		sub.addSubMenu(sub1);
-		sub.addSubMenu(sub2);
-		sub.addSubMenu(sub3);
-		
-		menu.setSubmenus(sub);
+		menu.addSubMenu(sub1);
+		menu.addSubMenu(sub2);
+		menu.addSubMenu(sub3);
 
 		File file = new File("administration-service-config.xml");
 

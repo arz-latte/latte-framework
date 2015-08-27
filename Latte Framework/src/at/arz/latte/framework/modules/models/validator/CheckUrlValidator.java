@@ -21,8 +21,13 @@ public class CheckUrlValidator implements ConstraintValidator<CheckUrl, String> 
 	@Override
 	public boolean isValid(String object, ConstraintValidatorContext constraintContext) {
 
-		if (object == null)
+		if (object == null) {
 			return false;
+		}
+		
+		if (object.equals("#")) {
+			return true;
+		}
 
 		try {
 			new URL(object);

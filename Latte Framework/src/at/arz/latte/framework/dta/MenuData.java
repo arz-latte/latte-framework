@@ -1,7 +1,6 @@
-package at.arz.latte.framework.modules.dta;
+package at.arz.latte.framework.dta;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +8,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlList;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import at.arz.latte.framework.modules.models.validator.CheckUrl;
@@ -35,14 +34,14 @@ public class MenuData implements Serializable {
 
 	private Boolean denied;
 
-	//private List<SubMenuData> submenu;
-	private SubMenusData submenus;
-	
+	@XmlElement(name="submenu")
+	private List<SubMenuData> submenus;
+
 	private Long lastmodified;
 
 	public MenuData() {
 		super();
-		//submenu = new ArrayList<>();
+		submenus = new ArrayList<>();
 	}
 
 	public MenuData(String name, String url) {
@@ -100,36 +99,25 @@ public class MenuData implements Serializable {
 	public void setDenied(Boolean denied) {
 		this.denied = denied;
 	}
-/*
-	public List<SubMenuData> getSubmenu() {
-		return submenu;
+
+	public List<SubMenuData> getSubmenus() {
+		return submenus;
 	}
 
-	public void setSubmenu(List<SubMenuData> submenu) {
-		this.submenu = submenu;
+	public void setSubmenus(List<SubMenuData> submenus) {
+		this.submenus = submenus;
 	}
 
 	public void addSubMenu(SubMenuData submenu) {
-		this.submenu.add(submenu);
+		this.submenus.add(submenu);
 	}
-*/
-	
-	
+
 	public Long getLastmodified() {
 		return lastmodified;
 	}
 
 	public void setLastmodified(Long lastmodified) {
 		this.lastmodified = lastmodified;
-	}
-
-
-	public SubMenusData getSubmenus() {
-		return submenus;
-	}
-
-	public void setSubmenus(SubMenusData submenus) {
-		this.submenus = submenus;
 	}
 
 }
