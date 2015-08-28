@@ -1,11 +1,15 @@
 package at.arz.latte.framework.services.schedule;
 
 import java.net.MalformedURLException;
+import java.util.Set;
 
 import javax.ejb.DependsOn;
 import javax.ejb.EJB;
 import javax.ejb.Schedule;
 import javax.ejb.Singleton;
+import javax.inject.Inject;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 
@@ -17,7 +21,7 @@ import at.arz.latte.framework.persistence.beans.ModuleManagementBean;
 import at.arz.latte.framework.persistence.models.Menu;
 import at.arz.latte.framework.persistence.models.Module;
 import at.arz.latte.framework.restful.dta.MenuData;
-import at.arz.latte.framework.restful.dta.SubMenuData;
+import at.arz.latte.framework.services.restful.LatteValidationException;
 import at.arz.latte.framework.websockets.WebsocketEndpoint;
 import at.arz.latte.framework.websockets.models.WebsocketMessage;
 
@@ -36,6 +40,9 @@ public class ModuleTimerService {
 
 	@EJB
 	private WebsocketEndpoint websocket;
+
+	@Inject
+	private Validator validator;
 
 	private int counter = 0;
 
@@ -64,10 +71,11 @@ public class ModuleTimerService {
 			// todo: send version to client via post...
 			MenuData menuData = client.accept(MediaType.APPLICATION_JSON).get(MenuData.class);
 
-			
-			// valiate menu response data....
-			
-			
+			// valiate menu response data
+			Set<ConstraintViolation<Object>> violations = requestValidation(menuData);
+			if (!violations.isEmpty()) {
+				throw new LatteValidationException(400, violations);
+			}			
 			
 			// got response -> check version
 			if (module.getLastModified() == null || module.getLastModified() < menuData.getLastModified()) {
@@ -81,6 +89,8 @@ public class ModuleTimerService {
 				
 				websocket.chat(new WebsocketMessage("update", "server"));
 			} else if (!module.getRunning()) {
+				
+				System.out.println("set running true " + module.getName());
 				
 				// set module running to true
 				bean.updateModuleRunning(module.getId(), true);				
@@ -104,4 +114,8 @@ public class ModuleTimerService {
 			e.printStackTrace();
 		}
 	}
+	
+	private Set<ConstraintViolation<Object>> requestValidation(Object moduleData) {
+		return validator.validate(moduleData);
+	}	
 }

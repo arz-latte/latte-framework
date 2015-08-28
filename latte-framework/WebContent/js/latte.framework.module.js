@@ -23,8 +23,10 @@ var appModule = {
 					var dt = new Date(module.lastmodified);					
 					var h = dt.getHours() < 10 ? "0" + dt.getHours() : dt.getHours();
 					var m = dt.getMinutes() < 10 ? "0" + dt.getMinutes() : dt.getMinutes();
-					var s = dt.getSeconds() < 10 ? "0" + dt.getSeconds() : dt.getSeconds();
-					version = dt.getDate() + "." + (dt.getMonth()+1) + "." + dt.getFullYear() + " " + h + ":" + m +":" + s;	
+					var s = dt.getSeconds() < 10 ? "0" + dt.getSeconds() : dt.getSeconds();					
+					var d = dt.getDate() < 10 ? "0" + dt.getDate() : dt.getDate();
+					var n = dt.getMonth() < 9 ? "0" + (dt.getMonth()+1) : dt.getMonth()+1;					
+					version = d + "." + n + "." + dt.getFullYear() + " " + h + ":" + m +":" + s;	
 				}
 				var $version = $("<td/>").append(version);
 				

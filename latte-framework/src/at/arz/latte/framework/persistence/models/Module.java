@@ -115,6 +115,7 @@ public class Module implements Serializable {
 		this.url = url;
 		this.interval = interval;
 		this.enabled = enabled;
+		this.running = false;
 	}
 
 	public Long getId() {
