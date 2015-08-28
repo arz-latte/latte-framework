@@ -39,7 +39,6 @@ public abstract class AbstractModuleHelper {
 		// validate menu structure
 		Set<ConstraintViolation<Object>> violations = requestValidation(menu);
 		if (!violations.isEmpty()) {
-			// throw new RuntimeException(violations.toString());
 			throw new LatteValidationException(500, violations);
 		}
 
@@ -61,7 +60,6 @@ public abstract class AbstractModuleHelper {
 				Set<ConstraintViolation<Object>> violations = requestValidation(submenu);
 				if (!violations.isEmpty()) {
 					throw new LatteValidationException(500, violations);
-					// throw new RuntimeException(violations.toString());
 				}
 
 				// recursive validate sub menu structure
