@@ -217,7 +217,7 @@ var app = {
 		if (menu.submenu) {
 
 			$.each(menu.submenu, function(index, menu) {
-				app.appendSubMenuRec($subMenu, menu);
+				app.appendSubMenuRec($subMenu, menu, 0);
 			});
 			
 			app.showSideBar();
@@ -226,7 +226,7 @@ var app = {
 		}
 	},
 
-	appendSubMenuRec : function($subMenu, menu) {
+	appendSubMenuRec : function($subMenu, menu, level) {
 		// sub menu entry
 		var $entry = $("<li/>").append($("<a/>", {
 			href : menu.url,
@@ -238,16 +238,26 @@ var app = {
 		if (menu.url == loc) {
 			$entry.addClass("active");
 		}
+		
+		if (level > 0) {
+			$entry.addClass("submenu");
+		}
 
+		$subMenu.append($entry);
+				
 		// check recursive sub menus
-		if (menu.submenu && menu.submenu.length > 0) {
+		if (menu.submenu) {
+			
+			if (menu.submenu.length > 0) {
 
-			$.each(menu.submenu, function(index, submenu) {
-				app.appendSubMenuRec($entry, submenu);
-			});
+				$.each(menu.submenu, function(index, submenu) {
+					app.appendSubMenuRec($subMenu, submenu, level + 1);
+				});
+			} else {
+				app.appendSubMenuRec($subMenu, menu.submenu, level + 1);
+			}
 		}
 		
-		$subMenu.append($entry);
 	},
 	
 	hideSideBar : function() {
