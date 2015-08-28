@@ -1,4 +1,4 @@
-package at.arz.latte.framework.modules.dta;
+package at.arz.latte.framework.restful.dta;
 
 import java.util.HashMap;
 
@@ -12,15 +12,15 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  */
 @XmlRootElement(name = "response")
-public class ResponseData {
+public class ValidationData {
 
 	private HashMap<String, String> validation;
 
-	public ResponseData() {
+	public ValidationData() {
 		super();
 	}
 
-	public ResponseData(HashMap<String, String> validation) {
+	public ValidationData(HashMap<String, String> validation) {
 		super();
 		this.validation = validation;
 	}
@@ -31,6 +31,11 @@ public class ResponseData {
 
 	public void setValidation(HashMap<String, String> validation) {
 		this.validation = validation;
+	}
+
+	@Override
+	public String toString() {
+		return "ValidationData [validation=" + validation + "]";
 	}
 
 }

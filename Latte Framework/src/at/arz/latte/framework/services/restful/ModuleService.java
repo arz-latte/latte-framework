@@ -17,10 +17,9 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import at.arz.latte.framework.modules.dta.ModuleData;
-import at.arz.latte.framework.modules.dta.ModuleListData;
-import at.arz.latte.framework.modules.models.Module;
 import at.arz.latte.framework.persistence.beans.ModuleManagementBean;
+import at.arz.latte.framework.persistence.models.Module;
+import at.arz.latte.framework.restful.dta.ModuleData;
 import at.arz.latte.framework.websockets.WebsocketEndpoint;
 import at.arz.latte.framework.websockets.models.WebsocketMessage;
 
@@ -36,60 +35,74 @@ public class ModuleService {
 
 	@EJB
 	private ModuleManagementBean bean;
-	
+
 	@EJB
 	private WebsocketEndpoint websocket;
-	
+
 	@Inject
 	private Validator validator;
-	
+
 	@GET
 	@Path("all.json")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<ModuleListData> getAllModules() {
-		return bean.getAllModulesBase();
+	public List<ModuleData> getAllModules() {
+		return bean.getAllModulesData();
 	}
 
 	@GET
 	@Path("get.json/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public ModuleData getModule(@PathParam("id") Long id) {
-		return new ModuleData(bean.getModule(id));
+		Module module = bean.getModule(id);
+		return toModuleData(module);
 	}
 
 	@POST
 	@Path("create.json")
 	@Produces(MediaType.APPLICATION_JSON)
 	public ModuleData createModule(ModuleData moduleData) {
-				
+
 		Set<ConstraintViolation<Object>> violations = requestValidation(moduleData);
-		if(!violations.isEmpty()){
+		if (!violations.isEmpty()) {
 			throw new LatteValidationException(400, violations);
 		}
 
-		Module module = new Module(moduleData);	
-		return new ModuleData(bean.createModule(module));
+		Module module = new Module(moduleData.getName(), moduleData.getProvider(), moduleData.getUrl(),
+				moduleData.getInterval(), moduleData.getEnabled());
+
+		return toModuleData(bean.createModule(module));
 	}
-	
+
 	@PUT
 	@Path("update.json")
 	@Produces(MediaType.APPLICATION_JSON)
 	public ModuleData updateModule(ModuleData moduleData) {
-				
+
 		Set<ConstraintViolation<Object>> violations = requestValidation(moduleData);
-		if(!violations.isEmpty()){
+		if (!violations.isEmpty()) {
 			throw new LatteValidationException(400, violations);
-		}	
+		}
 
 		// notify clients if urlchanged or module was disabled
-		Module module = bean.getModule(moduleData.getId());		
-		boolean urlChanged = !module.getUrl().equals(moduleData.getUrl());
-		boolean disabled = module.getEnabled() && !moduleData.getEnabled();
+		Module before = bean.getModule(moduleData.getId());
+		boolean urlChanged = !before.getUrl().equals(moduleData.getUrl());
+		boolean disabled = before.getEnabled() && !moduleData.getEnabled();
+
+		// set status to stopped if module gets disabled
+		boolean running = true;
+		if (!before.getEnabled()) {
+			running = false;
+		}
+
+		Module after = bean.updateModule(moduleData.getId(), moduleData.getName(), moduleData.getProvider(),
+				moduleData.getUrl(), moduleData.getInterval(), moduleData.getEnabled(), running);
+
+		// notify clients if urlchanged or module was disabled
 		if (urlChanged || disabled) {
 			websocket.chat(new WebsocketMessage("update", "server"));
 		}
-		
-		return new ModuleData(bean.updateModule(moduleData));
+
+		return toModuleData(after);
 	}
 
 	@DELETE
@@ -97,9 +110,25 @@ public class ModuleService {
 	public void deleteModule(@PathParam("id") Long moduleId) {
 		bean.deleteModule(moduleId);
 	}
-		
+
 	private Set<ConstraintViolation<Object>> requestValidation(Object moduleData) {
 		return validator.validate(moduleData);
 	}
-	
+
+	/**
+	 * helper for REST service
+	 * 
+	 * @param moduleData
+	 * @return
+	 */
+	public ModuleData toModuleData(Module module) {
+		ModuleData moduleData = new ModuleData();
+		moduleData.setId(module.getId());
+		moduleData.setName(module.getName());
+		moduleData.setProvider(module.getProvider());
+		moduleData.setUrl(module.getUrl());
+		moduleData.setInterval(module.getInterval());
+		moduleData.setEnabled(module.getEnabled());
+		return moduleData;
+	}
 }

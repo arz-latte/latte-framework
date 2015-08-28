@@ -1,4 +1,4 @@
-package at.arz.latte.framework.modules.models.validator;
+package at.arz.latte.framework.validator;
 
 import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.*;

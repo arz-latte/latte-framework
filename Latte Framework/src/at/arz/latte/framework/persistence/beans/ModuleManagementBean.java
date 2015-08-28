@@ -1,19 +1,14 @@
 package at.arz.latte.framework.persistence.beans;
 
 import java.util.List;
-import java.util.Set;
 
 import javax.ejb.Stateless;
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.validation.ConstraintViolation;
-import javax.validation.Validator;
 
-import at.arz.latte.framework.modules.dta.ModuleData;
-import at.arz.latte.framework.modules.dta.ModuleListData;
-import at.arz.latte.framework.modules.models.Module;
-import at.arz.latte.framework.modules.models.ModuleStatus;
+import at.arz.latte.framework.persistence.models.Menu;
+import at.arz.latte.framework.persistence.models.Module;
+import at.arz.latte.framework.restful.dta.ModuleData;
 
 /**
  * bean for module management
@@ -24,18 +19,15 @@ import at.arz.latte.framework.modules.models.ModuleStatus;
 @Stateless
 public class ModuleManagementBean {
 
-	@PersistenceContext(unitName="latte-unit")
+	@PersistenceContext(unitName = "latte-unit")
 	private EntityManager em;
-	
-	@Inject
-	private Validator validator;
 
 	public void initAllModules() {
-		em.createNamedQuery(Module.UPDATE_ALL).executeUpdate();
+		em.createNamedQuery(Module.STOP_ALL).executeUpdate();
 	}
 
-	public List<ModuleListData> getAllModulesBase() {
-		return em.createNamedQuery(Module.QUERY_GETALL_BASE, ModuleListData.class).getResultList();
+	public List<ModuleData> getAllModulesData() {
+		return em.createNamedQuery(Module.QUERY_GETALL_BASE, ModuleData.class).getResultList();
 	}
 
 	public List<Module> getAllModules() {
@@ -46,38 +38,71 @@ public class ModuleManagementBean {
 		return em.find(Module.class, moduleId);
 	}
 
-	/**
-	 * used for creation via REST-service
-	 */
-	public Module createModule(Module module) {	
+	public Module createModule(Module module) {
 		em.persist(module);
+		return module;
+	}
+
+	/**
+	 * update via REST-service
+	 * @param id
+	 * @param name
+	 * @param provider
+	 * @param url
+	 * @param interval
+	 * @param enabled
+	 * @param running
+	 * @return
+	 */
+	public Module updateModule(Long id, String name, String provider, String url, int interval, boolean enabled, boolean running) {
+		Module module = getModule(id);
+		module.setName(name);
+		module.setProvider(provider);
+		module.setUrl(url);
+		module.setInterval(interval);
+		module.setEnabled(enabled);
+		module.setRunning(running);
+		return module;
+	}
+
+	/**
+	 * update module via REST-service, only set running value
+	 * @param moduleId
+	 * @param running
+	 * @return
+	 */
+	public Module updateModuleRunning(Long moduleId, boolean running) {
+		Module module = getModule(moduleId);
+
+		module.setRunning(running);
+
 		return module;
 	}
 	
 	/**
-	 * used for partial updates via timer-service
+	 * update menu of module via REST-service
+	 * @param moduleId
+	 * @param menu
+	 * @return
 	 */
-	public Module updateModule(Module module) {		
-		em.merge(module);
-		return module;
-	}
-
-	/**
-	 * used for partial updates via REST-service
-	 */
-	public Module updateModule(ModuleData moduleData) {
-		Module module = getModule(moduleData.getId());
-
-		module.setName(moduleData.getName());
-		module.setProvider(moduleData.getProvider());
-		module.setUrl(moduleData.getUrl().toString());
-		module.setInterval(moduleData.getInterval());
-		module.setEnabled(moduleData.getEnabled());
+	public Module updateModuleMenu(Long moduleId, Menu menu) {
 		
-		// set status to stopped if module gets disabled
-		if (!module.getEnabled()) {
-			module.setStatus(ModuleStatus.Stopped);
+		System.out.println(moduleId);
+		System.out.println(menu);
+
+		Module module = updateModuleRunning(moduleId, true);
+
+		System.out.println(module);
+
+		if (menu != null) {
+			module.setLastModified(menu.getLastModified());
+			
+			System.out.println(menu.getLastModified());
+
+			module.setMenu(menu);
 		}
+		
+		System.out.println(module);
 
 		return module;
 	}

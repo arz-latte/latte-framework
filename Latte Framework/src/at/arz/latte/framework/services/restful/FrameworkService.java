@@ -9,8 +9,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import at.arz.latte.framework.modules.dta.ModuleMenuData;
 import at.arz.latte.framework.persistence.beans.FrameworkManagementBean;
+import at.arz.latte.framework.restful.dta.ModuleData;
 
 /**
  * RESTful service for module management
@@ -28,7 +28,7 @@ public class FrameworkService {
 	@GET
 	@Path("init.json")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<ModuleMenuData> getInitData() {
+	public List<ModuleData> getInitData() {
 		return bean.getAll();
 	}
 

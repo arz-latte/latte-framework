@@ -12,17 +12,18 @@ var appModule = {
 			var $modules = $("#modules");
 			$modules.find("tr:has(td)").remove(); // clear
 
-			$.each(data.modules, function(index, module) {
+			$.each(data.module, function(index, module) {
 				var $name = $("<td/>").append(module.name);
 				var $version = $("<td/>").append(module.version);
 				var $provider = $("<td/>").append(module.provider);
-				var $status = $("<td/>").append(module.status);
+				var $running = $("<td/>")
+				.append(module.enabled ? "ja" : "nein");
 				var $enabled = $("<td/>")
 						.append(module.enabled ? "ja" : "nein");
 
 				var $row = $("<tr/>").attr("data-id", module.id);
 				$row.append($name).append($provider).append($version).append(
-						$status).append($enabled);
+						$running).append($enabled);
 
 				$modules.append($row);
 			});

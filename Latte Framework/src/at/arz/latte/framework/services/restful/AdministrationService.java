@@ -9,7 +9,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.xml.bind.JAXBException;
 
-import at.arz.latte.framework.dta.MenuData;
+import at.arz.latte.framework.restful.dta.MenuData;
 
 /**
  * RESTful service for module management
@@ -19,7 +19,7 @@ import at.arz.latte.framework.dta.MenuData;
  */
 @RequestScoped
 @Path("administration")
-public class AdministrationService extends GenericModuleService {
+public class AdministrationService extends AbstractModuleHelper {
 
 	@GET
 	@Path("status.json")

@@ -1,4 +1,4 @@
-package at.arz.latte.framework.modules.models.validator;
+package at.arz.latte.framework.validator;
 
 import java.net.MalformedURLException;
 import java.net.URL;

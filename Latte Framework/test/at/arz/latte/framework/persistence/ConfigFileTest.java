@@ -8,8 +8,8 @@ import javax.xml.bind.Marshaller;
 
 import org.junit.Test;
 
-import at.arz.latte.framework.dta.MenuData;
-import at.arz.latte.framework.dta.SubMenuData;
+import at.arz.latte.framework.restful.dta.MenuData;
+import at.arz.latte.framework.restful.dta.SubMenuData;
 
 public class ConfigFileTest {
 
@@ -32,28 +32,5 @@ public class ConfigFileTest {
 		jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 		jaxbMarshaller.marshal(menu, file);
 	}
-/*
-	@Test
-	public void moduleIsPersistent() {
-		em.getTransaction().begin();
-
-		TestE t1 = new TestE("top1");
-
-		TestE b1 = new TestE("bottom1");
-		TestE b2 = new TestE("bottom2");
-
-		TestE bb1 = new TestE("bottombottom1");
-		TestE bb2 = new TestE("bottombottom2");
-
-		b1.add(bb1);
-		b1.add(bb2);
-
-		t1.add(b1);
-		t1.add(b2);
-
-		em.persist(t1);
-
-		em.getTransaction().commit();
-	}
-*/
+	
 }

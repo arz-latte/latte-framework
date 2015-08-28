@@ -6,8 +6,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import at.arz.latte.framework.modules.models.Module;
 import at.arz.latte.framework.persistence.JpaPersistenceSetup;
+import at.arz.latte.framework.persistence.models.Module;
 
 public class ModuleTest  {
 

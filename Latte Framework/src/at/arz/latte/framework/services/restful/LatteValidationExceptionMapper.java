@@ -5,15 +5,15 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
-import at.arz.latte.framework.modules.dta.ResponseData;
+import at.arz.latte.framework.restful.dta.ValidationData;
 
 @Provider
 public class LatteValidationExceptionMapper implements ExceptionMapper<LatteValidationException>{
 
 	@Override
 	public Response toResponse(LatteValidationException ex) {		
-		ResponseData responseData = new ResponseData(ex.getValidation());
-		return Response.status(ex.getStatus()).type(MediaType.APPLICATION_JSON).entity(responseData).build();
+		ValidationData validationData = new ValidationData(ex.getValidation());
+		return Response.status(ex.getStatus()).type(MediaType.APPLICATION_JSON).entity(validationData).build();
 	}
 
 }

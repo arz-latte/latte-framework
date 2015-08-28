@@ -6,12 +6,9 @@
 	<persistence-unit name="latte-unit">	
 		<jta-data-source>java:comp/env/jdbc/latte</jta-data-source>
 		<non-jta-data-source>java:comp/env/jdbc/latte</non-jta-data-source>
-		<class>at.arz.latte.framework.modules.models.AbstractEntity</class>
-		<class>at.arz.latte.framework.modules.models.MenuRoot</class>
-		<class>at.arz.latte.framework.modules.models.MenuLeaf</class>
-		<class>at.arz.latte.framework.modules.models.Module</class>
-		<class>at.arz.latte.framework.modules.models.MenuEntry</class>
-		<class>at.arz.latte.framework.modules.models.TestE</class>
+		<class>at.arz.latte.framework.persistence.models.Module</class>
+		<class>at.arz.latte.framework.persistence.models.Menu</class>
+		<class>at.arz.latte.framework.persistence.models.SubMenu</class>
 
 		<properties>
 			<property name="openjpa.DynamicEnhancementAgent" value="true" />

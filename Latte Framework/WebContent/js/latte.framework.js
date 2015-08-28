@@ -16,15 +16,15 @@ var app = {
 	 * create nav bar with main menu
 	 */
 	createMainNavBar : function() {
-		
+
 		var $menu = $("<nav/>", {
 			'class' : "navbar navbar-default"
 		});
-		
+
 		var $div = $("<div/>", {
 			'class' : "container-fluid"
 		});
-		
+
 		var $button = $("<button/>", {
 			type : "button",
 			'class' : "navbar-toggle collapsed",
@@ -49,7 +49,7 @@ var app = {
 			href : "#",
 			text : "Latte"
 		}));
-		
+
 		var $navbarCollapse = $("<div/>", {
 			'class' : "navbar-collapse collapse",
 			id : "main-navbar-collapse"
@@ -59,19 +59,22 @@ var app = {
 		}), $("<ul/>", {
 			'class' : "nav navbar-nav navbar-right",
 			id : "main-navbar-right"
-		}).append($("<li/>").append($("<a/>", { href : "#", text : "Logout"})) ) );
-		
+		}).append($("<li/>").append($("<a/>", {
+			href : "#",
+			text : "Logout"
+		}))));
+
 		$div.append($navbarHeader, $navbarCollapse);
-		
+
 		$menu.append($div);
-		
+
 		$("#main-navbar").append($menu);
 	},
-	
+
 	/**
 	 * create side bar with menu
 	 */
-	createSideBar : function() {
+	createSideNavBar : function() {
 
 		var $menu = $("<div/>", {
 			'class' : "navbar navbar-default"
@@ -121,38 +124,34 @@ var app = {
 	 */
 	loadModules : function() {
 
-		if (!localStorage.getItem("initialized")) {
-
-			console.log("load modules from framework");
-
-			$.ajax(
-					{
-						url : app.API_LATTE + app.PATH_FRAMEWORK
-								+ "/init.json?callback=?",
-						async : false,
-						contentType : "application/json",
-						dataType : 'jsonp',
-					}).done(function(data) {
-
-				localStorage.clear();
-				localStorage.setItem("initialized", true);
-
-				// store each module separate
-				$.each(data.module, function(index, m) {
-					localStorage.setItem('module-' + m.id, JSON.stringify(m));
-
-					// remove sub menu for storing list of modules (without sub
-					// menus)
-					delete m.subMenu;
-				});
-
-				// store list of modules
-				localStorage.setItem('modules', JSON.stringify(data.module));
-
-			}).fail(function() {
-				app.showErrorMessage("Fehler beim Initialisieren");
-			});
+		if (localStorage.getItem("initialized")) {
+			return;
 		}
+
+		console.log("load modules from framework");
+
+		$.ajax({
+			url : app.API_LATTE + app.PATH_FRAMEWORK + "/init.json",
+			async : false,
+		}).done(function(data) {
+			localStorage.clear();
+			// localStorage.setItem("initialized", true);
+
+			// store each module separate
+			$.each(data.module, function(index, m) {
+				localStorage.setItem('module-' + m.id, JSON.stringify(m.menu));
+
+				// remove sub menu for storing list of modules
+				// (without sub menus)
+				delete m.menu.submenu;
+			});
+
+			// store list of modules
+			localStorage.setItem('modules', JSON.stringify(data.module));
+
+		}).fail(function() {
+			app.showErrorMessage("Fehler beim Initialisieren");
+		});
 	},
 
 	/**
@@ -170,12 +169,12 @@ var app = {
 
 			// main menu (module name)
 			var $entry = $("<li/>").append($("<a/>", {
-				href : m.mainMenu.entry.href,
-				text : m.mainMenu.entry.value,
+				href : m.menu.url,
+				text : m.menu.name,
 				'data-id' : m.id,
 				on : {
 					click : function() {
-						localStorage.setItem("currentModuleId", m.id);
+						localStorage.setItem("module-id", m.id);
 						// app.initSubMenu();
 					}
 				}
@@ -184,7 +183,7 @@ var app = {
 			$mainMenuLeft.append($entry);
 
 			// mark current active module
-			if (localStorage.getItem("currentModuleId") == m.id) {
+			if (localStorage.getItem("module-id") == m.id) {
 				app.initSubMenu();
 			}
 		});
@@ -198,68 +197,53 @@ var app = {
 
 	},
 
+	appendSubMenuRec : function($subMenu, menu) {
+		// sub menu entry
+		var $entry = $("<li/>").append($("<a/>", {
+			href : menu.url,
+			text : menu.name
+		}));
+
+		// mark current active menu
+		if (menu.url == loc) {
+			$entry.addClass("active");
+		}
+
+		// check recursive sub menus
+		if (menu.submenu && menu.submenu.length > 0) {
+
+			$.each(menu.submenu, function(index, submenu) {
+				app.appendSubMenuRec($entry, submenu);
+			});
+		}
+		
+		$subMenu.append($entry);
+	},
+	
 	/**
 	 * parse menu for single module
-	 * 
-	 * @param id
-	 *            module-id
 	 */
 	initSubMenu : function() {
 
-		var id = localStorage.getItem("currentModuleId");
-		var module = JSON.parse(localStorage.getItem("module-" + id));
-
+		var id = localStorage.getItem("module-id");
+		var menu = JSON.parse(localStorage.getItem("module-" + id));
 		var loc = window.location.href.split('#')[0];
 
 		// main menu
 		var $mainMenuLeft = $("#main-navbar-left");
 		$mainMenuLeft.find("a").parent().removeClass("active");
-		$mainMenuLeft.find("a[data-id=" + module.id + "]").parent().addClass(
-				"active");
+		$mainMenuLeft.find("a[data-id=" + id + "]").parent().addClass("active");
 
 		// sub menu
 		var $subMenu = $("#side-navbar");
 		$subMenu.html(""); // clear
 
-		if (module.subMenu) {
+		if (menu.submenu) {
 
-			$.each(module.subMenu, function(index, menu) {
-
-				// sub menu (root)
-				var e = menu.entry;
-				var $entry = $("<li/>").append($("<a/>", {
-					href : e.href,
-					text : e.value
-				}));
-
-				// mark current active menu
-				if (e.href == loc) {
-					$entry.addClass("active");
-				}
-
-				$subMenu.append($entry);
-
-				// sub menu (leaf)
-				if (menu.children && menu.children.length >= 0) {
-
-					$.each(menu.children, function(index, submenu) {
-						var e = submenu.entry;
-						var $entry = $("<li/>", {
-							'class' : "submenu"
-						}).append($("<a/>", {
-							href : e.href,
-							text : e.value
-						}));
-
-						// mark current active menu
-						if (e.href == loc) {
-							$entry.addClass("active");
-						}
-
-						$subMenu.append($entry);
-					});
-				}
+			$.each(menu.submenu, function(index, menu) {
+				app.appendSubMenuRec($subMenu, menu);
 			});
+			
 			app.showSideBar();
 		} else {
 			app.hideSideBar(); // no side menu for this module
@@ -342,7 +326,7 @@ var app = {
 function initFramework() {
 	console.log("window ready");
 
-	app.createSideBar();
+	app.createSideNavBar();
 	app.createMainNavBar();
 
 	app.loadModules();
