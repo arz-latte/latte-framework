@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<menu>
+    <name>Demo Modul 1</name>
+    <url>#</url>
+    <order>10</order>
+    <submenu>
+        <name>Menü 1</name>
+        <url>#</url>
+        <permission>user</permission>
+	    <submenu>
+	        <name>SubMenü 1</name>
+	        <url>#</url>
+	        <permission>user</permission>
+	    </submenu>
+	    <submenu>
+	        <name>SubMenü 2</name>
+	        <url>#</url>
+	        <permission>user</permission>
+			<submenu>
+				<name>SubSubMenü 1</name>
+				<url>#</url>
+				<permission>user</permission>
+			</submenu>
+	    </submenu>
+    </submenu>
+    <submenu>
+        <name>Menü 2</name>
+        <url>#</url>
+        <permission>user</permission>
+    </submenu>
+</menu>

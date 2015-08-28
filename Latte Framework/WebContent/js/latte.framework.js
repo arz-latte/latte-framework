@@ -243,7 +243,7 @@ var app = {
 		if (menu.submenu && menu.submenu.length > 0) {
 
 			$.each(menu.submenu, function(index, submenu) {
-				app.appendSubMenuRec($entry, submenu);
+				app.appendSubMenuRec($subMenu, submenu);
 			});
 		}
 		

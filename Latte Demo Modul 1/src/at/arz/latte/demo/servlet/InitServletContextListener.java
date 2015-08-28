@@ -11,7 +11,7 @@ import javax.ws.rs.core.Response;
 
 import org.apache.cxf.jaxrs.client.WebClient;
 
-import at.arz.latte.modules.services.restful.config.DemoModuleConfiguration;
+import at.arz.latte.framework.services.restful.config.DemoModuleConfiguration;
 
 @WebListener
 public class InitServletContextListener implements ServletContextListener {
