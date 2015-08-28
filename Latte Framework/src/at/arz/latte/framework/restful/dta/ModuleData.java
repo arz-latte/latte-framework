@@ -5,7 +5,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import at.arz.latte.framework.validator.CheckUrl;
@@ -50,13 +50,12 @@ public class ModuleData {
 
 	// --------------- only for list view ---------------
 
-	@XmlAttribute(name = "lastmodified")
+	@XmlElement(name = "lastmodified")
 	private Long lastModified;
 
 	/**
 	 * currrent status of module
 	 */
-	@NotNull
 	private Boolean running;
 
 	// ------- only for transmisstion to client -------
@@ -136,11 +135,11 @@ public class ModuleData {
 		this.enabled = enabled;
 	}
 
-	public Long getLastmodified() {
+	public Long getLastModified() {
 		return lastModified;
 	}
 
-	public void setLastmodified(Long lastModified) {
+	public void setLastModified(Long lastModified) {
 		this.lastModified = lastModified;
 	}
 

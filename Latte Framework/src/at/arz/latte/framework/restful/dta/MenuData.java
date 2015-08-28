@@ -8,7 +8,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -32,7 +31,7 @@ public class MenuData implements Serializable {
 	@NotNull
 	private int order;
 
-	@XmlAttribute(name = "suborder")
+	@XmlElement(name = "suborder")
 	private Integer subOrder;
 
 	private Boolean denied;

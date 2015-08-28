@@ -89,14 +89,14 @@ public class ModuleService {
 		boolean disabled = before.getEnabled() && !moduleData.getEnabled();
 
 		// set status to stopped if module gets disabled
-		boolean running = true;
-		if (!before.getEnabled()) {
+		boolean running = before.getRunning();
+		if (!moduleData.getEnabled()) {
 			running = false;
 		}
-
+		
 		Module after = bean.updateModule(moduleData.getId(), moduleData.getName(), moduleData.getProvider(),
 				moduleData.getUrl(), moduleData.getInterval(), moduleData.getEnabled(), running);
-
+		
 		// notify clients if urlchanged or module was disabled
 		if (urlChanged || disabled) {
 			websocket.chat(new WebsocketMessage("update", "server"));

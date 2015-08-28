@@ -114,6 +114,7 @@ public class Menu implements Serializable {
 	}
 	
 	public void addSubMenu(SubMenu subMenu) {
+		subMenu.setOrder(this.subMenus.size());
 		this.subMenus.add(subMenu);
 	}
 

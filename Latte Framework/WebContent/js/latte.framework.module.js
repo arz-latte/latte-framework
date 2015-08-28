@@ -1,7 +1,10 @@
+/**
+ * version 28.08.2015
+ */
 var appModule = {
 
 	API_MODULES : 'api/v1/modules',
-	
+
 	currentId : null,
 
 	loadModules : function() {
@@ -14,10 +17,20 @@ var appModule = {
 
 			$.each(data.module, function(index, module) {
 				var $name = $("<td/>").append(module.name);
-				var $version = $("<td/>").append(module.version);
+				
+				version = "";
+				if (module.lastmodified) {
+					var dt = new Date(module.lastmodified);					
+					var h = dt.getHours() < 10 ? "0" + dt.getHours() : dt.getHours();
+					var m = dt.getMinutes() < 10 ? "0" + dt.getMinutes() : dt.getMinutes();
+					var s = dt.getSeconds() < 10 ? "0" + dt.getSeconds() : dt.getSeconds();
+					version = dt.getDate() + "." + (dt.getMonth()+1) + "." + dt.getFullYear() + " " + h + ":" + m +":" + s;	
+				}
+				var $version = $("<td/>").append(version);
+				
 				var $provider = $("<td/>").append(module.provider);
 				var $running = $("<td/>")
-				.append(module.enabled ? "ja" : "nein");
+						.append(module.running ? "ja" : "nein");
 				var $enabled = $("<td/>")
 						.append(module.enabled ? "ja" : "nein");
 
@@ -92,7 +105,7 @@ var appModule = {
 				contentType : "application/json; charset=UTF-8",
 			}).done(function(data) {
 				app.showMessage("Modul erstellt");
-				appModule.loadModules();				
+				appModule.loadModules();
 			}).fail(function(error) {
 				appModule.validateModule(error);
 			});
@@ -114,12 +127,12 @@ var appModule = {
 
 	validateModule : function(error) {
 		app.showErrorMessage("Fehler beim Speichern");
-		
+
 		if (error.status == 400) {
 			appModule.resetFormValidation();
 
 			var validation = error.responseJSON.response.validation;
-	
+
 			// mark inputs as invalid
 			var entries = [];
 			if ($.isArray(validation.entry)) {
@@ -131,23 +144,25 @@ var appModule = {
 				// mark input as invalid
 				var $input = $("[name=input-" + e.key + "]");
 				$input.closest(".form-group").addClass("has-error");
-	
+
 				$input.next().show(); // show glyphicon
-	
+
 				// set label text
 				var text = $input.parent().prev().text();
 				$input.parent().prev().text(text + ": " + e.value);
 			});
 		}
-	},	
+	},
 
 	deleteModule : function() {
 		var choice = confirm("Sind Sie sicher?");
 		if (choice == true) {
-			$.ajax({
-				url : appModule.API_MODULES + "/delete.json/" + appModule.currentId,
-				type : "DELETE",
-			}).done(function(data) {
+			$.ajax(
+					{
+						url : appModule.API_MODULES + "/delete.json/"
+								+ appModule.currentId,
+						type : "DELETE",
+					}).done(function(data) {
 				app.showMessage("Modul gel&ouml;scht");
 				appModule.loadModules();
 			}).fail(function() {
@@ -210,7 +225,7 @@ function initModule() {
 	$("#btn-restore-module").on("click", appModule.restoreModule);
 
 	$("#module-list-area tbody").on("click", "tr", appModule.showModule);
-	
+
 	appModule.loadModules();
 }
 

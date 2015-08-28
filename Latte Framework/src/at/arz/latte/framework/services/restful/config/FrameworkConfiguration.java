@@ -36,9 +36,5 @@ public class FrameworkConfiguration extends Application {
 		applicationClasses.add(ModuleService.class);
 		applicationClasses.add(AdministrationService.class);
 		applicationClasses.add(FrameworkService.class);
-		
-		// todo, add??   applicationClasses.add(GenericManagementBean.class);
-		
-		// IEGEND: EjbTransactionUtil.handleSystemException: The type "class at.arz.latte.framework.modules.models.AbstractEntity" has not been enhanced.
 	}
 }

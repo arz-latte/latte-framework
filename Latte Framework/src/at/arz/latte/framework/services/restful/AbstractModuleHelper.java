@@ -86,9 +86,6 @@ public abstract class AbstractModuleHelper {
 
 		URL url = getClass().getResource(filename);
 
-		// SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-		// System.out.println(sdf.format(url.openConnection().getLastModified()));
-
 		File file = new File(url.getPath());
 
 		JAXBContext jaxbContext = JAXBContext.newInstance(MenuData.class);

@@ -1,5 +1,5 @@
 /**
- * version 26.08.2015
+ * version 28.08.2015
  */
 var app = {
 
@@ -135,7 +135,7 @@ var app = {
 			async : false,
 		}).done(function(data) {
 			localStorage.clear();
-			// localStorage.setItem("initialized", true);
+			localStorage.setItem("initialized", true);
 
 			// store each module separate
 			$.each(data.module, function(index, m) {
@@ -175,7 +175,7 @@ var app = {
 				on : {
 					click : function() {
 						localStorage.setItem("module-id", m.id);
-						// app.initSubMenu();
+						app.initSubMenu();
 					}
 				}
 			}));
@@ -196,29 +196,6 @@ var app = {
 		});
 
 	},
-
-	appendSubMenuRec : function($subMenu, menu) {
-		// sub menu entry
-		var $entry = $("<li/>").append($("<a/>", {
-			href : menu.url,
-			text : menu.name
-		}));
-
-		// mark current active menu
-		if (menu.url == loc) {
-			$entry.addClass("active");
-		}
-
-		// check recursive sub menus
-		if (menu.submenu && menu.submenu.length > 0) {
-
-			$.each(menu.submenu, function(index, submenu) {
-				app.appendSubMenuRec($entry, submenu);
-			});
-		}
-		
-		$subMenu.append($entry);
-	},
 	
 	/**
 	 * parse menu for single module
@@ -227,7 +204,6 @@ var app = {
 
 		var id = localStorage.getItem("module-id");
 		var menu = JSON.parse(localStorage.getItem("module-" + id));
-		var loc = window.location.href.split('#')[0];
 
 		// main menu
 		var $mainMenuLeft = $("#main-navbar-left");
@@ -250,6 +226,30 @@ var app = {
 		}
 	},
 
+	appendSubMenuRec : function($subMenu, menu) {
+		// sub menu entry
+		var $entry = $("<li/>").append($("<a/>", {
+			href : menu.url,
+			text : menu.name
+		}));
+
+		// mark current active menu
+		var loc = window.location.href.split('#')[0];
+		if (menu.url == loc) {
+			$entry.addClass("active");
+		}
+
+		// check recursive sub menus
+		if (menu.submenu && menu.submenu.length > 0) {
+
+			$.each(menu.submenu, function(index, submenu) {
+				app.appendSubMenuRec($entry, submenu);
+			});
+		}
+		
+		$subMenu.append($entry);
+	},
+	
 	hideSideBar : function() {
 		$("#sidebar").hide();
 		$("#content").removeClass("col-sm-9");

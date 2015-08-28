@@ -67,6 +67,8 @@ public class ModuleTimerService {
 			
 			// valiate menu response data....
 			
+			
+			
 			// got response -> check version
 			if (module.getLastModified() == null || module.getLastModified() < menuData.getLastModified()) {
 
@@ -81,10 +83,6 @@ public class ModuleTimerService {
 			} else if (!module.getRunning()) {
 				
 				// set module running to true
-				System.out.println("save running");
-				System.out.println("save: " + module);
-				System.out.println("save: " + menuData);
-				
 				bean.updateModuleRunning(module.getId(), true);				
 				
 				websocket.chat(new WebsocketMessage("update", "server"));
