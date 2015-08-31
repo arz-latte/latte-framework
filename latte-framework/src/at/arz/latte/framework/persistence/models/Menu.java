@@ -24,7 +24,7 @@ import at.arz.latte.framework.restful.dta.SubMenuData;
 import at.arz.latte.framework.validator.CheckUrl;
 
 @Entity
-@Table(name = "menu")
+@Table(name = "menus")
 public class Menu implements Serializable {
 
 	private static final long serialVersionUID = 1L;

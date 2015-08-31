@@ -10,7 +10,7 @@
     </submenu>
     <submenu>
         <name>Benutzer</name>
-        <url>#</url>
+        <url>http://localhost:8080/latte/user.html</url>
         <permission>admin</permission>
     </submenu>
     <submenu>

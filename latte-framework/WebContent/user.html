@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Benutzerverwaltung</title>
+
+<link rel="stylesheet" href="css/bootstrap.min.css" />
+<link rel="stylesheet" href="css/latte.framework.css" />
+
+<script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="js/reconnecting-websocket.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/latte.framework.js"></script>
+<script type="text/javascript" src="js/latte.framework.user.js"></script>
+</head>
+<body>
+
+	<div id="main-navbar-placeholder"></div>
+	<div id="message-box-placeholder"></div>
+
+	<div id="content-placeholder">
+
+		<!-- Header -->
+		<div class="jumbotron">
+			<div class="row content-row">
+				<div class="col-sm-12">
+					<h3>Benutzerverwaltung</h3>
+				</div>
+			</div>
+		</div>
+
+		<!-- User-Overview -->
+		<div id="user-list-area">
+			<div class="input-group">
+				<input id="user-filter" type="text" class="form-control"
+					placeholder="Benutzer filtern..."> <span
+					class="input-group-btn"> <a role="button"
+					class="btn btn-default" id="btn-clear-user-filter">X</a>
+				</span>
+			</div>
+			<div class="row content-row">
+				<table class="col-sm-12 table table-hover table-striped" id="users">
+					<thead>
+						<tr>
+							<th>Vorname</th>
+							<th>Nachname</th>
+							<th>Benutzername</th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+			</div>
+			<div class="row content-row">
+				<div class="col-sm-12">
+					<a role="button" class="btn btn-success" id="btn-add-user">+</a> <a
+						role="button" class="btn btn-default" id="btn-load-users">Neu
+						laden</a>
+				</div>
+			</div>
+		</div>
+
+		<!-- User-Edit-Area -->
+		<div id="user-edit-area">
+
+			<form class="form-horizontal" role="form">
+				<div class="form-group">
+					<label class="control-label col-sm-2" for="input-firstname">Vorname</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" name="input-firstname">
+						<span class="glyphicon glyphicon-remove form-control-feedback"></span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-sm-2" for="input-lastname">Nachname</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" name="input-lastname">
+						<span class="glyphicon glyphicon-remove form-control-feedback"></span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-sm-2" for="input-username">Benutzername</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" name="input-username">
+						<span class="glyphicon glyphicon-remove form-control-feedback"></span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="control-label col-sm-2" for="input-password">Passwort</label>
+					<div class="col-sm-10">
+						<input type="password" class="form-control" name="input-password">
+						<span class="glyphicon glyphicon-remove form-control-feedback"></span>
+					</div>
+				</div>
+				<div class="row">&#160;</div>
+				<div class="row">
+					<div class="col-sm-12">
+						<button class="btn btn-success" id="btn-store-user">Speichern</button>
+						<button class="btn btn-danger" id="btn-delete-user">L&ouml;schen</button>
+						<button class="btn btn-default" id="btn-restore-user">Abbrechen</button>
+					</div>
+				</div>
+			</form>
+
+		</div>
+
+	</div>
+
+</body>
+</html>

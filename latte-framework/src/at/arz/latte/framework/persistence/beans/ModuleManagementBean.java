@@ -6,9 +6,6 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import org.apache.openejb.EnvProps;
-import org.apache.openejb.junit.EnableServices;
-
 import at.arz.latte.framework.persistence.models.Menu;
 import at.arz.latte.framework.persistence.models.Module;
 import at.arz.latte.framework.restful.dta.ModuleData;
@@ -59,14 +56,12 @@ public class ModuleManagementBean {
 	 */
 	public Module updateModule(Long id, String name, String provider, String url, int interval, boolean enabled, boolean running) {
 		Module module = getModule(id);
-		
 		module.setName(name);
 		module.setProvider(provider);
 		module.setUrl(url);
 		module.setInterval(interval);
 		module.setEnabled(enabled);
 		module.setRunning(running);
-		
 		return module;
 	}
 
@@ -78,9 +73,7 @@ public class ModuleManagementBean {
 	 */
 	public Module updateModuleRunning(Long moduleId, boolean running) {
 		Module module = getModule(moduleId);
-
 		module.setRunning(running);
-
 		return module;
 	}
 	

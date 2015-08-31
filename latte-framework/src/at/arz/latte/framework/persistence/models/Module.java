@@ -35,7 +35,7 @@ import at.arz.latte.framework.validator.CheckUrl;
 		@NamedQuery(name = Module.QUERY_GETALL_ENABLED, query = "SELECT m FROM Module m WHERE m.enabled=true ORDER BY m.menu.order, m.menu.subOrder"),
 		@NamedQuery(name = Module.STOP_ALL, query = "UPDATE Module m SET m.running = false"), })
 @Entity
-@Table(name = "module")
+@Table(name = "modules")
 public class Module implements Serializable {
 
 	private static final long serialVersionUID = 1L;

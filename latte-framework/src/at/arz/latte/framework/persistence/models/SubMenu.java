@@ -22,7 +22,7 @@ import at.arz.latte.framework.restful.dta.SubMenuData;
 import at.arz.latte.framework.validator.CheckUrl;
 
 @Entity
-@Table(name = "submenu")
+@Table(name = "submenus")
 public class SubMenu implements Serializable {
 
 	private static final long serialVersionUID = 1L;

@@ -10,6 +10,7 @@ import javax.ws.rs.core.Application;
 import at.arz.latte.framework.services.restful.AdministrationService;
 import at.arz.latte.framework.services.restful.FrameworkService;
 import at.arz.latte.framework.services.restful.ModuleService;
+import at.arz.latte.framework.services.restful.UserService;
 
 /**
  * initialization of RESTful Service classes
@@ -34,6 +35,7 @@ public class FrameworkConfiguration extends Application {
 	private void initApplicationClasses() {
 		applicationClasses = new HashSet<Class<?>>();
 		applicationClasses.add(ModuleService.class);
+		applicationClasses.add(UserService.class);
 		applicationClasses.add(AdministrationService.class);
 		applicationClasses.add(FrameworkService.class);
 	}
