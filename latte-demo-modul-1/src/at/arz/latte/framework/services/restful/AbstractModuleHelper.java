@@ -30,6 +30,32 @@ public abstract class AbstractModuleHelper {
 	private Validator validator;
 
 	/**
+	 * load and validate configuration file of a service
+	 * 
+	 * @param filename
+	 * @return
+	 * @throws JAXBException
+	 * @throws IOException
+	 */
+	protected MenuData loadServiceConfig(String filename) throws JAXBException, IOException {
+
+		URL url = getClass().getResource(filename);
+
+		File file = new File(url.getPath());
+
+		JAXBContext jaxbContext = JAXBContext.newInstance(MenuData.class);
+		Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+
+		MenuData menu = (MenuData) unmarshaller.unmarshal(file);
+		menu.setLastModified(url.openConnection().getLastModified());
+
+		// validate menu structure
+		validateMenu(menu);
+
+		return menu;
+	}
+
+	/**
 	 * validate menu data structure
 	 * 
 	 * @param menu
@@ -70,32 +96,6 @@ public abstract class AbstractModuleHelper {
 
 	private Set<ConstraintViolation<Object>> requestValidation(Object moduleData) {
 		return validator.validate(moduleData);
-	}
-
-	/**
-	 * load and validate configuration file of a service
-	 * 
-	 * @param filename
-	 * @return
-	 * @throws JAXBException
-	 * @throws IOException
-	 */
-	protected MenuData loadServiceConfig(String filename) throws JAXBException, IOException {
-
-		URL url = getClass().getResource(filename);
-
-		File file = new File(url.getPath());
-
-		JAXBContext jaxbContext = JAXBContext.newInstance(MenuData.class);
-		Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-
-		MenuData menu = (MenuData) unmarshaller.unmarshal(file);
-		menu.setLastModified(url.openConnection().getLastModified());
-
-		// validate menu structure
-		validateMenu(menu);
-
-		return menu;
 	}
 
 }

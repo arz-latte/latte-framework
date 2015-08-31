@@ -1,16 +1,91 @@
 /**
- * version 28.08.2015
+ * version 31.08.2015
  */
 var app = {
 
-	// ===========================================================================
-	// menu
-	// ===========================================================================
-
 	API_LATTE : 'http://localhost:8080',
+	PATH_INDEX : '/latte/index.html',
 	PATH_FRAMEWORK : '/latte/api/v1/framework',
 
 	API_WEBSOCKET : 'ws://localhost:8080/latte/ws',
+	
+	// ==========================================================================
+	// framework API
+	// ===========================================================================
+
+	/**
+	 * show sidebar with submenu
+	 */
+	showSideBar : function() {
+		$("#sidebar").show();
+		$("#content").removeClass("col-sm-12");
+		$("#content").addClass("col-sm-9");
+	},
+
+	/**
+	 * hide sidebar with submenu (use full width for content)
+	 */
+	hideSideBar : function() {
+		$("#sidebar").hide();
+		$("#content").removeClass("col-sm-9");
+		$("#content").addClass("col-sm-12");
+	},
+
+	/**
+	 * enable all submenus by specific attribute and value
+	 * @param attribute
+	 * @param value
+	 */
+	enableSubMenuByAttribute : function(attribute, value) {
+
+		$("#side-menu").find("li").each(function(i, li) {
+			var $li = $(li);			
+			if ($li.data(attribute) == value && !$li.data("denied")) {
+				$li.removeClass("disabled");
+			}
+		});
+	},
+	
+	/**
+	 * disable all submenus by specific attribute and value
+	 * @param attribute
+	 * @param value
+	 */
+	disableSubMenuByAttribute : function(attribute, value) {
+		
+		$("#side-menu").find("li").each(function(i, li) {
+			var $li = $(li);			
+			if ($li.data(attribute) == value && !$li.data("denied")) {
+				$li.addClass("disabled");
+			}
+		});
+	},
+
+	/**
+	 * show message to user
+	 * @param msg
+	 */
+	showMessage : function(msg) {
+		var $box = $("#message-box");
+		$box.removeClass("error");
+		$box.html(msg);
+		$box.show(100).delay(3000).hide(100);
+	},
+
+	/**
+	 * show error message to user
+	 * @param msg
+	 */
+	showErrorMessage : function(msg) {
+		var $box = $("#message-box");
+		$box.addClass("error");
+		$box.html(msg);
+		$box.show(100).delay(3000).hide(100);
+	},
+	
+	// ===========================================================================
+	// layout creation
+	// ===========================================================================
 
 	/**
 	 * create nav bar with main menu
@@ -46,7 +121,7 @@ var app = {
 			'class' : "navbar-header"
 		}).append($button, $("<a/>", {
 			'class' : "navbar-brand",
-			href : "#",
+			href : app.API_LATTE + app.PATH_INDEX,
 			text : "Latte"
 		}));
 
@@ -55,10 +130,10 @@ var app = {
 			id : "main-navbar-collapse"
 		}).append($("<ul/>", {
 			'class' : "nav navbar-nav",
-			id : "main-navbar-left"
+			id : "main-menu-left"
 		}), $("<ul/>", {
 			'class' : "nav navbar-nav navbar-right",
-			id : "main-navbar-right"
+			id : "main-menu-right"
 		}).append($("<li/>").append($("<a/>", {
 			href : "#",
 			text : "Logout"
@@ -72,7 +147,7 @@ var app = {
 	},
 
 	/**
-	 * create and place messge box
+	 * create and place message box
 	 */
 	createMessageBox : function() {
 
@@ -89,9 +164,9 @@ var app = {
 	},
 
 	/**
-	 * create and place content area
+	 * create and place content area and sidebar
 	 */
-	createContentArea : function() {
+	createContentAndSideBarArea : function() {
 
 		var $container = $("<div/>", {
 			'class' : "container-fluid"
@@ -122,7 +197,7 @@ var app = {
 	},
 
 	/**
-	 * create side bar with menu
+	 * create empty side bar for menu
 	 */
 	createSideNavBar : function() {
 
@@ -160,7 +235,7 @@ var app = {
 			id : "side-navbar-collapse"
 		}).append($("<ul/>", {
 			'class' : "nav navbar-nav",
-			id : "side-navbar"
+			id : "side-menu"
 		}));
 
 		$menu.append($navbarHeader, $navbarCollapse);
@@ -169,8 +244,12 @@ var app = {
 		app.hideSideBar();
 	},
 
+	// ===========================================================================
+	// initialize framework
+	// ===========================================================================
+
 	/**
-	 * load all menus from server and store them in localStorage
+	 * load all modules and menus from server and store them in localStorage
 	 */
 	loadModules : function() {
 
@@ -178,13 +257,11 @@ var app = {
 			return;
 		}
 
-		console.log("load modules from framework");
-
 		$.ajax({
 			url : app.API_LATTE + app.PATH_FRAMEWORK + "/init.json",
 			async : false,
 		}).done(function(data) {
-			localStorage.clear();
+			//localStorage.clear();
 			localStorage.setItem("initialized", true);
 
 			// store each module separate
@@ -205,13 +282,11 @@ var app = {
 	},
 
 	/**
-	 * initialize main menu from localStorage
-	 * 
-	 * @returns
+	 * initialize main menu
 	 */
 	initMainMenu : function() {
 
-		var $mainMenuLeft = $("#main-navbar-left");
+		var $mainMenuLeft = $("#main-menu-left");
 		$mainMenuLeft.html(""); // clear
 
 		var modules = JSON.parse(localStorage.getItem('modules'));
@@ -239,7 +314,7 @@ var app = {
 		});
 
 		// logout button
-		$("#main-navbar-right").find("a").on("click", function() {
+		$("#main-menu-right").find("a").on("click", function() {
 			localStorage.clear();
 			app.ws
 			alert("storage cleared");
@@ -248,20 +323,20 @@ var app = {
 	},
 
 	/**
-	 * parse menu for single module
+	 * initializes sub menu for single module
 	 */
 	initSubMenu : function() {
 
 		var id = localStorage.getItem("module-id");
 		var menu = JSON.parse(localStorage.getItem("module-" + id));
 
-		// main menu
-		var $mainMenuLeft = $("#main-navbar-left");
+		// activate main menu
+		var $mainMenuLeft = $("#main-menu-left");
 		$mainMenuLeft.find("a").parent().removeClass("active");
 		$mainMenuLeft.find("a[data-id=" + id + "]").parent().addClass("active");
 
-		// sub menu
-		var $subMenu = $("#side-navbar");
+		// create sub menu
+		var $subMenu = $("#side-menu");
 		$subMenu.html(""); // clear
 
 		if (menu.submenu) {
@@ -276,11 +351,17 @@ var app = {
 		}
 	},
 
+	/**
+	 * helper for creating submenu
+	 * @param $subMenu target element
+	 * @param menu datastructure with menu informations
+	 * @param level information about submenu level
+	 */
 	appendSubMenuRec : function($subMenu, menu, level) {
 		// sub menu entry
 		var $entry = $("<li/>").append($("<a/>", {
 			href : menu.url,
-			text : menu.name
+			text : menu.name,
 		}));
 
 		// mark current active menu
@@ -289,8 +370,24 @@ var app = {
 			$entry.addClass("active");
 		}
 
+		// mark submenu
 		if (level > 0) {
-			$entry.addClass("submenu");
+			$entry.addClass("submenu submenu-" + level);
+		}
+		
+		// add permission for this element
+		if (menu.denied) {
+			$entry.addClass("disabled");
+			$entry.attr("data-denied", true);
+		}
+
+		// add type and group for this element
+		if (menu.type) {
+			$entry.attr("data-type", menu.type);
+		}
+
+		if (menu.group) {
+			$entry.attr("data-group", menu.group);
 		}
 
 		$subMenu.append($entry);
@@ -299,7 +396,6 @@ var app = {
 		if (menu.submenu) {
 
 			if (menu.submenu.length > 0) {
-
 				$.each(menu.submenu, function(index, submenu) {
 					app.appendSubMenuRec($subMenu, submenu, level + 1);
 				});
@@ -310,31 +406,6 @@ var app = {
 
 	},
 
-	hideSideBar : function() {
-		$("#sidebar").hide();
-		$("#content").removeClass("col-sm-9");
-		$("#content").addClass("col-sm-12");
-	},
-
-	showSideBar : function() {
-		$("#sidebar").show();
-		$("#content").removeClass("col-sm-12");
-		$("#content").addClass("col-sm-9");
-	},
-
-	showMessage : function(msg) {
-		var $box = $("#message-box");
-		$box.removeClass("error");
-		$box.html(msg);
-		$box.show(100).delay(3000).hide(100);
-	},
-
-	showErrorMessage : function(msg) {
-		var $box = $("#message-box");
-		$box.addClass("error");
-		$box.html(msg);
-		$box.show(100).delay(3000).hide(100);
-	},
 
 	// ==========================================================================
 	// websocket functions
@@ -349,11 +420,20 @@ var app = {
 		});
 
 		app.ws.onmessage = function(msg) {
-			console.log("onmessage" + msg.data);
+			console.log("ws onmessage" + msg.data);
 
 			var data = JSON.parse(msg.data);
 			app.showMessage(data.message);
+			
+			
+			// new module
+			// module deleted
+			// module active
+			// module inactive
+			// module specific
+			
 
+			// module update available
 			if (data.message == "update") {
 				localStorage.removeItem("initialized");
 				app.loadModules();
@@ -373,7 +453,7 @@ var app = {
 		};
 
 		app.ws.onclose = function() {
-			app.showErrorMessage("VERBINDUNG GESCHLOSSEN");
+			app.showErrorMessage("Verbindung zum Server geschlossen");
 		};
 	},
 
@@ -387,7 +467,7 @@ function initFramework() {
 
 	app.createMainNavBar();
 	app.createMessageBox();
-	app.createContentArea();
+	app.createContentAndSideBarArea();
 	app.createSideNavBar();
 
 	app.loadModules();
