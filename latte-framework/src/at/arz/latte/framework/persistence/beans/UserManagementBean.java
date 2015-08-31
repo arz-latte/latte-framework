@@ -44,24 +44,14 @@ public class UserManagementBean {
 	 * @param firstName
 	 * @param lastName
 	 * @param username
+	 * @param password
 	 * @return
 	 */
-	public User updateUser(Long id, String firstName, String lastName, String username) {
+	public User updateUser(Long id, String firstName, String lastName, String username, String password) {
 		User user = getUser(id);
 		user.setFirstName(firstName);
 		user.setLastName(lastName);
 		user.setUsername(username);
-		return user;
-	}
-	
-	/**
-	 * update password via REST-service
-	 * @param id
-	 * @param password
-	 * @return
-	 */
-	public User updateUser(Long id, String password) {
-		User user = getUser(id);
 		user.setPassword(password);
 		return user;
 	}

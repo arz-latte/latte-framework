@@ -79,22 +79,7 @@ public class UserService {
 		}
 
 		User user = bean.updateUser(userData.getId(), userData.getFirstName(), userData.getLastName(),
-				userData.getUsername());
-
-		return toUserData(user);
-	}
-
-	@PUT
-	@Path("password.json")
-	@Produces(MediaType.APPLICATION_JSON)
-	public UserData updateUserPassword(UserData userData) {
-
-		Set<ConstraintViolation<Object>> violations = requestValidation(userData);
-		if (!violations.isEmpty()) {
-			throw new LatteValidationException(400, violations);
-		}
-
-		User user = bean.updateUser(userData.getId(), userData.getPassword());
+				userData.getUsername(), userData.getPassword());
 
 		return toUserData(user);
 	}

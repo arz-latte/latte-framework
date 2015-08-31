@@ -10,11 +10,13 @@
 <script type="text/javascript" src="js/reconnecting-websocket.js"></script>
 <script type="text/javascript" src="js/bootstrap.min.js"></script>
 <script type="text/javascript" src="js/latte.framework.js"></script>
+<script type="text/javascript" src="js/latte-framework-admin.js"></script>
 <script type="text/javascript" src="js/latte.framework.module.js"></script>
 </head>
 <body>
 
 	<div id="main-navbar-placeholder"></div>
+	
 	<div id="message-box-placeholder"></div>
 	
 	<div id="content-placeholder">
@@ -28,18 +30,17 @@
 			</div>
 		</div>
 
-		<!-- Module-Overview -->
-		<div id="module-list-area">
+		<!-- Overview -->
+		<div id="list-area">
 			<div class="input-group">
-				<input id="module-filter" type="text" class="form-control"
+				<input id="list-filter" type="text" class="form-control"
 					placeholder="Modul filtern..."> <span
 					class="input-group-btn"> <a role="button"
-					class="btn btn-default" id="btn-clear-module-filter">X</a>
+					class="btn btn-default" id="btn-clear-list-filter">X</a>
 				</span>
 			</div>
 			<div class="row content-row">
-				<table class="col-sm-12 table table-hover table-striped"
-					id="modules">
+				<table class="col-sm-12 table table-hover table-striped" id="modules">
 					<thead>
 						<tr>
 							<th>Name</th>
@@ -55,15 +56,14 @@
 			</div>
 			<div class="row content-row">
 				<div class="col-sm-12">
-					<a role="button" class="btn btn-success" id="btn-add-module">+</a>
-					<a role="button" class="btn btn-default" id="btn-load-modules">Neu
-						laden</a>
+					<a role="button" class="btn btn-success" id="btn-add">+</a>
+					<a role="button" class="btn btn-default" id="btn-load">Neu laden</a>
 				</div>
 			</div>
 		</div>
 
-		<!-- Module-Edit-Area -->
-		<div id="module-edit-area">
+		<!-- Edit-Area -->
+		<div id="edit-area">
 
 				<form class="form-horizontal" role="form">
 					<div class="form-group">
@@ -105,9 +105,9 @@
 					<div class="row">&#160;</div>
 					<div class="row">
 						<div class="col-sm-12">
-							<button class="btn btn-success" id="btn-store-module">Speichern</button>
-							<button class="btn btn-danger" id="btn-delete-module">L&ouml;schen</button>
-							<button class="btn btn-default" id="btn-restore-module">Abbrechen</button>
+							<button class="btn btn-success" id="btn-store">Speichern</button>
+							<button class="btn btn-danger" id="btn-delete">L&ouml;schen</button>
+							<button class="btn btn-default" id="btn-restore">Abbrechen</button>
 						</div>
 					</div>
 				</form>

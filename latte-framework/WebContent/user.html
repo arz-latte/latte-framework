@@ -10,11 +10,13 @@
 <script type="text/javascript" src="js/reconnecting-websocket.js"></script>
 <script type="text/javascript" src="js/bootstrap.min.js"></script>
 <script type="text/javascript" src="js/latte.framework.js"></script>
-<script type="text/javascript" src="js/latte.framework.user.js"></script>
+<script type="text/javascript" src="js/latte-framework-admin.js"></script>
+<script type="text/javascript" src="js/latte-framework-user.js"></script>
 </head>
 <body>
 
 	<div id="main-navbar-placeholder"></div>
+	
 	<div id="message-box-placeholder"></div>
 
 	<div id="content-placeholder">
@@ -28,13 +30,13 @@
 			</div>
 		</div>
 
-		<!-- User-Overview -->
-		<div id="user-list-area">
+		<!-- Overview -->
+		<div id="list-area">
 			<div class="input-group">
-				<input id="user-filter" type="text" class="form-control"
+				<input id="list-filter" type="text" class="form-control"
 					placeholder="Benutzer filtern..."> <span
 					class="input-group-btn"> <a role="button"
-					class="btn btn-default" id="btn-clear-user-filter">X</a>
+					class="btn btn-default" id="btn-clear-list-filter">X</a>
 				</span>
 			</div>
 			<div class="row content-row">
@@ -52,28 +54,27 @@
 			</div>
 			<div class="row content-row">
 				<div class="col-sm-12">
-					<a role="button" class="btn btn-success" id="btn-add-user">+</a> <a
-						role="button" class="btn btn-default" id="btn-load-users">Neu
-						laden</a>
+					<a role="button" class="btn btn-success" id="btn-add">+</a> <a
+						role="button" class="btn btn-default" id="btn-load">Neu	laden</a>
 				</div>
 			</div>
 		</div>
 
-		<!-- User-Edit-Area -->
-		<div id="user-edit-area">
+		<!-- Edit-Area -->
+		<div id="edit-area">
 
 			<form class="form-horizontal" role="form">
 				<div class="form-group">
-					<label class="control-label col-sm-2" for="input-firstname">Vorname</label>
+					<label class="control-label col-sm-2" for="input-firstName">Vorname</label>
 					<div class="col-sm-10">
-						<input type="text" class="form-control" name="input-firstname">
+						<input type="text" class="form-control" name="input-firstName">
 						<span class="glyphicon glyphicon-remove form-control-feedback"></span>
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="control-label col-sm-2" for="input-lastname">Nachname</label>
+					<label class="control-label col-sm-2" for="input-lastName">Nachname</label>
 					<div class="col-sm-10">
-						<input type="text" class="form-control" name="input-lastname">
+						<input type="text" class="form-control" name="input-lastName">
 						<span class="glyphicon glyphicon-remove form-control-feedback"></span>
 					</div>
 				</div>
@@ -94,9 +95,9 @@
 				<div class="row">&#160;</div>
 				<div class="row">
 					<div class="col-sm-12">
-						<button class="btn btn-success" id="btn-store-user">Speichern</button>
-						<button class="btn btn-danger" id="btn-delete-user">L&ouml;schen</button>
-						<button class="btn btn-default" id="btn-restore-user">Abbrechen</button>
+						<button class="btn btn-success" id="btn-store">Speichern</button>
+						<button class="btn btn-danger" id="btn-delete">L&ouml;schen</button>
+						<button class="btn btn-default" id="btn-restore">Abbrechen</button>
 					</div>
 				</div>
 			</form>

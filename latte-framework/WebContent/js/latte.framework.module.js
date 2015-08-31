@@ -8,7 +8,7 @@ var appModule = {
 	currentId : null,
 
 	loadModules : function() {
-		appModule.leaveEditMode();
+		appAdmin.leaveEditMode();
 
 		$.getJSON(appModule.API_MODULES + "/all.json", function(data) {
 
@@ -43,18 +43,20 @@ var appModule = {
 				$modules.append($row);
 			});
 
-			$("#module-filter").keyup();
+			$("#list-filter").keyup();
 		});
 	},
 
 	addNewModule : function() {
 		$("#btn-delete-module").hide();
-		appModule.enterEditMode();
+		appAdmin.enterEditMode();
+		appModule.currentId = null;	
 	},
 
 	showModule : function() {
 		$("#btn-delete-module").show();
-		appModule.enterEditMode();
+		appAdmin.enterEditMode();
+		appModule.currentId = null;
 
 		// load module details
 		appModule.currentId = $(this).attr("data-id");
@@ -94,7 +96,7 @@ var appModule = {
 				app.showMessage("Modul aktualisiert");
 				appModule.loadModules();
 			}).fail(function(error) {
-				appModule.validateModule(error);
+				appAdmin.validateData(error);
 			});
 		} else {
 
@@ -109,51 +111,11 @@ var appModule = {
 				app.showMessage("Modul erstellt");
 				appModule.loadModules();
 			}).fail(function(error) {
-				appModule.validateModule(error);
+				appAdmin.validateData(error);
 			});
 		}
 
 		return false;
-	},
-
-	resetFormValidation : function() {
-		// reset form valid
-		$("#module-edit-area input").each(function() {
-			$(this).closest(".form-group").removeClass("has-error");
-			$(this).next().hide(); // hide glyphicon
-
-			var text = $(this).parent().prev().text();
-			$(this).parent().prev().text(text.split(": ")[0]);
-		})
-	},
-
-	validateModule : function(error) {
-		app.showErrorMessage("Fehler beim Speichern");
-
-		if (error.status == 400) {
-			appModule.resetFormValidation();
-
-			var validation = error.responseJSON.response.validation;
-
-			// mark inputs as invalid
-			var entries = [];
-			if ($.isArray(validation.entry)) {
-				$.merge(entries, validation.entry);
-			} else {
-				entries.push(validation.entry);
-			}
-			$.each(entries, function(i, e) {
-				// mark input as invalid
-				var $input = $("[name=input-" + e.key + "]");
-				$input.closest(".form-group").addClass("has-error");
-
-				$input.next().show(); // show glyphicon
-
-				// set label text
-				var text = $input.parent().prev().text();
-				$input.parent().prev().text(text + ": " + e.value);
-			});
-		}
 	},
 
 	deleteModule : function() {
@@ -176,37 +138,9 @@ var appModule = {
 	},
 
 	restoreModule : function() {
-		appModule.leaveEditMode();
-		return false;
-	},
-
-	filterModule : function() {
-		var rex = new RegExp($(this).val(), "i");
-		$("tbody tr").hide();
-		$("tbody tr").filter(function() {
-			return rex.test($(this).text());
-		}).show();
-	},
-
-	clearModuleFilter : function() {
-		$("#module-filter").val("");
-		$("tbody tr").show();
-	},
-
-	enterEditMode : function() {
-		appModule.resetFormValidation();
-
-		$("#module-list-area").hide();
-		$("#module-edit-area").show();
-
-		$("#module-edit-area form").trigger("reset");
+		appAdmin.leaveEditMode();
 		appModule.currentId = null;
-	},
-
-	leaveEditMode : function() {
-		$("#module-edit-area").hide();
-		$("#module-list-area").show();
-		appModule.currentId = null;
+		return false;		
 	},
 
 };
@@ -216,17 +150,16 @@ var appModule = {
 // ===========================================================================
 function initModule() {
 
-	$("#btn-clear-module-filter").on("click", appModule.clearModuleFilter);
-	$("#module-filter").on("keyup", appModule.filterModule);
+	appAdmin.init();
 
-	$("#btn-load-modules").on("click", appModule.loadModules);
-	$("#btn-add-module").on("click", appModule.addNewModule);
+	$("#btn-load").on("click", appModule.loadModules);
+	$("#btn-add").on("click", appModule.addNewModule);
 
-	$("#btn-store-module").on("click", appModule.storeModule);
-	$("#btn-delete-module").on("click", appModule.deleteModule);
-	$("#btn-restore-module").on("click", appModule.restoreModule);
+	$("#btn-store").on("click", appModule.storeModule);
+	$("#btn-delete").on("click", appModule.deleteModule);
+	$("#btn-restore").on("click", appModule.restoreModule);
 
-	$("#module-list-area tbody").on("click", "tr", appModule.showModule);
+	$("#list-area tbody").on("click", "tr", appModule.showModule);
 
 	appModule.loadModules();
 }
