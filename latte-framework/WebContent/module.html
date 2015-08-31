@@ -14,126 +14,107 @@
 </head>
 <body>
 
-	<!-- main/top menu navbar -->
-	<div id="main-navbar"></div>	
-
-	<!-- sidebar with submenu, content area -->
-	<div class="container-fluid">
+	<div id="main-navbar-placeholder"></div>
+	<div id="message-box-placeholder"></div>
 	
-		<div class="row">
-			<div class="col-sm-12" id="message-box"></div>
+	<div id="content-placeholder">
+
+		<!-- Header -->
+		<div class="jumbotron">
+			<div class="row content-row">
+				<div class="col-sm-12">
+					<h3>Modulverwaltung</h3>
+				</div>
+			</div>
 		</div>
-		
-		<div class="row">
-			<!-- sidebar -->
-			<div class="col-sm-3" id="sidebar">
-				<!-- menu area -->
-			</div><!-- /sidebar -->
 
-			<!-- content -->
-			<div class="col-sm-9" id="content">
+		<!-- Modul-Overview -->
+		<div id="module-list-area">
+			<div class="input-group">
+				<input id="module-filter" type="text" class="form-control"
+					placeholder="Modul filtern..."> <span
+					class="input-group-btn"> <a role="button"
+					class="btn btn-default" id="btn-clear-module-filter">X</a>
+				</span>
+			</div>
+			<div class="row content-row">
+				<table class="col-sm-12 table table-hover table-striped"
+					id="modules">
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Provider</th>
+							<th>Version</th>
+							<th>Erreichbar</th>
+							<th>Aktiviert</th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+			</div>
+			<div class="row content-row">
+				<div class="col-sm-12">
+					<a role="button" class="btn btn-success" id="btn-add-module">+</a>
+					<a role="button" class="btn btn-default" id="btn-load-modules">Neu
+						laden</a>
+				</div>
+			</div>
+		</div>
 
-				<!-- Header -->
-				<div class="jumbotron">
-					<div class="row content-row">
+		<!-- Modul-Edit-Area -->
+		<div id="module-edit-area">
+
+				<form class="form-horizontal" role="form">
+					<div class="form-group">
+						<label class="control-label col-sm-2" for="input-name">Name</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" name="input-name">
+							<span class="glyphicon glyphicon-remove form-control-feedback"></span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-sm-2" for="input-provider">Provider</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" name="input-provider">
+							<span class="glyphicon glyphicon-remove form-control-feedback"></span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-sm-2" for="input-url">URL</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" name="input-url">
+							<span class="glyphicon glyphicon-remove form-control-feedback"></span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-sm-2" for="input-interval">Pr&uuml;fintervall</label>
+						<div class="col-sm-10">
+							<input type="text" class="form-control" name="input-interval"
+								value="60"> <span
+								class="glyphicon glyphicon-remove form-control-feedback"></span>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-sm-2" for="input-enabled">Aktiviert</label>
+						<div class="col-sm-10">
+							<input type="checkbox" class="form-control" name="input-enabled">
+							<span class="glyphicon glyphicon-remove form-control-feedback"></span>
+						</div>
+					</div>
+					<div class="row">&#160;</div>
+					<div class="row">
 						<div class="col-sm-12">
-							<h3>Modulverwaltung</h3>
+							<button class="btn btn-success" id="btn-store-module">Speichern</button>
+							<button class="btn btn-danger" id="btn-delete-module">L&ouml;schen</button>
+							<button class="btn btn-default" id="btn-restore-module">Abbrechen</button>
 						</div>
 					</div>
-				</div>
-
-				<!-- Modul-Overview -->
-				<div id="module-list-area">
-					<div class="input-group">
-						<input id="module-filter" type="text" class="form-control"
-							placeholder="Modul filtern..."> <span
-							class="input-group-btn"> <a role="button"
-							class="btn btn-default" id="btn-clear-module-filter">X</a>
-						</span>
-					</div>
-					<div class="row content-row">
-						<table class="col-sm-12 table table-hover table-striped"
-							id="modules">
-							<thead>
-								<tr>
-									<th>Name</th>
-									<th>Provider</th>
-									<th>Version</th>
-									<th>Erreichbar</th>
-									<th>Aktiviert</th>
-								</tr>
-							</thead>
-							<tbody>
-							</tbody>
-						</table>
-					</div>
-					<div class="row content-row">
-						<div class="col-sm-12">
-							<a role="button" class="btn btn-success" id="btn-add-module">+</a>
-							<a role="button" class="btn btn-default" id="btn-load-modules">Neu
-								laden</a>
-						</div>
-					</div>
-				</div>
-
-
-				<!-- Modul-Edit-Area -->
-				<div id="module-edit-area">
-
-					<form class="form-horizontal" role="form">
-						<div class="form-group">
-							<label class="control-label col-sm-2" for="input-name">Name</label>
-							<div class="col-sm-10">
-								<input type="text" class="form-control" name="input-name">
-								<span class="glyphicon glyphicon-remove form-control-feedback"></span>
-							</div>
-						</div>
-						<div class="form-group">
-							<label class="control-label col-sm-2" for="input-provider">Provider</label>
-							<div class="col-sm-10">
-								<input type="text" class="form-control" name="input-provider">
-								<span class="glyphicon glyphicon-remove form-control-feedback"></span>
-							</div>
-						</div>
-						<div class="form-group">
-							<label class="control-label col-sm-2" for="input-url">URL</label>
-							<div class="col-sm-10">
-								<input type="text" class="form-control" name="input-url">
-								<span class="glyphicon glyphicon-remove form-control-feedback"></span>
-							</div>
-						</div>
-						<div class="form-group">
-							<label class="control-label col-sm-2" for="input-interval">Pr&uuml;fintervall</label>
-							<div class="col-sm-10">
-								<input type="text" class="form-control" name="input-interval"
-									value="60"> <span
-									class="glyphicon glyphicon-remove form-control-feedback"></span>
-							</div>
-						</div>
-						<div class="form-group">
-							<label class="control-label col-sm-2" for="input-enabled">Aktiviert</label>
-							<div class="col-sm-10">
-								<input type="checkbox" class="form-control" name="input-enabled">
-								<span class="glyphicon glyphicon-remove form-control-feedback"></span>
-							</div>
-						</div>
-						<div class="row">&#160;</div>
-						<div class="row">
-							<div class="col-sm-12">
-								<button class="btn btn-success" id="btn-store-module">Speichern</button>
-								<button class="btn btn-danger" id="btn-delete-module">L&ouml;schen</button>
-								<button class="btn btn-default" id="btn-restore-module">Abbrechen</button>
-							</div>
-						</div>
-					</form>
-
-				</div>
+				</form>
 
 			</div>
-			<!-- /content -->
-			
-		</div>
-	</div>
 
+	</div>
+	
 </body>
 </html>

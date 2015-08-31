@@ -68,7 +68,57 @@ var app = {
 
 		$menu.append($div);
 
-		$("#main-navbar").append($menu);
+		$("#main-navbar-placeholder").replaceWith($menu);
+	},
+
+	/**
+	 * create and place messge box
+	 */
+	createMessageBox : function() {
+
+		var $container = $("<div/>", {
+			'class' : "container-fluid"
+		}).append($("<div/>", {
+			'class' : "row"
+		}).append($("<div/>", {
+			'class' : "col-sm-12",
+			id : "message-box"
+		})));
+
+		$("#message-box-placeholder").replaceWith($container);
+	},
+
+	/**
+	 * create and place content area
+	 */
+	createContentArea : function() {
+
+		var $container = $("<div/>", {
+			'class' : "container-fluid"
+		});
+		
+		var $row = $("<div/>", {
+			'class' : "row"
+		});
+		
+		var $sidebar = $("<div/>", {
+			'class' : "col-sm-3",
+			id : "sidebar"
+		});
+		
+		var $content = $("<div/>", {
+			'class' : "col-sm-9",
+			id : "content"
+		});
+		
+		// fill with predefined content from html-file
+		$content.append($("#content-placeholder").html());
+		
+		$row.append($sidebar, $content);
+		
+		$container.append($row);
+
+		$("#content-placeholder").replaceWith($container);
 	},
 
 	/**
@@ -196,7 +246,7 @@ var app = {
 		});
 
 	},
-	
+
 	/**
 	 * parse menu for single module
 	 */
@@ -219,7 +269,7 @@ var app = {
 			$.each(menu.submenu, function(index, menu) {
 				app.appendSubMenuRec($subMenu, menu, 0);
 			});
-			
+
 			app.showSideBar();
 		} else {
 			app.hideSideBar(); // no side menu for this module
@@ -238,16 +288,16 @@ var app = {
 		if (menu.url == loc) {
 			$entry.addClass("active");
 		}
-		
+
 		if (level > 0) {
 			$entry.addClass("submenu");
 		}
 
 		$subMenu.append($entry);
-				
+
 		// check recursive sub menus
 		if (menu.submenu) {
-			
+
 			if (menu.submenu.length > 0) {
 
 				$.each(menu.submenu, function(index, submenu) {
@@ -257,9 +307,9 @@ var app = {
 				app.appendSubMenuRec($subMenu, menu.submenu, level + 1);
 			}
 		}
-		
+
 	},
-	
+
 	hideSideBar : function() {
 		$("#sidebar").hide();
 		$("#content").removeClass("col-sm-9");
@@ -334,10 +384,11 @@ var app = {
 // ===========================================================================
 
 function initFramework() {
-	console.log("window ready");
 
-	app.createSideNavBar();
 	app.createMainNavBar();
+	app.createMessageBox();
+	app.createContentArea();
+	app.createSideNavBar();
 
 	app.loadModules();
 

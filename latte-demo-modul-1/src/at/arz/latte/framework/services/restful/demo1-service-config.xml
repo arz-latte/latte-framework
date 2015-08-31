@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <menu>
     <name>Demo Modul 1</name>
-    <url>#</url>
+    <url>http://localhost:8080/demo1/index.html</url>
     <order>10</order>
     <submenu>
-        <name>Menü 1</name>
-        <url>#</url>
+        <name>Demo</name>
+        <url>http://localhost:8080/demo1/index.html</url>
         <permission>user</permission>
 	    <submenu>
 	        <name>SubMenü 1</name>
