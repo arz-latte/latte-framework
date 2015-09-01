@@ -34,6 +34,10 @@ public class ModuleManagementBean {
 		return em.createNamedQuery(Module.QUERY_GETALL, Module.class).getResultList();
 	}
 
+	public List<Module> getAllEnabledModules() {
+		return em.createNamedQuery(Module.QUERY_GETALL_ENABLED, Module.class).getResultList();
+	}
+
 	public Module getModule(Long moduleId) {
 		return em.find(Module.class, moduleId);
 	}

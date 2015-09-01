@@ -6,7 +6,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.Set;
 
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
@@ -23,11 +23,34 @@ import at.arz.latte.framework.restful.dta.SubMenuData;
  * Dominik Neuner {@link "mailto:dominik@neuner-it.at"}
  *
  */
-@RequestScoped
+@ApplicationScoped
 public abstract class AbstractModuleHelper {
 
 	@Inject
 	private Validator validator;
+
+	/**
+	 * storage for menu structure
+	 */
+	private static MenuData menu;
+
+	/**
+	 * load and validate configuration file of a service, cache menu structure
+	 * 
+	 * @param filename
+	 * @param lastModified
+	 * @return
+	 * @throws JAXBException
+	 * @throws IOException
+	 */
+	protected MenuData loadAndCacheServiceConfig(String filename, Long lastModified) throws JAXBException, IOException {
+
+		if (menu == null || lastModified == null || lastModified < menu.getLastModified()) {
+			menu = loadServiceConfig(filename);
+		}
+
+		return menu;
+	}
 
 	/**
 	 * load and validate configuration file of a service

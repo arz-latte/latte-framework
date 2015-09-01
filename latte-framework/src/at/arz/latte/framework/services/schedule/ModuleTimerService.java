@@ -16,6 +16,7 @@ import javax.ws.rs.core.MediaType;
 import org.apache.cxf.jaxrs.client.ClientWebApplicationException;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.apache.cxf.transport.http.HTTPConduit;
+import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 
 import at.arz.latte.framework.persistence.beans.ModuleManagementBean;
 import at.arz.latte.framework.persistence.models.Menu;
@@ -51,52 +52,45 @@ public class ModuleTimerService {
 
 		counter++;
 
-		for (Module module : bean.getAllModules()) {
-			
+		for (Module module : bean.getAllEnabledModules()) {
+
 			int checkInterval = module.getInterval();
-			if (module.getEnabled() && checkInterval > 0 && counter % checkInterval == 0) {
+			if (checkInterval > 0 && counter % checkInterval == 0) {
 				checkStatus(module);
 			}
 		}
 	}
 
 	private void checkStatus(Module module) {
-		
-		try {
-			WebClient client = WebClient.create(module.getUrlHost()).path(module.getUrlPath() + "/status.json");
-			HTTPConduit conduit = WebClient.getConfig(client).getHttpConduit();
-			conduit.getClient().setReceiveTimeout(2000);
-			conduit.getClient().setConnectionTimeout(2000);
 
-			// todo: send version to client via post...
-			MenuData menuData = client.accept(MediaType.APPLICATION_JSON).get(MenuData.class);
+		try {
+			WebClient client = setupClient(module.getUrlHost(), module.getUrlPath() + "/status.json");
+
+			// get menu, send lastModified of module to client
+			MenuData menuData = client.query("lastModified", module.getLastModified()).get(MenuData.class);
 
 			// valiate menu response data
 			Set<ConstraintViolation<Object>> violations = requestValidation(menuData);
 			if (!violations.isEmpty()) {
 				throw new LatteValidationException(400, violations);
-			}			
-			
+			}
+
 			// got response -> check version
 			if (module.getLastModified() == null || module.getLastModified() < menuData.getLastModified()) {
 
-				System.out.println("save new menu");
-				System.out.println("save: " + module);
 				System.out.println("save: " + menuData);
-								
+
 				Menu menu = Menu.getMenuRec(menuData);
-				bean.updateModuleMenu(module.getId(), menu);				
-				
+				bean.updateModuleMenu(module.getId(), menu);
+
 				websocket.chat(new WebsocketMessage("update", "server"));
 			} else if (!module.getRunning()) {
-				
-				System.out.println("set running true " + module.getName());
-				
+
 				// set module running to true
-				bean.updateModuleRunning(module.getId(), true);				
-				
+				bean.updateModuleRunning(module.getId(), true);
+
 				websocket.chat(new WebsocketMessage("update", "server"));
-			}		
+			}
 
 		} catch (WebApplicationException | ClientWebApplicationException ex) {
 			System.out.println("Check module: " + module);
@@ -106,7 +100,7 @@ public class ModuleTimerService {
 			if (module.getRunning()) {
 
 				bean.updateModuleRunning(module.getId(), false);
-				
+
 				websocket.chat(new WebsocketMessage("inactive", "server"));
 			}
 
@@ -114,8 +108,21 @@ public class ModuleTimerService {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private Set<ConstraintViolation<Object>> requestValidation(Object moduleData) {
 		return validator.validate(moduleData);
-	}	
+	}
+
+	private WebClient setupClient(String host, String path) {
+		WebClient client = WebClient.create(host).path(path);
+		HTTPConduit conduit = WebClient.getConfig(client).getHttpConduit();
+		HTTPConduit http = (HTTPConduit) WebClient.getConfig(client).getConduit();
+		HTTPClientPolicy httpClientPolicy = new HTTPClientPolicy();
+		httpClientPolicy.setConnectionTimeout(500);
+		httpClientPolicy.setReceiveTimeout(500);
+		http.setClient(httpClientPolicy);
+		client.accept(MediaType.APPLICATION_JSON);
+		client.type(MediaType.APPLICATION_JSON);
+		return client;
+	}
 }
