@@ -19,6 +19,13 @@ public class LatteValidationException extends RuntimeException {
 		this.status = status;
 		convertToMap(violations);
 	}
+	
+	public LatteValidationException(int status, String key, String value) {
+		super();
+		this.status = status;
+		validation = new HashMap<String, String>();
+		validation.put(key, value);
+	}
 
 	private void convertToMap(Set<ConstraintViolation<Object>> violations) {
 

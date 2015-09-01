@@ -8,6 +8,7 @@ import javax.persistence.PersistenceContext;
 
 import at.arz.latte.framework.persistence.models.Menu;
 import at.arz.latte.framework.persistence.models.Module;
+import at.arz.latte.framework.persistence.models.SubMenu;
 import at.arz.latte.framework.restful.dta.ModuleData;
 
 /**
@@ -91,13 +92,29 @@ public class ModuleManagementBean {
 
 		Module module = updateModuleRunning(moduleId, true);
 
-		if (menu != null) {
-			module.setLastModified(menu.getLastModified());
-
-			module.setMenu(menu);
-		}
+		module.setLastModified(menu.getLastModified());
+		module.setMenu(menu);
+		
+		// extract and store permissions
+		storeRecPermissions(menu.getSubMenus());
 
 		return module;
+	}
+	
+	/**
+	 * extract and store permissions
+	 * @param menus
+	 */
+	private void storeRecPermissions(List<SubMenu> menus) {
+		if (menus != null) {
+		
+			for(SubMenu submenu : menus) {
+				System.out.println(submenu.getName() + ": " + submenu.getPermission());
+
+				
+				storeRecPermissions(submenu.getSubMenus());
+			}
+		}
 	}
 
 	public void deleteModule(Long moduleId) {

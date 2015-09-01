@@ -4,11 +4,13 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
@@ -21,8 +23,10 @@ import javax.validation.constraints.Size;
  * Dominik Neuner {@link "mailto:dominik@neuner-it.at"}
  *
  */
-
-@NamedQuery(name = Role.QUERY_GETALL_BASE, query = "SELECT new at.arz.latte.framework.restful.dta.RoleData(r.id, r.name) FROM Role r ORDER BY r.name")
+@NamedQueries({
+	@NamedQuery(name = Role.QUERY_GETALL_BASE, query = "SELECT new at.arz.latte.framework.restful.dta.RoleData(r.id, r.name) FROM Role r ORDER BY r.name"),
+	@NamedQuery(name = Role.QUERY_GET_BY_NAME, query = "SELECT r FROM Role r WHERE r.name = :name") 
+	})
 @Entity
 @Table(name = "roles")
 public class Role implements Serializable {
@@ -30,6 +34,7 @@ public class Role implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	public static final String QUERY_GETALL_BASE = "Role.GetAllBase";
+	public static final String QUERY_GET_BY_NAME = "Role.GetByName";
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "Role.ID")
@@ -37,6 +42,7 @@ public class Role implements Serializable {
 	private Long id;
 
 	@NotNull
+	@Column(unique=true)
 	@Size(min = 1, max = 63)
 	private String name;
 

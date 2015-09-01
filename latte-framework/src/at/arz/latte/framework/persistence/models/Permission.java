@@ -2,6 +2,7 @@ package at.arz.latte.framework.persistence.models;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -34,6 +35,7 @@ public class Permission implements Serializable {
 	private Long id;
 
 	@NotNull
+	@Column(unique=true)
 	@Size(min = 1, max = 63)
 	private String name;
 

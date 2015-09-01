@@ -25,7 +25,9 @@ import javax.validation.constraints.Size;
  */
 @NamedQueries({
 		@NamedQuery(name = User.QUERY_GETALL_BASE, query = "SELECT new at.arz.latte.framework.restful.dta.UserData(u.id, u.firstName, u.lastName, u.username) FROM User u ORDER BY u.lastName, u.firstName"),
-		@NamedQuery(name = User.QUERY_GETALL, query = "SELECT u FROM User u") })
+		@NamedQuery(name = User.QUERY_GETALL, query = "SELECT u FROM User u"),
+		@NamedQuery(name = User.QUERY_GET_BY_USERNAME, query = "SELECT u FROM User u WHERE u.username = :username") 
+		})
 @Entity
 @Table(name = "users")
 public class User implements Serializable {
@@ -34,6 +36,7 @@ public class User implements Serializable {
 
 	public static final String QUERY_GETALL_BASE = "User.GetAllBase";
 	public static final String QUERY_GETALL = "User.GetAll";
+	public static final String QUERY_GET_BY_USERNAME = "User.GetByUsername";
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "User.ID")
@@ -51,6 +54,7 @@ public class User implements Serializable {
 	private String lastName;
 
 	@NotNull
+	@Column(unique=true)
 	@Size(min = 1, max = 63)
 	private String username;
 

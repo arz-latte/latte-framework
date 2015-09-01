@@ -115,7 +115,6 @@ public class ModuleTimerService {
 
 	private WebClient setupClient(String host, String path) {
 		WebClient client = WebClient.create(host).path(path);
-		HTTPConduit conduit = WebClient.getConfig(client).getHttpConduit();
 		HTTPConduit http = (HTTPConduit) WebClient.getConfig(client).getConduit();
 		HTTPClientPolicy httpClientPolicy = new HTTPClientPolicy();
 		httpClientPolicy.setConnectionTimeout(500);
