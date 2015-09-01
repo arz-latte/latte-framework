@@ -37,9 +37,6 @@ public class UserService {
 	@EJB
 	private UserManagementBean bean;
 
-	@EJB
-	private RoleManagementBean roleBean;
-
 	@Inject
 	private Validator validator;
 
@@ -54,7 +51,7 @@ public class UserService {
 	@Path("roles.json")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<RoleData> getAllRoles() {
-		return roleBean.getAllRolesData();
+		return bean.getAllRolesData();
 	}
 
 	@GET
@@ -76,7 +73,7 @@ public class UserService {
 		}
 
 		User user = new User(userData.getFirstName(), userData.getLastName(), userData.getUsername(),
-				userData.getPassword(), null);
+				userData.getPassword());
 
 		return toUserData(bean.createUser(user, userData.getRole()));
 	}

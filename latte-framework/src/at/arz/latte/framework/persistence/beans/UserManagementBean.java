@@ -28,6 +28,10 @@ public class UserManagementBean {
 	public List<UserData> getAllUsersData() {
 		return em.createNamedQuery(User.QUERY_GETALL_BASE, UserData.class).getResultList();
 	}
+	
+	public List<RoleData> getAllRolesData() {
+		return em.createNamedQuery(Role.QUERY_GETALL_BASE, RoleData.class).getResultList();
+	}
 
 	public List<User> getAllUsers() {
 		return em.createNamedQuery(User.QUERY_GETALL, User.class).getResultList();

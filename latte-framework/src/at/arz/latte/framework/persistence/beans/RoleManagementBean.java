@@ -6,7 +6,9 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import at.arz.latte.framework.persistence.models.Permission;
 import at.arz.latte.framework.persistence.models.Role;
+import at.arz.latte.framework.restful.dta.PermissionData;
 import at.arz.latte.framework.restful.dta.RoleData;
 
 /**
@@ -25,12 +27,16 @@ public class RoleManagementBean {
 		return em.createNamedQuery(Role.QUERY_GETALL_BASE, RoleData.class).getResultList();
 	}
 
-	public List<Role> getAllRoles() {
-		return em.createNamedQuery(Role.QUERY_GETALL, Role.class).getResultList();
+	public List<PermissionData> getAllPermissionsData() {
+		return em.createNamedQuery(Permission.QUERY_GETALL_BASE, PermissionData.class).getResultList();
 	}
 
 	public Role getRole(Long roleId) {
-		return em.find(Role.class, roleId);
+		Role r = em.find(Role.class, roleId);
+		for (Permission p : r.getPermission()) {
+			// fetch eager
+		}
+		return r;
 	}
 
 	public Role createRole(Role role) {

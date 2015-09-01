@@ -11,6 +11,7 @@
 		<class>at.arz.latte.framework.persistence.models.SubMenu</class>
 		<class>at.arz.latte.framework.persistence.models.User</class>
 		<class>at.arz.latte.framework.persistence.models.Role</class>
+		<class>at.arz.latte.framework.persistence.models.Permission</class>
 
 		<properties>
 			<property name="openjpa.DynamicEnhancementAgent" value="true" />

@@ -27,7 +27,7 @@ public class UserTest {
 	public void moduleIsPersistent() {
 		em.getTransaction().begin();
 
-		User u = new User("Max", "Mustermann", "max", "max", null);
+		User u = new User("Max", "Mustermann", "max", "max");
 		em.persist(u);
 
 		em.getTransaction().commit();

@@ -25,6 +25,21 @@ var appRole = {
 			$("#list-filter").keyup();
 		});
 	},
+	
+	loadPermissions : function() {
+		$.getJSON(appRole.API_ROLES + "/permissions.json", function(data) {
+
+			var $permissions = $("[name=select-permission]");
+			$permissions.find("option").remove(); // clear
+
+			$.each(data.permission, function(index, permission) {
+				var $option = $('<option />');
+				$option.attr('value', permission.id).text(permission.name);
+
+				$permissions.append($option);
+			});
+		});
+	},
 
 	addNewRole : function() {
 		$("#btn-delete-role").hide();
@@ -45,6 +60,15 @@ var appRole = {
 					// fill form
 					var r = data.role;
 					$("[name=input-name]").val(r.name);
+					
+					var $permission = $("[name=select-permission]");
+					if (r.permission.length > 0) {
+						$.each(r.permission, function(index, permission) {
+							$permission.find("option[value='" + permission.id + "']").prop("selected", true);
+						});
+					} else {
+						$permission.find("option[value='" + r.permission.id + "']").prop("selected", true);
+					}					
 				});
 	},
 
@@ -54,6 +78,11 @@ var appRole = {
 		r.id = appRole.currentId;
 		r.name = $("[name=input-name]").val();
 
+		r.role = [];
+		$("[name=select-permission]").find(":selected").each(function(index, selected) {
+			r.role.push({"id" : $(selected).val()});
+		});
+		
 		if (r.id > 0) {
 
 			$.ajax({
@@ -133,6 +162,7 @@ function initRole() {
 	$("#list-area tbody").on("click", "tr", appRole.showRole);
 
 	appRole.loadRoles();
+	appRole.loadPermissions();
 }
 
 $(initRole);

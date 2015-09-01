@@ -67,10 +67,8 @@ var appUser = {
 					$("[name=input-password]").val(u.password);
 					
 					var $role = $("[name=select-role]");
-					
 					if (u.role.length > 0) {
 						$.each(u.role, function(index, role) {
-							//$("[name=select-role] option[value='" + role + "']").prop("selected", true);
 							$role.find("option[value='" + role.id + "']").prop("selected", true);
 						});
 					} else {

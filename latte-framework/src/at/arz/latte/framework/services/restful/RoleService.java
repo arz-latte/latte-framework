@@ -19,6 +19,7 @@ import javax.ws.rs.core.MediaType;
 
 import at.arz.latte.framework.persistence.beans.RoleManagementBean;
 import at.arz.latte.framework.persistence.models.Role;
+import at.arz.latte.framework.restful.dta.PermissionData;
 import at.arz.latte.framework.restful.dta.RoleData;
 
 /**
@@ -42,6 +43,13 @@ public class RoleService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<RoleData> getAllRoles() {
 		return bean.getAllRolesData();
+	}
+
+	@GET
+	@Path("permissions.json")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<PermissionData> getAllPermissions() {
+		return bean.getAllPermissionsData();
 	}
 
 	@GET
