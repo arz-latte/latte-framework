@@ -1,6 +1,3 @@
-/**
- * version 31.08.2015
- */
 var appUser = {
 
 	API_USERS : 'api/v1/users',
@@ -31,6 +28,21 @@ var appUser = {
 		});
 	},
 
+	loadRoles : function() {
+		$.getJSON(appUser.API_USERS + "/roles.json", function(data) {
+
+			var $roles = $("[name=select-role]");
+			$roles.find("option").remove(); // clear
+
+			$.each(data.role, function(index, role) {
+				var $option = $('<option />');
+				$option.attr('value', role.id).text(role.name);
+
+				$roles.append($option);
+			});
+		});
+	},
+
 	addNewUser : function() {
 		$("#btn-delete-user").hide();
 		appAdmin.enterEditMode();
@@ -53,6 +65,17 @@ var appUser = {
 					$("[name=input-lastName]").val(u.lastName);
 					$("[name=input-username]").val(u.username);
 					$("[name=input-password]").val(u.password);
+					
+					var $role = $("[name=select-role]");
+					
+					if (u.role.length > 0) {
+						$.each(u.role, function(index, role) {
+							//$("[name=select-role] option[value='" + role + "']").prop("selected", true);
+							$role.find("option[value='" + role.id + "']").prop("selected", true);
+						});
+					} else {
+						$role.find("option[value='" + u.role.id + "']").prop("selected", true);
+					}
 				});
 	},
 
@@ -64,6 +87,11 @@ var appUser = {
 		u.lastName = $("[name=input-lastName]").val();
 		u.username = $("[name=input-username]").val();
 		u.password = $("[name=input-password]").val();
+
+		u.role = [];
+		$("[name=select-role]").find(":selected").each(function(index, selected) {
+			u.role.push({"id" : $(selected).val()});
+		});
 
 		if (u.id > 0) {
 
@@ -103,12 +131,10 @@ var appUser = {
 	deleteUser : function() {
 		var choice = confirm("Sind Sie sicher?");
 		if (choice == true) {
-			$.ajax(
-					{
-						url : appUser.API_USERS + "/delete.json/"
-								+ appUser.currentId,
-						type : "DELETE",
-					}).done(function(data) {
+			$.ajax({
+				url : appUser.API_USERS + "/delete.json/" + appUser.currentId,
+				type : "DELETE",
+			}).done(function(data) {
 				app.showMessage("Benutzer gel&ouml;scht");
 				appUser.loadUsers();
 			}).fail(function() {
@@ -131,7 +157,7 @@ var appUser = {
 // ready & event handlers
 // ===========================================================================
 function initUser() {
-	
+
 	appAdmin.init();
 
 	$("#btn-load").on("click", appUser.loadUsers);
@@ -143,6 +169,7 @@ function initUser() {
 
 	$("#list-area tbody").on("click", "tr", appUser.showUser);
 
+	appUser.loadRoles();
 	appUser.loadUsers();
 }
 

@@ -1,5 +1,8 @@
 package at.arz.latte.framework.restful.dta;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -34,6 +37,8 @@ public class UserData {
 	@Size(min = 1, max = 63)
 	private String password;
 
+	private Set<RoleData> role = new HashSet<RoleData>();
+
 	public UserData() {
 	}
 
@@ -41,11 +46,9 @@ public class UserData {
 	 * constructor for REST list view
 	 * 
 	 * @param id
-	 * @param name
-	 * @param provider
-	 * @param enabled
-	 * @param running
-	 * @param lastModified
+	 * @param firstName
+	 * @param lastName
+	 * @param username
 	 */
 	public UserData(Long id, String firstName, String lastName, String username) {
 		this();
@@ -95,10 +98,22 @@ public class UserData {
 		this.password = password;
 	}
 
+	public Set<RoleData> getRole() {
+		return role;
+	}
+
+	public void setRole(Set<RoleData> role) {
+		this.role = role;
+	}
+
+	public void addRole(RoleData role) {
+		this.role.add(role);
+	}
+
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", username=" + username
-				+ ", password=" + password + "]";
+		return "UserData [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", username=" + username
+				+ ", password=" + password + ", role=" + role + "]";
 	}
 
 }

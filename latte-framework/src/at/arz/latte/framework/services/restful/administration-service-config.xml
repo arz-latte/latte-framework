@@ -15,7 +15,7 @@
     </submenu>
     <submenu>
         <name>Rollen</name>
-        <url>#</url>
+        <url>http://localhost:8080/latte/role.html</url>
         <permission>admin</permission>
     </submenu>
 </menu>

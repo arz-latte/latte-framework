@@ -17,8 +17,11 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import at.arz.latte.framework.persistence.beans.RoleManagementBean;
 import at.arz.latte.framework.persistence.beans.UserManagementBean;
+import at.arz.latte.framework.persistence.models.Role;
 import at.arz.latte.framework.persistence.models.User;
+import at.arz.latte.framework.restful.dta.RoleData;
 import at.arz.latte.framework.restful.dta.UserData;
 
 /**
@@ -34,6 +37,9 @@ public class UserService {
 	@EJB
 	private UserManagementBean bean;
 
+	@EJB
+	private RoleManagementBean roleBean;
+
 	@Inject
 	private Validator validator;
 
@@ -42,6 +48,13 @@ public class UserService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<UserData> getAllUsers() {
 		return bean.getAllUsersData();
+	}
+
+	@GET
+	@Path("roles.json")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<RoleData> getAllRoles() {
+		return roleBean.getAllRolesData();
 	}
 
 	@GET
@@ -63,9 +76,9 @@ public class UserService {
 		}
 
 		User user = new User(userData.getFirstName(), userData.getLastName(), userData.getUsername(),
-				userData.getPassword());
+				userData.getPassword(), null);
 
-		return toUserData(bean.createUser(user));
+		return toUserData(bean.createUser(user, userData.getRole()));
 	}
 
 	@PUT
@@ -79,7 +92,7 @@ public class UserService {
 		}
 
 		User user = bean.updateUser(userData.getId(), userData.getFirstName(), userData.getLastName(),
-				userData.getUsername(), userData.getPassword());
+				userData.getUsername(), userData.getPassword(), userData.getRole());
 
 		return toUserData(user);
 	}
@@ -107,6 +120,15 @@ public class UserService {
 		userData.setLastName(user.getLastName());
 		userData.setUsername(user.getUsername());
 		userData.setPassword(user.getPassword());
+
+		if (user.getRole() != null) {
+			for (Role role : user.getRole()) {
+				RoleData roleData = new RoleData();
+				roleData.setId(role.getId());
+				userData.addRole(roleData);
+			}
+		}
+
 		return userData;
 	}
 }
