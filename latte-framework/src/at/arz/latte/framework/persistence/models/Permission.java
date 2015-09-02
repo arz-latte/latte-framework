@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
@@ -19,8 +20,9 @@ import javax.validation.constraints.Size;
  * Dominik Neuner {@link "mailto:dominik@neuner-it.at"}
  *
  */
-
-@NamedQuery(name = Permission.QUERY_GETALL_BASE, query = "SELECT new at.arz.latte.framework.restful.dta.PermissionData(p.id, p.name) FROM Permission p ORDER BY p.name")
+@NamedQueries({
+		@NamedQuery(name = Permission.QUERY_GETALL_BASE, query = "SELECT new at.arz.latte.framework.restful.dta.PermissionData(p.id, p.name) FROM Permission p ORDER BY p.name"),
+		@NamedQuery(name = Permission.QUERY_GET_BY_NAME, query = "SELECT p FROM Permission p WHERE p.name = :name") })
 @Entity
 @Table(name = "permissions")
 public class Permission implements Serializable {
@@ -28,6 +30,7 @@ public class Permission implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	public static final String QUERY_GETALL_BASE = "Permission.GetAllBase";
+	public static final String QUERY_GET_BY_NAME = "Permission.GetByName";
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "Permission.ID")
@@ -35,7 +38,7 @@ public class Permission implements Serializable {
 	private Long id;
 
 	@NotNull
-	@Column(unique=true)
+	@Column(unique = true)
 	@Size(min = 1, max = 63)
 	private String name;
 

@@ -53,7 +53,7 @@ public class ModuleTimerService {
 		counter++;
 
 		for (Module module : bean.getAllEnabledModules()) {
-
+			
 			int checkInterval = module.getInterval();
 			if (checkInterval > 0 && counter % checkInterval == 0) {
 				checkStatus(module);
@@ -66,8 +66,13 @@ public class ModuleTimerService {
 		try {
 			WebClient client = setupClient(module.getUrlHost(), module.getUrlPath() + "/status.json");
 
-			// get menu, send lastModified of module to client
-			MenuData menuData = client.query("lastModified", module.getLastModified()).get(MenuData.class);
+			// send lastModified of module to client
+			if (module.getLastModified() != null) {
+				client.query("lastModified", module.getLastModified());
+			}
+			
+			// get menu
+			MenuData menuData = client.get(MenuData.class);
 
 			// valiate menu response data
 			Set<ConstraintViolation<Object>> violations = requestValidation(menuData);
@@ -82,6 +87,7 @@ public class ModuleTimerService {
 
 				Menu menu = Menu.getMenuRec(menuData);
 				bean.updateModuleMenu(module.getId(), menu);
+				bean.storeModulePermissions(menu);
 
 				websocket.chat(new WebsocketMessage("update", "server"));
 			} else if (!module.getRunning()) {

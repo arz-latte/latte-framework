@@ -18,6 +18,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import at.arz.latte.framework.persistence.beans.RoleManagementBean;
+import at.arz.latte.framework.persistence.models.Permission;
 import at.arz.latte.framework.persistence.models.Role;
 import at.arz.latte.framework.restful.dta.PermissionData;
 import at.arz.latte.framework.restful.dta.RoleData;
@@ -72,7 +73,7 @@ public class RoleService {
 
 		Role role = new Role(roleData.getName());
 
-		return toRoleData(bean.createRole(role));
+		return toRoleData(bean.createRole(role, roleData.getPermission()));
 	}
 
 	@PUT
@@ -85,7 +86,7 @@ public class RoleService {
 			throw new LatteValidationException(400, violations);
 		}
 
-		Role role = bean.updateRole(roleData.getId(), roleData.getName());
+		Role role = bean.updateRole(roleData.getId(), roleData.getName(), roleData.getPermission());
 
 		return toRoleData(role);
 	}
@@ -110,6 +111,15 @@ public class RoleService {
 		RoleData roleData = new RoleData();
 		roleData.setId(role.getId());
 		roleData.setName(role.getName());
+
+		if (role.getPermission() != null) {
+			for (Permission permission : role.getPermission()) {
+				PermissionData permissionData = new PermissionData();
+				permissionData.setId(permission.getId());
+				roleData.addPermission(permissionData);
+			}
+		}
+		
 		return roleData;
 	}
 }

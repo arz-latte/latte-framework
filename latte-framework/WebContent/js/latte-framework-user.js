@@ -66,13 +66,15 @@ var appUser = {
 					$("[name=input-username]").val(u.username);
 					$("[name=input-password]").val(u.password);
 					
-					var $role = $("[name=select-role]");
-					if (u.role.length > 0) {
-						$.each(u.role, function(index, role) {
-							$role.find("option[value='" + role.id + "']").prop("selected", true);
-						});
-					} else {
-						$role.find("option[value='" + u.role.id + "']").prop("selected", true);
+					if (u.role) {
+						var $role = $("[name=select-role]");
+						if (u.role.length > 0) {
+							$.each(u.role, function(index, role) {
+								$role.find("option[value='" + role.id + "']").prop("selected", true);
+							});
+						} else {
+							$role.find("option[value='" + u.role.id + "']").prop("selected", true);
+						}
 					}
 				});
 	},
@@ -91,6 +93,8 @@ var appUser = {
 			u.role.push({"id" : $(selected).val()});
 		});
 
+		console.log(u);
+		
 		if (u.id > 0) {
 
 			$.ajax({

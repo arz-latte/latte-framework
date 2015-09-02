@@ -1,6 +1,8 @@
 package at.arz.latte.framework.persistence.beans;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -8,8 +10,11 @@ import javax.persistence.PersistenceContext;
 
 import at.arz.latte.framework.persistence.models.Menu;
 import at.arz.latte.framework.persistence.models.Module;
+import at.arz.latte.framework.persistence.models.Permission;
+import at.arz.latte.framework.persistence.models.Role;
 import at.arz.latte.framework.persistence.models.SubMenu;
 import at.arz.latte.framework.restful.dta.ModuleData;
+import at.arz.latte.framework.services.restful.LatteValidationException;
 
 /**
  * bean for module management
@@ -50,6 +55,7 @@ public class ModuleManagementBean {
 
 	/**
 	 * update via REST-service
+	 * 
 	 * @param id
 	 * @param name
 	 * @param provider
@@ -59,7 +65,8 @@ public class ModuleManagementBean {
 	 * @param running
 	 * @return
 	 */
-	public Module updateModule(Long id, String name, String provider, String url, int interval, boolean enabled, boolean running) {
+	public Module updateModule(Long id, String name, String provider, String url, int interval, boolean enabled,
+			boolean running) {
 		Module module = getModule(id);
 		module.setName(name);
 		module.setProvider(provider);
@@ -72,6 +79,7 @@ public class ModuleManagementBean {
 
 	/**
 	 * update module via REST-service, only set running value
+	 * 
 	 * @param moduleId
 	 * @param running
 	 * @return
@@ -81,9 +89,10 @@ public class ModuleManagementBean {
 		module.setRunning(running);
 		return module;
 	}
-	
+
 	/**
 	 * update menu of module via REST-service
+	 * 
 	 * @param moduleId
 	 * @param menu
 	 * @return
@@ -94,25 +103,31 @@ public class ModuleManagementBean {
 
 		module.setLastModified(menu.getLastModified());
 		module.setMenu(menu);
-		
-		// extract and store permissions
-		storeRecPermissions(menu.getSubMenus());
 
 		return module;
 	}
-	
-	/**
-	 * extract and store permissions
-	 * @param menus
-	 */
-	private void storeRecPermissions(List<SubMenu> menus) {
-		if (menus != null) {
-		
-			for(SubMenu submenu : menus) {
-				System.out.println(submenu.getName() + ": " + submenu.getPermission());
 
-				
-				storeRecPermissions(submenu.getSubMenus());
+	/**
+	 * store permissions of module via REST-service
+	 * 
+	 * @param menu
+	 */
+	public void storeModulePermissions(Menu menu) {
+
+		// extract and store permissions
+		Set<String> permissions = new HashSet<>();
+		extractPermissionsRec(menu.getSubMenus(), permissions);
+		System.out.println(permissions);
+
+		// store all permissions (ignore duplicates)
+		for (String permission : permissions) {
+
+			// check if permission already exists
+			List<Permission> duplicates = em.createNamedQuery(Permission.QUERY_GET_BY_NAME, Permission.class)
+					.setParameter("name", permission).getResultList();
+
+			if (duplicates.isEmpty()) {
+				em.persist(new Permission(permission));
 			}
 		}
 	}
@@ -120,6 +135,24 @@ public class ModuleManagementBean {
 	public void deleteModule(Long moduleId) {
 		Module toBeDeleted = getModule(moduleId);
 		em.remove(toBeDeleted);
+	}
+
+	/**
+	 * extract permissions from menu
+	 * 
+	 * @param menus
+	 * @param permissions
+	 */
+	private Set<String> extractPermissionsRec(List<SubMenu> menus, Set<String> permissions) {
+		if (menus != null) {
+
+			for (SubMenu submenu : menus) {
+				permissions.add(submenu.getPermission());
+				extractPermissionsRec(submenu.getSubMenus(), permissions);
+			}
+		}
+
+		return permissions;
 	}
 
 }

@@ -69,7 +69,6 @@ public class UserManagementBean {
 		checkDuplicateUser(id, username);
 
 		User user = getUser(id);
-
 		user.setFirstName(firstName);
 		user.setLastName(lastName);
 		user.setUsername(username);

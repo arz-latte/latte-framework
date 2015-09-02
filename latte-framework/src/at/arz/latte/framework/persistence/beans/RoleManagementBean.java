@@ -1,6 +1,8 @@
 package at.arz.latte.framework.persistence.beans;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -8,7 +10,6 @@ import javax.persistence.PersistenceContext;
 
 import at.arz.latte.framework.persistence.models.Permission;
 import at.arz.latte.framework.persistence.models.Role;
-import at.arz.latte.framework.persistence.models.User;
 import at.arz.latte.framework.restful.dta.PermissionData;
 import at.arz.latte.framework.restful.dta.RoleData;
 import at.arz.latte.framework.services.restful.LatteValidationException;
@@ -41,11 +42,18 @@ public class RoleManagementBean {
 		return r;
 	}
 
-	public Role createRole(Role role) {
+	public Role createRole(Role role, Set<PermissionData> permissionData) {
 
 		checkDuplicateRole(role.getId(), role.getName());
 
 		em.persist(role);
+
+		Set<Permission> permissions = new HashSet<>();
+		for (PermissionData p : permissionData) {
+			Permission permission = em.find(Permission.class, p.getId());
+			permissions.add(permission);
+		}
+		role.setPermission(permissions);
 
 		return role;
 	}
@@ -55,15 +63,22 @@ public class RoleManagementBean {
 	 * 
 	 * @param id
 	 * @param name
+	 * @param permissionData
 	 * @return
 	 */
-	public Role updateRole(Long id, String name) {
+	public Role updateRole(Long id, String name, Set<PermissionData> permissionData) {
 
 		checkDuplicateRole(id, name);
 
 		Role role = getRole(id);
-
 		role.setName(name);
+
+		Set<Permission> permissions = new HashSet<>();
+		for (PermissionData p : permissionData) {
+			Permission permission = em.find(Permission.class, p.getId());
+			permissions.add(permission);
+		}
+		role.setPermission(permissions);
 
 		return role;
 	}
@@ -74,8 +89,8 @@ public class RoleManagementBean {
 	}
 
 	/**
-	 * check if name is already stored, throws LatteValidationException if user
-	 * is a duplicate
+	 * check if role name is already stored, throws LatteValidationException if
+	 * name is a duplicate
 	 * 
 	 * @param roleId
 	 * @param name

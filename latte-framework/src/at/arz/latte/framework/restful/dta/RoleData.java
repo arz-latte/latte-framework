@@ -25,7 +25,7 @@ public class RoleData {
 	@Size(min = 1, max = 63)
 	private String name;
 
-	private Set<PermissionData> role = new HashSet<PermissionData>();
+	private Set<PermissionData> permission = new HashSet<PermissionData>();
 
 	public RoleData() {
 	}
@@ -58,12 +58,16 @@ public class RoleData {
 		this.name = name;
 	}
 
-	public Set<PermissionData> getRole() {
-		return role;
+	public Set<PermissionData> getPermission() {
+		return permission;
 	}
 
-	public void setRole(Set<PermissionData> role) {
-		this.role = role;
+	public void setPermission(Set<PermissionData> permission) {
+		this.permission = permission;
+	}
+
+	public void addPermission(PermissionData permission) {
+		this.permission.add(permission);
 	}
 
 	@Override
@@ -72,7 +76,7 @@ public class RoleData {
 		int result = 1;
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((role == null) ? 0 : role.hashCode());
+		result = prime * result + ((permission == null) ? 0 : permission.hashCode());
 		return result;
 	}
 
@@ -95,17 +99,17 @@ public class RoleData {
 				return false;
 		} else if (!name.equals(other.name))
 			return false;
-		if (role == null) {
-			if (other.role != null)
+		if (permission == null) {
+			if (other.permission != null)
 				return false;
-		} else if (!role.equals(other.role))
+		} else if (!permission.equals(other.permission))
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "RoleData [id=" + id + ", name=" + name + ", role=" + role + "]";
+		return "RoleData [id=" + id + ", name=" + name + ", permission=" + permission + "]";
 	}
 
 }

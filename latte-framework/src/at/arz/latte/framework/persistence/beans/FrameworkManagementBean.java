@@ -28,7 +28,7 @@ public class FrameworkManagementBean {
 	 * @return
 	 */
 	public List<ModuleData> getAll() {
-		List<Module> modules = em.createNamedQuery(Module.QUERY_GETALL_ENABLED, Module.class).getResultList();
+		List<Module> modules = em.createNamedQuery(Module.QUERY_GETALL_ENABLED_SORTED, Module.class).getResultList();
 		
 		List<ModuleData> modulesData = new ArrayList<>();
 

@@ -24,9 +24,8 @@ import javax.validation.constraints.Size;
  *
  */
 @NamedQueries({
-	@NamedQuery(name = Role.QUERY_GETALL_BASE, query = "SELECT new at.arz.latte.framework.restful.dta.RoleData(r.id, r.name) FROM Role r ORDER BY r.name"),
-	@NamedQuery(name = Role.QUERY_GET_BY_NAME, query = "SELECT r FROM Role r WHERE r.name = :name") 
-	})
+		@NamedQuery(name = Role.QUERY_GETALL_BASE, query = "SELECT new at.arz.latte.framework.restful.dta.RoleData(r.id, r.name) FROM Role r ORDER BY r.name"),
+		@NamedQuery(name = Role.QUERY_GET_BY_NAME, query = "SELECT r FROM Role r WHERE r.name = :name") })
 @Entity
 @Table(name = "roles")
 public class Role implements Serializable {
