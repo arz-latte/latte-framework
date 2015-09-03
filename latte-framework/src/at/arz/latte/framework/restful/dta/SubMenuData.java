@@ -34,7 +34,7 @@ public class SubMenuData implements Serializable {
 	@Size(max = 31)
 	private String group;
 
-	@Size(max = 31)
+	@Size(min = 1, max = 31)
 	private String permission;
 
 	private Boolean denied;
@@ -47,6 +47,13 @@ public class SubMenuData implements Serializable {
 		this.subMenus = new ArrayList<>();
 	}
 
+	/**
+	 * constructor for JUnit
+	 * 
+	 * @param name
+	 * @param url
+	 * @param permission
+	 */
 	public SubMenuData(String name, String url, String permission) {
 		this();
 		this.name = name;
@@ -54,8 +61,18 @@ public class SubMenuData implements Serializable {
 		this.permission = permission;
 	}
 
-	public SubMenuData(String name, String url, String type, String group, String permission) {
-		this(name, url, permission);
+	/**
+	 * constructor for allowed menu entry
+	 * 
+	 * @param name
+	 * @param url
+	 * @param type
+	 * @param group
+	 */
+	public SubMenuData(String name, String url, String type, String group) {
+		this();
+		this.name = name;
+		this.url = url;
 		this.type = type;
 		this.group = group;
 	}
@@ -117,7 +134,9 @@ public class SubMenuData implements Serializable {
 	}
 
 	public void addSubMenu(SubMenuData subMenu) {
-		this.subMenus.add(subMenu);
+		if (subMenu != null) {
+			this.subMenus.add(subMenu);
+		}
 	}
 
 	@Override

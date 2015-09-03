@@ -339,11 +339,14 @@ var app = {
 		var $subMenu = $("#side-menu");
 		$subMenu.html(""); // clear
 
-		if (menu.submenu) {
-
-			$.each(menu.submenu, function(index, menu) {
-				app.appendSubMenuRec($subMenu, menu, 0);
-			});
+		if (menu.submenu) {			
+			if (menu.submenu.length > 0) {
+				$.each(menu.submenu, function(index, menu) {
+					app.appendSubMenuRec($subMenu, menu, 0);
+				});
+			} else {
+				app.appendSubMenuRec($subMenu, menu.submenu, 0);
+			}
 
 			app.showSideBar();
 		} else {
@@ -358,6 +361,7 @@ var app = {
 	 * @param level information about submenu level
 	 */
 	appendSubMenuRec : function($subMenu, menu, level) {
+
 		// sub menu entry
 		var $entry = $("<li/>").append($("<a/>", {
 			href : menu.url,
@@ -393,8 +397,7 @@ var app = {
 		$subMenu.append($entry);
 
 		// check recursive sub menus
-		if (menu.submenu) {
-
+		if (menu.submenu) {			
 			if (menu.submenu.length > 0) {
 				$.each(menu.submenu, function(index, submenu) {
 					app.appendSubMenuRec($subMenu, submenu, level + 1);

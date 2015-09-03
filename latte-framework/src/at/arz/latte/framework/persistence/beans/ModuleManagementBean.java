@@ -107,6 +107,11 @@ public class ModuleManagementBean {
 		return module;
 	}
 
+	public void deleteModule(Long moduleId) {
+		Module toBeDeleted = getModule(moduleId);
+		em.remove(toBeDeleted);
+	}
+	
 	/**
 	 * store permissions of module via REST-service
 	 * 
@@ -114,9 +119,16 @@ public class ModuleManagementBean {
 	 */
 	public void storeModulePermissions(Menu menu) {
 
-		// extract and store permissions
 		Set<String> permissions = new HashSet<>();
+		
+		// permission from mainmenu
+		if (menu.getPermission() != null) {
+			permissions.add(menu.getPermission());
+		}
+		
+		// permissions from submenu
 		extractPermissionsRec(menu.getSubMenus(), permissions);
+				
 		System.out.println(permissions);
 
 		// store all permissions (ignore duplicates)
@@ -132,11 +144,6 @@ public class ModuleManagementBean {
 		}
 	}
 
-	public void deleteModule(Long moduleId) {
-		Module toBeDeleted = getModule(moduleId);
-		em.remove(toBeDeleted);
-	}
-
 	/**
 	 * extract permissions from menu
 	 * 
@@ -147,7 +154,10 @@ public class ModuleManagementBean {
 		if (menus != null) {
 
 			for (SubMenu submenu : menus) {
-				permissions.add(submenu.getPermission());
+				String permission = submenu.getPermission();
+				if (permission != null) {
+					permissions.add(permission);
+				}
 				extractPermissionsRec(submenu.getSubMenus(), permissions);
 			}
 		}

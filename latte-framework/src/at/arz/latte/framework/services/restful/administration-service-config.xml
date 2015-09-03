@@ -6,7 +6,7 @@
     <submenu>
         <name>Module</name>
         <url>http://localhost:8080/latte/module.html</url>
-        <permission>admin</permission>
+        <permission>superadmin</permission>
     </submenu>
     <submenu>
         <name>Benutzer</name>
