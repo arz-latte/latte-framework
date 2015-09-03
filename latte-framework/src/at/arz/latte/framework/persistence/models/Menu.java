@@ -48,6 +48,9 @@ public class Menu implements Serializable {
 
 	private Integer subOrder;
 
+	@Size(min = 1, max = 31)
+	private String permission;
+
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	@JoinColumn(name = "menu_id")
 	@OrderColumn(name = "order")
@@ -105,6 +108,14 @@ public class Menu implements Serializable {
 		this.subOrder = subOrder;
 	}
 
+	public String getPermission() {
+		return permission;
+	}
+
+	public void setPermission(String permission) {
+		this.permission = permission;
+	}
+
 	public List<SubMenu> getSubMenus() {
 		return subMenus;
 	}
@@ -112,7 +123,7 @@ public class Menu implements Serializable {
 	public void setSubMenus(List<SubMenu> subMenus) {
 		this.subMenus = subMenus;
 	}
-	
+
 	public void addSubMenu(SubMenu subMenu) {
 		subMenu.setOrder(this.subMenus.size());
 		this.subMenus.add(subMenu);
@@ -129,48 +140,33 @@ public class Menu implements Serializable {
 	@Override
 	public String toString() {
 		return "Menu [id=" + id + ", name=" + name + ", url=" + url + ", order=" + order + ", subOrder=" + subOrder
-				+ ", subMenus=" + subMenus + ", lastModified=" + lastModified + "]";
+				+ ", permission=" + permission + ", subMenus=" + subMenus + ", lastModified=" + lastModified + "]";
 	}
 
-	// ----------------------- entity to dta -----------------------
+	// ----------------------- dta to entity -----------------------
 
 	/**
-	 * convert menu entity to menu data for REST
+	 * convert menu data from REST to menu entity
 	 * 
 	 * @return
 	 */
-	public MenuData getMenuData() {
-		MenuData menuData = new MenuData(name, url, order, subOrder);
-
-		if (subMenus != null && !subMenus.isEmpty()) {
-			for (SubMenu submenu : subMenus) {
-				menuData.addSubMenu(submenu.getSubMenuDataRec());
-			}
-		}
-
-		return menuData;
-	}
-	
-	/**
-	 * convert menu data from REST to menu entity
-	 * @return
-	 */	
 	public static Menu getMenuRec(MenuData menuData) {
 		Menu menu = new Menu();
 		menu.setName(menuData.getName());
 		menu.setUrl(menuData.getUrl());
 		menu.setOrder(menuData.getOrder());
 		menu.setSubOrder(menuData.getSubOrder());
+		menu.setPermission(menuData.getPermission());
 		menu.setLastModified(menuData.getLastModified());
-		
+
 		List<SubMenuData> subMenusData = menuData.getSubMenus();
 		if (subMenusData != null && !subMenusData.isEmpty()) {
 			for (SubMenuData s : subMenusData) {
 				menu.addSubMenu(SubMenu.getSubMenuRec(s));
 			}
 		}
-		
+
 		return menu;
 	}
-	
+
 }

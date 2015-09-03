@@ -48,7 +48,6 @@ public abstract class AbstractModuleHelper {
 		if (menu == null || lastModified == null || lastModified < menu.getLastModified()) {
 			menu = loadServiceConfig(filename);
 		}
-
 		return menu;
 	}
 
@@ -71,7 +70,7 @@ public abstract class AbstractModuleHelper {
 
 		MenuData menu = (MenuData) unmarshaller.unmarshal(file);
 		menu.setLastModified(url.openConnection().getLastModified());
-
+		
 		// validate menu structure
 		validateMenu(menu);
 

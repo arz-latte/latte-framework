@@ -47,7 +47,7 @@ public class SubMenu implements Serializable {
 	@Size(max = 31)
 	private String group;
 
-	@Size(max = 31)
+	@Size(min = 1, max = 31)
 	private String permission;
 
 	@NotNull
@@ -141,25 +141,7 @@ public class SubMenu implements Serializable {
 				+ ", permission=" + permission + ", order=" + order + ", subMenus=" + subMenus + "]";
 	}
 
-	// ----------------------- entity to dta -----------------------
-
-	/**
-	 * recursive convert submenu entity to submenu data for REST
-	 * 
-	 * @return
-	 */
-	public SubMenuData getSubMenuDataRec() {
-
-		SubMenuData subMenuData = new SubMenuData(name, url, type, group, permission);
-
-		if (subMenus != null && !subMenus.isEmpty()) {
-			for (SubMenu subMenu : subMenus) {
-				subMenuData.addSubMenu(subMenu.getSubMenuDataRec());
-			}
-		}
-
-		return subMenuData;
-	}
+	// ----------------------- dta to entity -----------------------
 
 	/**
 	 * convert submenu data from REST to submenu entity

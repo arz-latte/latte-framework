@@ -61,7 +61,7 @@ public class JpaPersistenceSetup {
 	private static Properties loadJpaPersistenceSetupProperties() {
 		Properties persistenceProperties = new Properties();
 		try {
-			persistenceProperties.load(ModuleTest.class.getResourceAsStream("persistence-test.properties"));
+			persistenceProperties.load(InitializeTest.class.getResourceAsStream("persistence-test.properties"));
 			return persistenceProperties;
 		} catch (IOException e) {
 			throw new RuntimeException("could not load jpaPersistenceSetupProperties", e);

@@ -36,6 +36,9 @@ public class MenuData implements Serializable {
 
 	private Boolean denied;
 
+	@Size(min = 1, max = 31)
+	private String permission;
+
 	@XmlElement(name = "submenu")
 	private List<SubMenuData> subMenus;
 
@@ -91,6 +94,14 @@ public class MenuData implements Serializable {
 		this.subOrder = subOrder;
 	}
 
+	public String getPermission() {
+		return permission;
+	}
+
+	public void setPermission(String permission) {
+		this.permission = permission;
+	}
+
 	public Boolean getDenied() {
 		return denied;
 	}
@@ -108,7 +119,9 @@ public class MenuData implements Serializable {
 	}
 
 	public void addSubMenu(SubMenuData subMenu) {
-		this.subMenus.add(subMenu);
+		if (subMenu != null) {
+			this.subMenus.add(subMenu);
+		}
 	}
 
 	public Long getLastModified() {
@@ -122,7 +135,8 @@ public class MenuData implements Serializable {
 	@Override
 	public String toString() {
 		return "MenuData [name=" + name + ", url=" + url + ", order=" + order + ", subOrder=" + subOrder + ", denied="
-				+ denied + ", subMenus=" + subMenus + ", lastModified=" + lastModified + "]";
+				+ denied + ", permission=" + permission + ", subMenus=" + subMenus + ", lastModified=" + lastModified
+				+ "]";
 	}
 
 }

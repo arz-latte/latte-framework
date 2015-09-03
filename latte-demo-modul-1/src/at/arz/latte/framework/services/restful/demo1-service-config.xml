@@ -6,7 +6,6 @@
     <submenu>
         <name>Demo</name>
         <url>http://localhost:8080/demo1/index.html</url>
-        <permission>user</permission>
 	    <submenu>
 	        <name>SubMenü 1</name>
 	        <url>#</url>
@@ -15,11 +14,10 @@
 	    <submenu>
 	        <name>SubMenü 2</name>
 	        <url>#</url>
-	        <permission>user</permission>
 			<submenu>
-				<name>SubSubMenü 1</name>
+				<name>SubSubMenü 2 1</name>
 				<url>#</url>
-				<permission>user</permission>
+				<permission>admin</permission>
 			</submenu>
 	    </submenu>
     </submenu>
