@@ -45,20 +45,24 @@ public class InitializeTest  {
 	public void createUserAndRole() {
 		em.getTransaction().begin();
 		
-		Role r1 = new Role("Administrator");
-		Role r2 = new Role("Benutzer");
+		Role r1 = new Role("tomcat");
+		Role r2 = new Role("Administrator");
+		Role r3 = new Role("Benutzer");
 		em.persist(r1);
 		em.persist(r2);
+		em.persist(r3);
 		
 		User u1 = new User("Admin", "Admin", "admin", "admin");
 		Set<Role> roles = new HashSet<>();
 		roles.add(r1);
+		roles.add(r2);
 		u1.setRole(roles);
 		em.persist(u1);
 
 		User u2 = new User("User", "User", "user", "user");
 		roles = new HashSet<>();
-		roles.add(r2);
+		roles.add(r1);
+		roles.add(r3);
 		u2.setRole(roles);
 		em.persist(u2);
 
