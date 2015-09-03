@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Latte Framework Login</title>
+
+<link rel="stylesheet" href="css/bootstrap.min.css" />
+<link rel="stylesheet" href="css/login.css" />
+
+<script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<form action="j_security_check" method=post>
+    <p><strong>Please Enter Your User Name: </strong>
+    <input type="text" name="j_username" size="25">
+    <p><p><strong>Please Enter Your Password: </strong>
+    <input type="password" size="15" name="j_password">
+    <p><p>
+    <input type="submit" value="Submit">
+    <input type="reset" value="Reset">
+</form>
+<!-- 
+
+	<div class="container">
+
+		<form class="form-signin">
+			<h2 class="form-signin-heading">Anmeldung erforderlich</h2>
+			<label for="input-username" class="sr-only">Benutzername</label> <input
+				type="text" id="input-username" class="form-control"
+				placeholder="Benutzername" required="" autofocus=""> <label
+				for="input-password" class="sr-only">Passwort</label> <input
+				type="password" id="input-password" class="form-control"
+				placeholder="Passwort" required="">
+			<div class="checkbox">
+				<label> <input type="checkbox" value="Anmeldedaten merken">
+					Anmeldedaten merken
+				</label>
+			</div>
+			<button class="btn btn-lg btn-primary btn-block" type="submit">Anmelden</button>
+		</form>
+
+	</div>
+ -->
+</body>
+</html>
