@@ -315,9 +315,8 @@ var app = {
 
 		// logout button
 		$("#main-menu-right").find("a").on("click", function() {
-			localStorage.clear();
-			app.ws
-			alert("storage cleared");
+			localStorage.clear();			
+			window.location.replace("logout");
 		});
 
 	},

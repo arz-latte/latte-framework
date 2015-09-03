@@ -3,20 +3,29 @@
 	xmlns="http://java.sun.com/xml/ns/javaee"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
 	id="WebApp_ID" version="3.0">
+	
 	<display-name>latte-framework</display-name>
+	
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
 	</welcome-file-list>
 
-	<!-- ignore administration module -->
 	<security-constraint>
-	    <web-resource-collection>
-	        <web-resource-name>app</web-resource-name>
-	        <url-pattern>/api/v1/administration/*</url-pattern>
-	    </web-resource-collection>
-	    <!-- OMIT auth-constraint -->
+		<web-resource-collection>
+			<web-resource-name>Web ressources</web-resource-name>
+			<url-pattern>/css/*</url-pattern>
+			<url-pattern>/fonts/*</url-pattern>
+			<url-pattern>/js/*</url-pattern>
+		</web-resource-collection>
 	</security-constraint>
-
+	
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>app</web-resource-name>
+			<url-pattern>/api/v1/administration/*</url-pattern>
+		</web-resource-collection>
+	</security-constraint>
+	
 	<security-constraint>
 		<web-resource-collection>
 			<web-resource-name>whole app requires authentication</web-resource-name>
@@ -25,25 +34,17 @@
 		<auth-constraint>
 			<role-name>tomcat</role-name>
 		</auth-constraint>
-
 		<user-data-constraint>
 			<transport-guarantee>NONE</transport-guarantee>
 		</user-data-constraint>
 	</security-constraint>
-
+	
 	<login-config>
-		<auth-method>BASIC</auth-method>
-	</login-config>
-
-<!-- 
-		<login-config>
 		<auth-method>FORM</auth-method>
 		<form-login-config>
 			<form-login-page>/login.html</form-login-page>
 			<form-error-page>/error.html</form-error-page>
 		</form-login-config>
 	</login-config>
- -->
-
-
+	
 </web-app>

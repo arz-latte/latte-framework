@@ -8,10 +8,15 @@ body {
 	max-width: 360px;
 	padding: 15px;
 	margin: 0 auto;
+	text-align: center;
 }
 
 .form-signin .form-signin-heading, .form-signin .checkbox {
 	margin-bottom: 10px;
+}
+
+p.form-signin-error {
+	color: red;
 }
 
 .form-signin .checkbox {

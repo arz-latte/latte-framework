@@ -1,13 +1,35 @@
+<!DOCTYPE html>
 <html>
 <head>
-    <title>Login Error</title>
+<title>Latte Framework Login</title>
+<link rel="stylesheet" href="css/bootstrap.min.css" />
+<link rel="stylesheet" href="css/login.css" />
+
+<script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
 </head>
 <body>
-    <h2>Invalid user name or password.</h2>
 
-    <p>Please enter a user name or password that is authorized to access this 
-    application. For this application, this means a user that has been created in the 
-    <code>file</code> realm and has been assigned to the <em>group</em> of 
-    <code>TutorialUser</code>.  Click here to <a href="login.html">Startseite</a>Try Again</a></p>
+	<div class="container">
+
+		<form class="form-signin" action="j_security_check" method="post">
+			<h1 class="form-signin-heading">Latte Framework</h1>
+			
+			<label for="j_username" class="sr-only">Benutzername</label>
+			<input type="text" name="j_username" class="form-control" 
+				placeholder="Benutzername" required="" autofocus="">
+			
+			<label for="j_password" class="sr-only">Passwort</label>
+			<input type="password" name="j_password" class="form-control" 
+				placeholder="Passwort" required="">
+				
+			<p class="form-signin-error">Benutzername oder Passwort
+				ungültig!</p>
+				
+			<button class="btn btn-lg btn-primary btn-block" type="submit">Anmelden</button>
+		</form>
+
+	</div>
+
 </body>
 </html>
