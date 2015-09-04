@@ -21,7 +21,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import at.arz.latte.framework.validator.CheckUrl;
+import at.arz.latte.framework.validator.Url;
 
 /**
  * persistent entity for a module
@@ -64,7 +64,7 @@ public class Module implements Serializable {
 	 * address of the REST-service of the module, used for checking module
 	 * status, e.g. http://localhost:8080/Modul1/api/v1/module
 	 */
-	@CheckUrl
+	@Url
 	@NotNull
 	@Size(max = 511)
 	private String url;

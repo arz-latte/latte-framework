@@ -73,7 +73,7 @@ public class UserService {
 			throw new LatteValidationException(400, violations);
 		}
 
-		User user = new User(userData.getFirstName(), userData.getLastName(), userData.getUsername(),
+		User user = new User(userData.getFirstName(), userData.getLastName(), userData.getEmail(),
 				userData.getPassword());
 
 		return toUserData(bean.createUser(user, userData.getRole()));
@@ -90,7 +90,7 @@ public class UserService {
 		}
 
 		User user = bean.updateUser(userData.getId(), userData.getFirstName(), userData.getLastName(),
-				userData.getUsername(), userData.getPassword(), userData.getRole());
+				userData.getEmail(), userData.getPassword(), userData.getRole());
 
 		return toUserData(user);
 	}
@@ -116,7 +116,7 @@ public class UserService {
 		userData.setId(user.getId());
 		userData.setFirstName(user.getFirstName());
 		userData.setLastName(user.getLastName());
-		userData.setUsername(user.getUsername());
+		userData.setEmail(user.getEmail());
 		userData.setPassword(user.getPassword());
 
 		if (user.getRole() != null) {

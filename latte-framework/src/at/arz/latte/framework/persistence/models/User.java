@@ -17,6 +17,8 @@ import javax.persistence.TableGenerator;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import at.arz.latte.framework.validator.EMail;
+
 /**
  * persistent entity for an user
  * 
@@ -24,10 +26,9 @@ import javax.validation.constraints.Size;
  *
  */
 @NamedQueries({
-		@NamedQuery(name = User.QUERY_GETALL_BASE, query = "SELECT new at.arz.latte.framework.restful.dta.UserData(u.id, u.firstName, u.lastName, u.username) FROM User u ORDER BY u.lastName, u.firstName"),
+		@NamedQuery(name = User.QUERY_GETALL_BASE, query = "SELECT new at.arz.latte.framework.restful.dta.UserData(u.id, u.firstName, u.lastName, u.email) FROM User u ORDER BY u.lastName, u.firstName"),
 		@NamedQuery(name = User.QUERY_GETALL, query = "SELECT u FROM User u"),
-		@NamedQuery(name = User.QUERY_GET_BY_USERNAME, query = "SELECT u FROM User u WHERE u.username = :username") 
-		})
+		@NamedQuery(name = User.QUERY_GET_BY_EMAIL, query = "SELECT u FROM User u WHERE u.email = :email") })
 @Entity
 @Table(name = "users")
 public class User implements Serializable {
@@ -36,7 +37,7 @@ public class User implements Serializable {
 
 	public static final String QUERY_GETALL_BASE = "User.GetAllBase";
 	public static final String QUERY_GETALL = "User.GetAll";
-	public static final String QUERY_GET_BY_USERNAME = "User.GetByUsername";
+	public static final String QUERY_GET_BY_EMAIL = "User.GetByEmail";
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "User.ID")
@@ -54,9 +55,10 @@ public class User implements Serializable {
 	private String lastName;
 
 	@NotNull
-	@Column(unique=true)
+	@EMail
+	@Column(unique = true)
 	@Size(min = 1, max = 63)
-	private String username;
+	private String email;
 
 	@NotNull
 	@Size(min = 1, max = 63)
@@ -75,11 +77,11 @@ public class User implements Serializable {
 	/**
 	 * used for creation via REST-service or JUnit
 	 */
-	public User(String firstName, String lastName, String username, String password) {
+	public User(String firstName, String lastName, String email, String password) {
 		this();
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.username = username;
+		this.email = email;
 		this.password = password;
 	}
 
@@ -107,12 +109,12 @@ public class User implements Serializable {
 		this.lastName = lastName;
 	}
 
-	public String getUsername() {
-		return username;
+	public String getEmail() {
+		return email;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public String getPassword() {
@@ -140,7 +142,7 @@ public class User implements Serializable {
 		result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
 		result = prime * result + ((password == null) ? 0 : password.hashCode());
 		result = prime * result + ((role == null) ? 0 : role.hashCode());
-		result = prime * result + ((username == null) ? 0 : username.hashCode());
+		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		return result;
 	}
 
@@ -178,17 +180,17 @@ public class User implements Serializable {
 				return false;
 		} else if (!role.equals(other.role))
 			return false;
-		if (username == null) {
-			if (other.username != null)
+		if (email == null) {
+			if (other.email != null)
 				return false;
-		} else if (!username.equals(other.username))
+		} else if (!email.equals(other.email))
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", username=" + username
+		return "User [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email
 				+ ", password=" + password + "]";
 	}
 

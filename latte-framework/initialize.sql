@@ -141,7 +141,7 @@ CREATE TABLE users (
     firstname character varying(255),
     lastname character varying(255),
     password character varying(255),
-    username character varying(255)
+    email character varying(255)
 );
 
 
@@ -164,7 +164,7 @@ ALTER TABLE users_roles OWNER TO latte;
 --
 
 CREATE VIEW tc_realm_roles AS
- SELECT users.username,
+ SELECT users.email as username,
     roles.name AS rolename
    FROM (users
      LEFT JOIN ( SELECT users_roles.user_id,
@@ -180,7 +180,7 @@ ALTER TABLE tc_realm_roles OWNER TO latte;
 --
 
 CREATE VIEW tc_realm_users AS
- SELECT users.username,
+ SELECT users.email as username,
     users.password
    FROM users;
 
@@ -257,8 +257,8 @@ INSERT INTO submenus (id, group0, name, order0, permission, type, url, menu_id, 
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: latte
 --
 
-INSERT INTO users (id, firstname, lastname, password, username) VALUES (1, 'Admin', 'Admin', 'admin', 'admin');
-INSERT INTO users (id, firstname, lastname, password, username) VALUES (2, 'User', 'User', 'user', 'user');
+INSERT INTO users (id, firstname, lastname, password, email) VALUES (1, 'Admin', 'Admin', 'admin', 'admin@arz.at');
+INSERT INTO users (id, firstname, lastname, password, email) VALUES (2, 'User', 'User', 'user', 'user@arz.at');
 
 
 --
@@ -336,11 +336,11 @@ ALTER TABLE ONLY roles
 
 
 --
--- Name: u_users_username; Type: CONSTRAINT; Schema: public; Owner: latte; Tablespace: 
+-- Name: u_users_email; Type: CONSTRAINT; Schema: public; Owner: latte; Tablespace: 
 --
 
 ALTER TABLE ONLY users
-    ADD CONSTRAINT u_users_username UNIQUE (username);
+    ADD CONSTRAINT u_users_email UNIQUE (email);
 
 
 --

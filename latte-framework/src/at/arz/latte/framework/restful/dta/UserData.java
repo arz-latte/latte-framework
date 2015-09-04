@@ -9,6 +9,8 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import at.arz.latte.framework.validator.EMail;
+
 /**
  * used to transmit user data to the client, for single view or update
  * 
@@ -30,8 +32,9 @@ public class UserData {
 	private String lastName;
 
 	@NotNull
+	@EMail
 	@Size(min = 1, max = 63)
-	private String username;
+	private String email;
 
 	@NotNull
 	@Size(min = 1, max = 63)
@@ -50,12 +53,12 @@ public class UserData {
 	 * @param lastName
 	 * @param username
 	 */
-	public UserData(Long id, String firstName, String lastName, String username) {
+	public UserData(Long id, String firstName, String lastName, String email) {
 		this();
 		this.id = id;
 		this.firstName = firstName;
 		this.lastName = lastName;
-		this.username = username;
+		this.email = email;
 	}
 
 	public Long getId() {
@@ -82,12 +85,12 @@ public class UserData {
 		this.lastName = lastName;
 	}
 
-	public String getUsername() {
-		return username;
+	public String getEmail() {
+		return email;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public String getPassword() {
@@ -119,7 +122,7 @@ public class UserData {
 		result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
 		result = prime * result + ((password == null) ? 0 : password.hashCode());
 		result = prime * result + ((role == null) ? 0 : role.hashCode());
-		result = prime * result + ((username == null) ? 0 : username.hashCode());
+		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		return result;
 	}
 
@@ -157,17 +160,17 @@ public class UserData {
 				return false;
 		} else if (!role.equals(other.role))
 			return false;
-		if (username == null) {
-			if (other.username != null)
+		if (email == null) {
+			if (other.email != null)
 				return false;
-		} else if (!username.equals(other.username))
+		} else if (!email.equals(other.email))
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "UserData [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", username=" + username
+		return "UserData [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email
 				+ ", password=" + password + ", role=" + role + "]";
 	}
 

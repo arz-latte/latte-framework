@@ -129,19 +129,20 @@ var app = {
 			text : "Latte"
 		}));
 
+		var $mainMenuLeft = $("<ul/>", {
+			'class' : "nav navbar-nav",
+			id : "main-menu-left"
+		});
+
+		var $mainMenuRight = $("<ul/>", {
+			'class' : "nav navbar-nav navbar-right",
+			id : "main-menu-right"
+		});
+
 		var $navbarCollapse = $("<div/>", {
 			'class' : "navbar-collapse collapse",
 			id : "main-navbar-collapse"
-		}).append($("<ul/>", {
-			'class' : "nav navbar-nav",
-			id : "main-menu-left"
-		}), $("<ul/>", {
-			'class' : "nav navbar-nav navbar-right",
-			id : "main-menu-right"
-		}).append($("<li/>").append($("<a/>", {
-			href : "#",
-			text : "Logout"
-		}))));
+		}).append($mainMenuLeft, $mainMenuRight);
 
 		$div.append($navbarHeader, $navbarCollapse);
 
@@ -253,24 +254,77 @@ var app = {
 	// ===========================================================================
 
 	/**
+	 * load user data from server and store them in localStorage
+	 */
+	loadUser : function() {
+
+		if (localStorage.getItem("initialized")) {
+			app.initUserMenu();
+			return;
+		}
+
+		$.ajax({
+			url : app.API_LATTE + app.PATH_FRAMEWORK + "/user.json",
+			async : false,
+		}).done(function(data) {
+			localStorage.setItem("initialized", true);
+			localStorage.setItem("user", JSON.stringify(data.user));
+			app.initUserMenu();
+		}).fail(function() {
+			app.showErrorMessage("Fehler beim Initialisieren");
+		});
+	},
+
+	/**
+	 * initialize user menu
+	 */
+	initUserMenu : function() {
+		var user = JSON.parse(localStorage.getItem('user'));
+		
+		var $dropDownLink = $("<a/>", {
+			id : "user-menu",
+			href : "#",
+			'class' : "dropdown-toggle",
+			'data-toggle' : "dropdown",
+			role : "button",
+			'aria-haspopup' : "true",
+			'aria-expanded' : "true"
+		}).append(user.firstName, " ", $("<span/>", {
+			'class' : "caret"
+		}));
+
+		var $dropDownMenu = $("<ul/>", {
+			'class' : "dropdown-menu"
+		}).append($("<li/>").append($("<a/>", {
+			href : "#",
+			id : "btn-logout",
+			text : "Abmelden"
+		})));
+
+		var $mainMenuRight = $("#main-menu-right").append($("<li/>", {
+			'class' : "dropdown"
+		}).append($dropDownLink, $dropDownMenu));
+	},
+
+	/**
 	 * load all modules and menus from server and store them in localStorage
 	 */
 	loadModules : function() {
 
-		if (localStorage.getItem("initialized")) {
-			return;
-		}
+		/*
+		 * if (localStorage.getItem("initialized")) { return; }
+		 */
 
 		$.ajax({
 			url : app.API_LATTE + app.PATH_FRAMEWORK + "/init.json",
 			async : false,
 		}).done(function(data) {
 			// localStorage.clear();
-			localStorage.setItem("initialized", true);
+			// localStorage.setItem("initialized", true);
 
 			// store each module separate
 			$.each(data.module, function(index, m) {
-				localStorage.setItem('module-' + m.id, JSON.stringify(m.menu));
+				localStorage.setItem("module-" + m.id, JSON.stringify(m.menu));
 
 				// remove sub menu for storing list of modules
 				// (without sub menus)
@@ -278,7 +332,7 @@ var app = {
 			});
 
 			// store list of modules
-			localStorage.setItem('modules', JSON.stringify(data.module));
+			localStorage.setItem("modules", JSON.stringify(data.module));
 
 		}).fail(function() {
 			app.showErrorMessage("Fehler beim Initialisieren");
@@ -317,14 +371,12 @@ var app = {
 			}
 		});
 
-		// logout button
-		$("#main-menu-right").find("a").on("click", function() {
-
+		// logout
+		$("#btn-logout").on("click", function() {
 			$.get(app.API_LATTE + "/logout", function(data) {
 				localStorage.clear();
 				window.location.replace("index.html");
 			});
-
 		});
 
 	},
@@ -481,6 +533,7 @@ function initFramework() {
 	app.createContentAndSideBarArea();
 	app.createSideNavBar();
 
+	app.loadUser();
 	app.loadModules();
 
 	app.initMainMenu();
@@ -488,16 +541,5 @@ function initFramework() {
 	app.initWebSocket();
 
 }
-
-(function() {
-	try {
-		support = 'localStorage' in window && window['localStorage'] !== null;
-	} catch (e) {
-		support = false;
-	}
-	if (!support) {
-		alert("Inkompatibler Browser");
-	}
-})();
 
 $(initFramework);

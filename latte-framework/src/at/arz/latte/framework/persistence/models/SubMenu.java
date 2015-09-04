@@ -19,7 +19,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import at.arz.latte.framework.restful.dta.SubMenuData;
-import at.arz.latte.framework.validator.CheckUrl;
+import at.arz.latte.framework.validator.Url;
 
 @Entity
 @Table(name = "submenus")
@@ -36,7 +36,7 @@ public class SubMenu implements Serializable {
 	@Size(min = 1, max = 63)
 	private String name;
 
-	@CheckUrl
+	@Url
 	@NotNull
 	@Size(max = 511)
 	private String url;

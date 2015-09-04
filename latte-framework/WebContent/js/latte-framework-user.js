@@ -16,10 +16,10 @@ var appUser = {
 			$.each(data.user, function(index, user) {
 				var $firstName = $("<td/>").append(user.firstName);
 				var $lastName = $("<td/>").append(user.lastName);
-				var $username = $("<td/>").append(user.username);
+				var $email = $("<td/>").append(user.email);
 
 				var $row = $("<tr/>").attr("data-id", user.id);
-				$row.append($firstName).append($lastName).append($username);
+				$row.append($firstName).append($lastName).append($email);
 
 				$users.append($row);
 			});
@@ -63,7 +63,7 @@ var appUser = {
 					var u = data.user;
 					$("[name=input-firstName]").val(u.firstName);
 					$("[name=input-lastName]").val(u.lastName);
-					$("[name=input-username]").val(u.username);
+					$("[name=input-email]").val(u.email);
 					$("[name=input-password]").val(u.password);
 					
 					if (u.role) {
@@ -85,7 +85,7 @@ var appUser = {
 		u.id = appUser.currentId;
 		u.firstName = $("[name=input-firstName]").val();
 		u.lastName = $("[name=input-lastName]").val();
-		u.username = $("[name=input-username]").val();
+		u.email = $("[name=input-email]").val();
 		u.password = $("[name=input-password]").val();
 
 		u.role = [];

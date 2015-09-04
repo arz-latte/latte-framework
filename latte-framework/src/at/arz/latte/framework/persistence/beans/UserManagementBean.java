@@ -7,7 +7,6 @@ import java.util.Set;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.validation.ConstraintViolation;
 
 import at.arz.latte.framework.persistence.models.Role;
 import at.arz.latte.framework.persistence.models.User;
@@ -47,9 +46,13 @@ public class UserManagementBean {
 		return u;
 	}
 
+	public User getUser(String email) {
+		return em.createNamedQuery(User.QUERY_GET_BY_EMAIL, User.class).setParameter("email", email).getSingleResult();
+	}
+
 	public User createUser(User user, Set<RoleData> roleData) {
 
-		checkDuplicateUser(user.getId(), user.getUsername());
+		checkDuplicateUser(user.getId(), user.getEmail());
 
 		em.persist(user);
 
@@ -63,15 +66,15 @@ public class UserManagementBean {
 		return user;
 	}
 
-	public User updateUser(Long id, String firstName, String lastName, String username, String password,
+	public User updateUser(Long id, String firstName, String lastName, String email, String password,
 			Set<RoleData> roleData) {
 
-		checkDuplicateUser(id, username);
+		checkDuplicateUser(id, email);
 
 		User user = getUser(id);
 		user.setFirstName(firstName);
 		user.setLastName(lastName);
-		user.setUsername(username);
+		user.setEmail(email);
 		user.setPassword(password);
 
 		Set<Role> roles = new HashSet<>();
@@ -90,16 +93,16 @@ public class UserManagementBean {
 	}
 
 	/**
-	 * check if username is already stored, throws LatteValidationException if
-	 * user is a duplicate
+	 * check if email is already stored, throws LatteValidationException if user
+	 * is a duplicate
 	 * 
 	 * @param userId
 	 * @param username
 	 * @throws LatteValidationException
 	 */
-	private void checkDuplicateUser(Long userId, String username) throws LatteValidationException {
-		List<User> duplicates = em.createNamedQuery(User.QUERY_GET_BY_USERNAME, User.class)
-				.setParameter("username", username).getResultList();
+	private void checkDuplicateUser(Long userId, String email) throws LatteValidationException {
+		List<User> duplicates = em.createNamedQuery(User.QUERY_GET_BY_EMAIL, User.class).setParameter("email", email)
+				.getResultList();
 
 		if (duplicates.size() == 1 && !duplicates.get(0).getId().equals(userId)) {
 			throw new LatteValidationException(400, "username", "Eintrag bereits vorhanden");

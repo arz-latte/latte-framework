@@ -8,7 +8,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import at.arz.latte.framework.validator.CheckUrl;
+import at.arz.latte.framework.validator.Url;
 
 /**
  * used to transmit module data to the client, for single view or update
@@ -30,7 +30,7 @@ public class ModuleData {
 	@Size(min = 1, max = 63)
 	private String provider;
 
-	@CheckUrl
+	@Url
 	@NotNull
 	@Size(max = 511)
 	private String url;
