@@ -3,12 +3,12 @@
  */
 var app = {
 
-	API_LATTE : 'http://localhost:8080',
-	PATH_INDEX : '/latte/index.html',
-	PATH_FRAMEWORK : '/latte/api/v1/framework',
+	API_LATTE : 'http://localhost:8080/latte',
+	PATH_INDEX : '/index.html',
+	PATH_FRAMEWORK : '/api/v1/framework',
 
 	API_WEBSOCKET : 'ws://localhost:8080/latte/ws',
-	
+
 	// ==========================================================================
 	// framework API
 	// ===========================================================================
@@ -33,28 +33,30 @@ var app = {
 
 	/**
 	 * enable all submenus by specific attribute and value
+	 * 
 	 * @param attribute
 	 * @param value
 	 */
 	enableSubMenuByAttribute : function(attribute, value) {
 
 		$("#side-menu").find("li").each(function(i, li) {
-			var $li = $(li);			
+			var $li = $(li);
 			if ($li.data(attribute) == value && !$li.data("denied")) {
 				$li.removeClass("disabled");
 			}
 		});
 	},
-	
+
 	/**
 	 * disable all submenus by specific attribute and value
+	 * 
 	 * @param attribute
 	 * @param value
 	 */
 	disableSubMenuByAttribute : function(attribute, value) {
-		
+
 		$("#side-menu").find("li").each(function(i, li) {
-			var $li = $(li);			
+			var $li = $(li);
 			if ($li.data(attribute) == value && !$li.data("denied")) {
 				$li.addClass("disabled");
 			}
@@ -63,6 +65,7 @@ var app = {
 
 	/**
 	 * show message to user
+	 * 
 	 * @param msg
 	 */
 	showMessage : function(msg) {
@@ -74,6 +77,7 @@ var app = {
 
 	/**
 	 * show error message to user
+	 * 
 	 * @param msg
 	 */
 	showErrorMessage : function(msg) {
@@ -82,7 +86,7 @@ var app = {
 		$box.html(msg);
 		$box.show(100).delay(3000).hide(100);
 	},
-	
+
 	// ===========================================================================
 	// layout creation
 	// ===========================================================================
@@ -171,26 +175,26 @@ var app = {
 		var $container = $("<div/>", {
 			'class' : "container-fluid"
 		});
-		
+
 		var $row = $("<div/>", {
 			'class' : "row"
 		});
-		
+
 		var $sidebar = $("<div/>", {
 			'class' : "col-sm-3",
 			id : "sidebar"
 		});
-		
+
 		var $content = $("<div/>", {
 			'class' : "col-sm-9",
 			id : "content"
 		});
-		
+
 		// fill with predefined content from html-file
 		$content.append($("#content-placeholder").html());
-		
+
 		$row.append($sidebar, $content);
-		
+
 		$container.append($row);
 
 		$("#content-placeholder").replaceWith($container);
@@ -261,7 +265,7 @@ var app = {
 			url : app.API_LATTE + app.PATH_FRAMEWORK + "/init.json",
 			async : false,
 		}).done(function(data) {
-			//localStorage.clear();
+			// localStorage.clear();
 			localStorage.setItem("initialized", true);
 
 			// store each module separate
@@ -315,8 +319,12 @@ var app = {
 
 		// logout button
 		$("#main-menu-right").find("a").on("click", function() {
-			localStorage.clear();			
-			window.location.replace("logout");
+
+			$.get(app.API_LATTE + "/logout", function(data) {
+				localStorage.clear();
+				window.location.replace("index.html");
+			});
+
 		});
 
 	},
@@ -338,7 +346,7 @@ var app = {
 		var $subMenu = $("#side-menu");
 		$subMenu.html(""); // clear
 
-		if (menu.submenu) {			
+		if (menu.submenu) {
 			if (menu.submenu.length > 0) {
 				$.each(menu.submenu, function(index, menu) {
 					app.appendSubMenuRec($subMenu, menu, 0);
@@ -355,9 +363,13 @@ var app = {
 
 	/**
 	 * helper for creating submenu
-	 * @param $subMenu target element
-	 * @param menu datastructure with menu informations
-	 * @param level information about submenu level
+	 * 
+	 * @param $subMenu
+	 *            target element
+	 * @param menu
+	 *            datastructure with menu informations
+	 * @param level
+	 *            information about submenu level
 	 */
 	appendSubMenuRec : function($subMenu, menu, level) {
 
@@ -377,7 +389,7 @@ var app = {
 		if (level > 0) {
 			$entry.addClass("submenu submenu-" + level);
 		}
-		
+
 		// add permission for this element
 		if (menu.denied) {
 			$entry.addClass("disabled");
@@ -396,7 +408,7 @@ var app = {
 		$subMenu.append($entry);
 
 		// check recursive sub menus
-		if (menu.submenu) {			
+		if (menu.submenu) {
 			if (menu.submenu.length > 0) {
 				$.each(menu.submenu, function(index, submenu) {
 					app.appendSubMenuRec($subMenu, submenu, level + 1);
@@ -407,7 +419,6 @@ var app = {
 		}
 
 	},
-
 
 	// ==========================================================================
 	// websocket functions
@@ -426,14 +437,12 @@ var app = {
 
 			var data = JSON.parse(msg.data);
 			app.showMessage(data.message);
-			
-			
+
 			// new module
 			// module deleted
 			// module active
 			// module inactive
 			// module specific
-			
 
 			// module update available
 			if (data.message == "update") {

@@ -45,18 +45,24 @@ public class ModuleTimerService {
 	@Inject
 	private Validator validator;
 
-	private int counter = 0;
+	/**
+	 * wait 10 seconds before start
+	 */
+	private int counter = -10;
 
 	@Schedule(second = "*/1", minute = "*", hour = "*", persistent = false)
 	private void checkModules() {
 
 		counter++;
 
-		for (Module module : bean.getAllEnabledModules()) {
-			
-			int checkInterval = module.getInterval();
-			if (checkInterval > 0 && counter % checkInterval == 0) {
-				checkStatus(module);
+		if (counter >= 0) {
+
+			for (Module module : bean.getAllEnabledModules()) {
+
+				int checkInterval = module.getInterval();
+				if (checkInterval > 0 && counter % checkInterval == 0) {
+					checkStatus(module);
+				}
 			}
 		}
 	}
@@ -70,7 +76,7 @@ public class ModuleTimerService {
 			if (module.getLastModified() != null) {
 				client.query("lastModified", module.getLastModified());
 			}
-			
+
 			// get menu
 			MenuData menuData = client.get(MenuData.class);
 

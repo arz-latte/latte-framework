@@ -2,7 +2,6 @@ package at.arz.latte.framework.authentication;
 
 import java.io.IOException;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -18,7 +17,5 @@ public class LogoutServlet extends HttpServlet {
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
 		HttpSession session = req.getSession();
 		session.invalidate();
-		RequestDispatcher rd = req.getRequestDispatcher("/login.html");
-		rd.forward(req, res);
 	}
 }

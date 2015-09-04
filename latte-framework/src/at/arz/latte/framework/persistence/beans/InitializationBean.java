@@ -7,7 +7,7 @@ import javax.ejb.Singleton;
 import javax.ejb.Startup;
 
 /**
- * initializes status of all stored modules
+ * initializes status of all stored modules (set running to false)
  * 
  * Dominik Neuner {@link "mailto:dominik@neuner-it.at"}
  *

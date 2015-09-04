@@ -1,1 +1,0 @@
-INSERT INTO roles_permissions (role_id, permission_id) VALUES(2,1);
