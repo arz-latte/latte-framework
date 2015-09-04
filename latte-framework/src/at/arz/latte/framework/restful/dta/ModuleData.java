@@ -62,8 +62,6 @@ public class ModuleData {
 
 	private MenuData menu;
 
-	private Boolean denied;
-
 	public ModuleData() {
 	}
 
@@ -159,19 +157,11 @@ public class ModuleData {
 		this.menu = menu;
 	}
 
-	public Boolean getDenied() {
-		return denied;
-	}
-
-	public void setDenied(Boolean denied) {
-		this.denied = denied;
-	}
-
 	@Override
 	public String toString() {
 		return "ModuleData [id=" + id + ", name=" + name + ", provider=" + provider + ", url=" + url + ", interval="
 				+ interval + ", enabled=" + enabled + ", lastModified=" + lastModified + ", running=" + running
-				+ ", menu=" + menu + ", denied=" + denied + "]";
+				+ ", menu=" + menu + "]";
 	}
 
 }

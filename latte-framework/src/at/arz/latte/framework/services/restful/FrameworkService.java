@@ -40,7 +40,8 @@ public class FrameworkService {
 	@Path("init.json")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<ModuleData> getInitData() {
-		return bean.getAll();
+		String email = sc.getUserPrincipal().getName();
+		return bean.getAll(email);
 	}
 
 	@GET

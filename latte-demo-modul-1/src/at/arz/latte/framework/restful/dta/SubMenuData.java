@@ -11,7 +11,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import at.arz.latte.framework.validator.CheckUrl;
+import at.arz.latte.framework.validator.Url;
 
 @XmlRootElement(name = "submenu")
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -23,7 +23,7 @@ public class SubMenuData implements Serializable {
 	@Size(min = 1, max = 63)
 	private String name;
 
-	@CheckUrl
+	@Url
 	@NotNull
 	@Size(max = 511)
 	private String url;

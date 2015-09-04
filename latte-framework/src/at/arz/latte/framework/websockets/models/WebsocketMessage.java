@@ -3,6 +3,7 @@ package at.arz.latte.framework.websockets.models;
 import java.io.StringReader;
 import javax.json.Json;
 import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 
 /**
  * message for websocket communication
@@ -11,17 +12,22 @@ import javax.json.JsonObject;
  *
  */
 public class WebsocketMessage {
-	
+
 	private String message;
-	
-	private String sender;
-	
-	public WebsocketMessage() {}
-	
-	public WebsocketMessage(String message, String sender) {
-		super();
+
+	private String moduleId;
+
+	public WebsocketMessage() {
+	}
+
+	public WebsocketMessage(String message) {
+		this();
 		this.message = message;
-		this.sender = sender;
+	}
+
+	public WebsocketMessage(String message, String moduleId) {
+		this(message);
+		this.moduleId = moduleId;
 	}
 
 	public String getMessage() {
@@ -32,36 +38,35 @@ public class WebsocketMessage {
 		this.message = message;
 	}
 
-	public String getSender() {
-		return sender;
+	public String getModuleId() {
+		return moduleId;
 	}
 
-	public void setSender(String sender) {
-		this.sender = sender;
+	public void setModuleId(String moduleId) {
+		this.moduleId = moduleId;
 	}
-	
+
 	public String toJSON() {
-		
-		JsonObject json = 
-				Json.createObjectBuilder()
-					.add("message", getMessage())
-					.add("sender", getSender())
-					.build();
-		
-		return json.toString();
+
+		JsonObjectBuilder json = Json.createObjectBuilder().add("message", getMessage());
+
+		if (moduleId != null) {
+			json.add("module-id", getModuleId());
+		}
+
+		return json.build().toString();
 	}
 
 	public static WebsocketMessage fromJSON(String message) {
-		JsonObject json = 
-				Json.createReader(
-						new StringReader(message))
-							.readObject();
-		
-		WebsocketMessage result = new WebsocketMessage(
-				json.getString("message"),
-				json.getString("sender"));
-		
+		JsonObject json = Json.createReader(new StringReader(message)).readObject();
+
+		WebsocketMessage result = new WebsocketMessage(json.getString("message"));
+
+		if (json.containsKey("module-id")) {
+			result.setModuleId(json.getString("module-id"));
+		}
+
 		return result;
 	}
-	
+
 }

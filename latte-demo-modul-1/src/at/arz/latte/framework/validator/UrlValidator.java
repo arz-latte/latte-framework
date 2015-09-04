@@ -12,25 +12,25 @@ import javax.validation.ConstraintValidatorContext;
  * Dominik Neuner {@link "mailto:dominik@neuner-it.at"}
  *
  */
-public class CheckUrlValidator implements ConstraintValidator<CheckUrl, String> {
+public class UrlValidator implements ConstraintValidator<Url, String> {
 
 	@Override
-	public void initialize(CheckUrl constraintAnnotation) {
+	public void initialize(Url constraintAnnotation) {
 	}
 	
 	@Override
-	public boolean isValid(String object, ConstraintValidatorContext constraintContext) {
+	public boolean isValid(String value, ConstraintValidatorContext constraintContext) {
 
-		if (object == null) {
+		if (value == null) {
 			return false;
 		}
 		
-		if (object.equals("#")) {
+		if (value.equals("#")) {
 			return true;
 		}
 
 		try {
-			new URL(object);
+			new URL(value);
 		} catch (MalformedURLException ex) {
 			return false;
 		}

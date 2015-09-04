@@ -105,7 +105,7 @@ var appUser = {
 				}),
 				contentType : "application/json; charset=UTF-8",
 			}).done(function(data) {
-				app.showMessage("Benutzer aktualisiert");
+				app.showSuccessMessage("Benutzer aktualisiert");
 				appUser.loadUsers();
 			}).fail(function(error) {
 				appAdmin.validateData(error);
@@ -120,7 +120,7 @@ var appUser = {
 				}),
 				contentType : "application/json; charset=UTF-8",
 			}).done(function(data) {
-				app.showMessage("Benutzer erstellt");
+				app.showSuccessMessage("Benutzer erstellt");
 				appUser.loadUsers();
 			}).fail(function(error) {
 				appAdmin.validateData(error);
@@ -137,7 +137,7 @@ var appUser = {
 				url : appUser.API_USERS + "/delete.json/" + appUser.currentId,
 				type : "DELETE",
 			}).done(function(data) {
-				app.showMessage("Benutzer gel&ouml;scht");
+				app.showSuccessMessage("Benutzer gel&ouml;scht");
 				appUser.loadUsers();
 			}).fail(function() {
 				app.showErrorMessage("Fehler");

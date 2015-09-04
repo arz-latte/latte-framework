@@ -18,9 +18,9 @@ import javax.validation.Payload;
  */
 @Target({ METHOD, FIELD, ANNOTATION_TYPE })
 @Retention(RUNTIME)
-@Constraint(validatedBy = CheckUrlValidator.class)
+@Constraint(validatedBy = UrlValidator.class)
 @Documented
-public @interface CheckUrl {
+public @interface Url {
 	String message() default "Ungültige URL";
 
 	Class<?>[]groups() default {};
