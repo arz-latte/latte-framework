@@ -30,22 +30,25 @@ public class FrameworkManagementBean {
 	/**
 	 * get all modules with their menus for REST-service
 	 * 
+	 * @param email
 	 * @return
 	 */
-	public List<ModuleData> getAll() {
+	public List<ModuleData> getAll(String email) {
 
 		List<ModuleData> modulesData = new ArrayList<>();
 
 		// get permissions of user
-		List<String> permissions = em.createNamedQuery(Permission.QUERY_GET_NAME_BY_USER, String.class).setParameter("id", 1).getResultList();
-		
+		List<String> permissions = em.createNamedQuery(Permission.QUERY_GET_NAME_BY_USER, String.class)
+				.setParameter("email", email).getResultList();
+
 		// get modules
 		List<Module> modules = em.createNamedQuery(Module.QUERY_GETALL_ENABLED_SORTED, Module.class).getResultList();
 		for (Module module : modules) {
 
 			ModuleData moduleData = new ModuleData();
 			moduleData.setId(module.getId());
-			
+			moduleData.setRunning(module.getRunning());
+
 			moduleData.setMenu(getMenuData(module.getMenu(), permissions));
 
 			// ignore module if user has no permission to submenus
@@ -69,14 +72,14 @@ public class FrameworkManagementBean {
 		if (menu.getPermission() != null && !permissions.contains(menu.getPermission())) {
 			return null;
 		}
-		
+
 		MenuData menuData = new MenuData(menu.getName(), menu.getUrl(), menu.getOrder(), menu.getSubOrder());
 
 		if (menu.getSubMenus() != null && !menu.getSubMenus().isEmpty()) {
 			for (SubMenu subMenu : menu.getSubMenus()) {
 				menuData.addSubMenu(getSubMenuDataRec(subMenu, permissions));
 			}
-		
+
 			// ignore module if user has no permmission for any submenu
 			if (menuData.getSubMenus().isEmpty()) {
 				return null;
@@ -98,7 +101,7 @@ public class FrameworkManagementBean {
 		if (menu.getPermission() != null && !permissions.contains(menu.getPermission())) {
 			return null;
 		}
-	
+
 		SubMenuData subMenuData = new SubMenuData(menu.getName(), menu.getUrl(), menu.getType(), menu.getGroup());
 
 		// recursive add sub menus
@@ -107,7 +110,7 @@ public class FrameworkManagementBean {
 				subMenuData.addSubMenu(getSubMenuDataRec(subMenu, permissions));
 			}
 		}
-		
+
 		return subMenuData;
 	}
 

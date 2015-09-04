@@ -23,7 +23,7 @@ import javax.validation.constraints.Size;
 @NamedQueries({
 		@NamedQuery(name = Permission.QUERY_GETALL_BASE, query = "SELECT new at.arz.latte.framework.restful.dta.PermissionData(p.id, p.name) FROM Permission p ORDER BY p.name"),
 		@NamedQuery(name = Permission.QUERY_GET_BY_NAME, query = "SELECT p FROM Permission p WHERE p.name = :name"),
-		@NamedQuery(name = Permission.QUERY_GET_NAME_BY_USER, query = "SELECT DISTINCT p.name FROM User u JOIN u.role r JOIN r.permission p WHERE u.id = :id"),
+		@NamedQuery(name = Permission.QUERY_GET_NAME_BY_USER, query = "SELECT DISTINCT p.name FROM User u JOIN u.role r JOIN r.permission p WHERE u.email = :email"),
 		})
 @Entity
 @Table(name = "permissions")

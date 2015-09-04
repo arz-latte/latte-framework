@@ -20,8 +20,6 @@ import javax.ws.rs.core.MediaType;
 import at.arz.latte.framework.persistence.beans.ModuleManagementBean;
 import at.arz.latte.framework.persistence.models.Module;
 import at.arz.latte.framework.restful.dta.ModuleData;
-import at.arz.latte.framework.websockets.WebsocketEndpoint;
-import at.arz.latte.framework.websockets.models.WebsocketMessage;
 
 /**
  * RESTful service for module management
@@ -35,9 +33,6 @@ public class ModuleService {
 
 	@EJB
 	private ModuleManagementBean bean;
-
-	@EJB
-	private WebsocketEndpoint websocket;
 
 	@Inject
 	private Validator validator;
@@ -83,24 +78,9 @@ public class ModuleService {
 			throw new LatteValidationException(400, violations);
 		}
 
-		// notify clients if urlchanged or module was disabled
-		Module before = bean.getModule(moduleData.getId());
-		boolean urlChanged = !before.getUrl().equals(moduleData.getUrl());
-		boolean disabled = before.getEnabled() && !moduleData.getEnabled();
-
-		// set status to stopped if module gets disabled
-		boolean running = before.getRunning();
-		if (!moduleData.getEnabled()) {
-			running = false;
-		}
-		
 		Module after = bean.updateModule(moduleData.getId(), moduleData.getName(), moduleData.getProvider(),
-				moduleData.getUrl(), moduleData.getInterval(), moduleData.getEnabled(), running);
-		
-		// notify clients if urlchanged or module was disabled
-		if (urlChanged || disabled) {
-			websocket.chat(new WebsocketMessage("update", "server"));
-		}
+				moduleData.getUrl(), moduleData.getInterval(), moduleData.getEnabled(),
+				!moduleData.getEnabled() ? false : null);
 
 		return toModuleData(after);
 	}

@@ -93,7 +93,7 @@ var appModule = {
 				}),
 				contentType : "application/json; charset=UTF-8",
 			}).done(function(data) {
-				app.showMessage("Modul aktualisiert");
+				app.showSuccessMessage("Modul aktualisiert");
 				appModule.loadModules();
 			}).fail(function(error) {
 				appAdmin.validateData(error);
@@ -108,7 +108,7 @@ var appModule = {
 				}),
 				contentType : "application/json; charset=UTF-8",
 			}).done(function(data) {
-				app.showMessage("Modul erstellt");
+				app.showSuccessMessage("Modul erstellt");
 				appModule.loadModules();
 			}).fail(function(error) {
 				appAdmin.validateData(error);
@@ -127,7 +127,7 @@ var appModule = {
 								+ appModule.currentId,
 						type : "DELETE",
 					}).done(function(data) {
-				app.showMessage("Modul gel&ouml;scht");
+				app.showSuccessMessage("Modul gel&ouml;scht");
 				appModule.loadModules();
 			}).fail(function() {
 				app.showErrorMessage("Fehler");

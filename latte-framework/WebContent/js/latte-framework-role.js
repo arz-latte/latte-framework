@@ -95,7 +95,7 @@ var appRole = {
 				}),
 				contentType : "application/json; charset=UTF-8",
 			}).done(function(data) {
-				app.showMessage("Rolle aktualisiert");
+				app.showSuccessMessage("Rolle aktualisiert");
 				appRole.loadRoles();
 			}).fail(function(error) {
 				appAdmin.validateData(error);
@@ -110,7 +110,7 @@ var appRole = {
 				}),
 				contentType : "application/json; charset=UTF-8",
 			}).done(function(data) {
-				app.showMessage("Rolle erstellt");
+				app.showSuccessMessage("Rolle erstellt");
 				appRole.loadRoles();
 			}).fail(function(error) {
 				appAdmin.validateData(error);
@@ -129,7 +129,7 @@ var appRole = {
 								+ appRole.currentId,
 						type : "DELETE",
 					}).done(function(data) {
-				app.showMessage("Rolle gel&ouml;scht");
+				app.showSuccessMessage("Rolle gel&ouml;scht");
 				appRole.loadRoles();
 			}).fail(function() {
 				app.showErrorMessage("Fehler");
