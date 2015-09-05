@@ -3,9 +3,9 @@ Latte Integration Framework
 
 create db latte on postgresql:
 
-create user latte with password 'latte';
-create database latte;
-grant all privileges on database latte to latte;
+create user latte with password 'latte';<br/>
+create database latte;<br/>
+grant all privileges on database latte to latte;<br/>
 execute initialize.sql
 
 run 'latte-framework' and 'latte-demo-modul-1'
@@ -13,8 +13,7 @@ run 'latte-framework' and 'latte-demo-modul-1'
 either log in as administrator with admin@arz.at / admin<br/>
 or log in as user with user@arz.at / user
 
-Module-Configuration 'service-config.xml':
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<h3>Module-Configuration 'service-config.xml':</h3><br/>
 <menu>
     <name>Demo Modul 1</name>
     <url>http://localhost:8080/demo1/index.html</url>
