@@ -17,36 +17,36 @@ or log in as user with user@arz.at / user
 
 <h3>Module-Configuration 'service-config.xml':</h3>
 <code>
-<menu>
-    <name>Demo Modul 1</name>
-    <url>http://localhost:8080/demo1/index.html</url>
-    <order>10</order>
-    <submenu>
-		<name>SubMenü für user</name>			
+&lt;menu&gt;
+    &lt;name&gt;Demo Modul 1&lt;/name&gt;
+    &lt;url&gt;http://localhost:8080/demo1/index.html&lt;/url&gt;
+    &lt;order&gt;10&lt;/order&gt;
+    &lt;submenu&gt;
+		&lt;name&gt;SubMenü für user&lt;/name&gt;			
 		
-		<!--  optional: relativ or absolute path (uses # if missing) -->
-		<url>index.html</url>
+		&lt;!--  optional: relativ or absolute path (uses # if missing) --&gt;
+		&lt;url&gt;index.html&lt;/url&gt;
 		
-		<!--  optional: on click function: only in combination with missing url or '#' -->
-		<script>appDemo.demoFunction("ok")</script>
+		&lt;!--  optional: on click function: only in combination with missing url or '#' --&gt;
+		&lt;script&gt;appDemo.demoFunction("ok")&lt;/script&gt;
 		
-		<!--  optional: required permission for this entry -->
-		<permission>user</permission>
+		&lt;!--  optional: required permission for this entry --&gt;
+		&lt;permission&gt;user&lt;/permission&gt;
 		
-		<!--  optional: disable this menu entry -->
-		<disabled>false</disabled>
+		&lt;!--  optional: disable this menu entry --&gt;
+		&lt;disabled&gt;false&lt;/disabled&gt;
 		
-		<!--  optional: add type class to this menu entry -->
-		<type>t</type>
+		&lt;!--  optional: add type class to this menu entry --&gt;
+		&lt;type&gt;t&lt;/type&gt;
 		
-		<!--  optional: add type class to this menu entry -->
-		<group>g</group>
+		&lt;!--  optional: add type class to this menu entry --&gt;
+		&lt;group&gt;g&lt;/group&gt;
 
-		<!-- optional: recursive sub menu structure -->
-		<submenu>
-			<!-- same as above -->
-	    </submenu>
-    </submenu>
-</menu>
+		&lt;!-- optional: recursive sub menu structure --&gt;
+		&lt;submenu&gt;
+			&lt;!-- same as above --&gt;
+	    &lt;/submenu&gt;
+    &lt;/submenu&gt;
+&lt;/menu&gt;
 </code>
 
