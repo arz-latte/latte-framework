@@ -99,7 +99,7 @@ public class ModuleTimerService {
 			if (!violations.isEmpty()) {
 				throw new LatteValidationException(400, violations);
 			}
-
+			
 			// got response -> check version
 			if (module.getLastModified() == null || module.getLastModified() < menuData.getLastModified()) {
 

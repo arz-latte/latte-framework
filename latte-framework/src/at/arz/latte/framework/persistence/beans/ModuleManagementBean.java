@@ -102,7 +102,19 @@ public class ModuleManagementBean {
 		Module module = updateModuleRunning(moduleId, true);
 
 		module.setLastModified(menu.getLastModified());
-		module.setMenu(menu);
+		
+		// update menu entry
+		Menu old = module.getMenu();
+		if (old != null) {
+			old.setLastModified(menu.getLastModified());
+			old.setName(menu.getName());
+			old.setOrder(menu.getOrder());
+			old.setPermission(menu.getPermission());
+			old.setUrl(menu.getUrl());
+			old.setSubMenus(menu.getSubMenus());
+		} else {
+			module.setMenu(menu);
+		}
 
 		return module;
 	}

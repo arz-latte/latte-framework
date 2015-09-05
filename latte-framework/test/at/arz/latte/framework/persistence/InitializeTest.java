@@ -52,14 +52,14 @@ public class InitializeTest  {
 		em.persist(r2);
 		em.persist(r3);
 		
-		User u1 = new User("Admin", "Admin", "admin", "admin");
+		User u1 = new User("Admin", "Admin", "admin@arz.at", "admin");
 		Set<Role> roles = new HashSet<>();
 		roles.add(r1);
 		roles.add(r2);
 		u1.setRole(roles);
 		em.persist(u1);
 
-		User u2 = new User("User", "User", "user", "user");
+		User u2 = new User("User", "User", "user@arz.at", "user");
 		roles = new HashSet<>();
 		roles.add(r1);
 		roles.add(r3);

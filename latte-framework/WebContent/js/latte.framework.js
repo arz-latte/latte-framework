@@ -647,7 +647,7 @@ var app = {
 		};
 
 		app.ws.onerror = function(evt) {
-			app.showErrorMessage("WebSocketfehler");
+			app.showErrorMessage("WebSocket-Fehler");
 			console.log(evt);
 		};
 
