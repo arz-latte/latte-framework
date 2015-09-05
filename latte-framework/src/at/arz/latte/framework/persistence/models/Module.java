@@ -30,10 +30,10 @@ import at.arz.latte.framework.validator.Url;
  *
  */
 @NamedQueries({
-		@NamedQuery(name = Module.QUERY_GETALL_BASE, query = "SELECT new at.arz.latte.framework.restful.dta.ModuleData(m.id, m.name, m.provider, m.running, m.enabled, m.lastModified) FROM Module m LEFT JOIN m.menu me ORDER BY me.order, me.subOrder"),
+		@NamedQuery(name = Module.QUERY_GETALL_BASE, query = "SELECT new at.arz.latte.framework.restful.dta.ModuleData(m.id, m.name, m.provider, m.running, m.enabled, m.lastModified) FROM Module m LEFT JOIN m.menu me ORDER BY me.order"),
 		@NamedQuery(name = Module.QUERY_GETALL, query = "SELECT m FROM Module m"),
 		@NamedQuery(name = Module.QUERY_GETALL_ENABLED, query = "SELECT m FROM Module m WHERE m.enabled=true"),
-		@NamedQuery(name = Module.QUERY_GETALL_ENABLED_SORTED, query = "SELECT m FROM Module m WHERE m.enabled=true ORDER BY m.menu.order, m.menu.subOrder"),
+		@NamedQuery(name = Module.QUERY_GETALL_ENABLED_SORTED, query = "SELECT m FROM Module m WHERE m.enabled=true ORDER BY m.menu.order"),
 		@NamedQuery(name = Module.STOP_ALL, query = "UPDATE Module m SET m.running = false"), })
 @Entity
 @Table(name = "modules")

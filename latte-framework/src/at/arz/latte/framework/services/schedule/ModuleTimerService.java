@@ -23,7 +23,7 @@ import at.arz.latte.framework.persistence.beans.ModuleManagementBean;
 import at.arz.latte.framework.persistence.models.Menu;
 import at.arz.latte.framework.persistence.models.Module;
 import at.arz.latte.framework.restful.dta.MenuData;
-import at.arz.latte.framework.services.restful.LatteValidationException;
+import at.arz.latte.framework.services.restful.exception.LatteValidationException;
 import at.arz.latte.framework.websockets.WebsocketEndpoint;
 import at.arz.latte.framework.websockets.models.WebsocketMessage;
 

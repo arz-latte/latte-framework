@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -36,10 +37,13 @@ public class SubMenu implements Serializable {
 	@Size(min = 1, max = 63)
 	private String name;
 
-	@Url
-	@NotNull
-	@Size(max = 255)
+	@Size(max = 511)
+	@Column(length = 511)
 	private String url;
+
+	@Size(max = 511)
+	@Column(length = 511)
+	private String script;
 
 	@Size(max = 31)
 	private String type;
@@ -49,6 +53,8 @@ public class SubMenu implements Serializable {
 
 	@Size(min = 1, max = 31)
 	private String permission;
+
+	private Boolean disabled;
 
 	@NotNull
 	private int order;
@@ -90,6 +96,14 @@ public class SubMenu implements Serializable {
 		this.url = url;
 	}
 
+	public String getScript() {
+		return script;
+	}
+
+	public void setScript(String script) {
+		this.script = script;
+	}
+
 	public String getType() {
 		return type;
 	}
@@ -112,6 +126,14 @@ public class SubMenu implements Serializable {
 
 	public void setPermission(String permission) {
 		this.permission = permission;
+	}
+
+	public Boolean getDisabled() {
+		return disabled;
+	}
+
+	public void setDisabled(Boolean disabled) {
+		this.disabled = disabled;
 	}
 
 	public List<SubMenu> getSubMenus() {
@@ -137,8 +159,9 @@ public class SubMenu implements Serializable {
 
 	@Override
 	public String toString() {
-		return "SubMenu [id=" + id + ", name=" + name + ", url=" + url + ", type=" + type + ", group=" + group
-				+ ", permission=" + permission + ", order=" + order + ", subMenus=" + subMenus + "]";
+		return "SubMenu [id=" + id + ", name=" + name + ", url=" + url + ", script=" + script + ", type=" + type
+				+ ", group=" + group + ", permission=" + permission + ", disabled=" + disabled + ", order=" + order
+				+ ", subMenus=" + subMenus + "]";
 	}
 
 	// ----------------------- dta to entity -----------------------
@@ -152,7 +175,9 @@ public class SubMenu implements Serializable {
 		SubMenu subMenu = new SubMenu();
 		subMenu.setName(subMenuData.getName());
 		subMenu.setUrl(subMenuData.getUrl());
+		subMenu.setScript(subMenuData.getScript());
 		subMenu.setPermission(subMenuData.getPermission());
+		subMenu.setDisabled(subMenuData.getDisabled());
 		subMenu.setType(subMenuData.getType());
 		subMenu.setGroup(subMenuData.getGroup());
 

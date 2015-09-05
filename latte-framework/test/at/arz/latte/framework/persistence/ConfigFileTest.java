@@ -17,9 +17,9 @@ public class ConfigFileTest {
 	public void createConfig() throws JAXBException {
 		MenuData menu = new MenuData("Administration", "http://localhost:8080/latte/index.html", 20);
 		
-		SubMenuData sub1 = new SubMenuData("Module", "http://localhost:8080/latte/module.html", "admin"); 
-		SubMenuData sub2 = new SubMenuData("Benutzer", "#", "admin"); 
-		SubMenuData sub3 = new SubMenuData("Rollen", "#", "admin"); 
+		SubMenuData sub1 = new SubMenuData("Module", "http://localhost:8080/latte/module.html", "admin");
+		SubMenuData sub2 = new SubMenuData("Benutzer", "http://localhost:8080/latte/user.html", "admin"); 
+		SubMenuData sub3 = new SubMenuData("Rollen", "http://localhost:8080/latte/role.html", "admin"); 
 		
 		menu.addSubMenu(sub1);
 		menu.addSubMenu(sub2);

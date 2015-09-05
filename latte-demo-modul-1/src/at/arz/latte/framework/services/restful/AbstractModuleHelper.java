@@ -16,6 +16,7 @@ import javax.xml.bind.Unmarshaller;
 
 import at.arz.latte.framework.restful.dta.MenuData;
 import at.arz.latte.framework.restful.dta.SubMenuData;
+import at.arz.latte.framework.services.restful.exception.LatteValidationException;
 
 /**
  * helper class for RESTful module management service

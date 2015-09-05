@@ -28,6 +28,10 @@ var appDemo = {
 		});
 		
 		alert("Aufgabe gestartet (10s)");
+	},
+	
+	functionTest : function(data) {
+		alert("function test: " + data);
 	}
 };
 

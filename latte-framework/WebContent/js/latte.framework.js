@@ -52,7 +52,7 @@ var app = {
 
 		$("#side-menu").find("li").each(function(i, li) {
 			var $li = $(li);
-			if ($li.data(attribute) == value) {
+			if ($li.data(attribute) == value && !$li.data("disabled")) {
 				$li.removeClass("disabled");
 			}
 		});
@@ -68,7 +68,7 @@ var app = {
 
 		$("#side-menu").find("li").each(function(i, li) {
 			var $li = $(li);
-			if ($li.data(attribute) == value) {
+			if ($li.data(attribute) == value && !$li.data("disabled")) {
 				$li.addClass("disabled");
 			}
 		});
@@ -80,7 +80,7 @@ var app = {
 	 * @param moduleId
 	 */
 	activateSubMenu : function(moduleId) {
-		$("#main-menu-left").find("[data-id=" + moduleId + "]").parent()
+		$("#main-menu-left").find("[module-id=" + moduleId + "]").parent()
 				.removeClass("disabled");
 		if (localStorage.getItem("module-id") == moduleId) {
 			$("#side-menu").find("li").removeClass("disabled");
@@ -93,7 +93,7 @@ var app = {
 	 * @param moduleId
 	 */
 	deactivateSubMenu : function(moduleId) {
-		$("#main-menu-left").find("[data-id=" + moduleId + "]").parent()
+		$("#main-menu-left").find("[module-id=" + moduleId + "]").parent()
 				.addClass("disabled");
 		if (localStorage.getItem("module-id") == moduleId) {
 			$("#side-menu").find("li").addClass("disabled");
@@ -371,7 +371,7 @@ var app = {
 		}).on("click", function() {
 			$.get(app.API_LATTE + "/logout", function(data) {
 				localStorage.clear();
-				window.location.replace("index.html");
+				window.location.replace(app.API_LATTE  + "/index.html");
 			});
 		});
 
@@ -442,7 +442,7 @@ var app = {
 			// main menu (module name)
 			var $entry = $("<li/>").append($("<a/>", {
 				href : module.menu.url,
-				'data-id' : module.id,
+				'module-id' : module.id,
 				on : {
 					click : function() {
 						localStorage.setItem("module-id", module.id);
@@ -478,7 +478,7 @@ var app = {
 		// mark current active main menu entry
 		var $mainMenuLeft = $("#main-menu-left");
 		$mainMenuLeft.find("a").parent().removeClass("active");
-		$mainMenuLeft.find("a[data-id=" + id + "]").parent().addClass("active");
+		$mainMenuLeft.find("a[module-id=" + id + "]").parent().addClass("active");
 
 		// create sub menu
 		var $subMenu = $("#side-menu");
@@ -517,12 +517,19 @@ var app = {
 	 *            information about submenu level
 	 */
 	appendSubMenuRec : function($subMenu, menu, level) {
-
+	
 		// sub menu entry
 		var $entry = $("<li/>").append($("<a/>", {
-			href : menu.url,
+			href : menu.url ? menu.url : "#",
 			text : menu.name,
 		}));
+		
+		// add javacript function
+		if (menu.script) {
+			$entry.on("click", function() {
+				new Function(menu.script).call(this);
+			});
+		}
 
 		// mark current active menu
 		var loc = window.location.href.split('#')[0];
@@ -535,10 +542,10 @@ var app = {
 			$entry.addClass("submenu submenu-" + level);
 		}
 
-		// add permission for this element
-		if (menu.denied) {
+		// disabled for this element
+		if (menu.disabled && menu.disabled == true) {
 			$entry.addClass("disabled");
-			$entry.attr("data-denied", true);
+			$entry.attr("data-disabled", true);
 		}
 
 		// add type and group for this element
@@ -625,7 +632,7 @@ var app = {
 				var module = JSON.parse(localStorage.getItem("module-" + id));
 				app.showInfoMessage("Nachricht von " + module.menu.name);
 
-				var $span = $("#main-menu-left").find("[data-id=" + id + "]")
+				var $span = $("#main-menu-left").find("[module-id=" + id + "]")
 						.find("span");
 
 				if ($span.text() == "") {

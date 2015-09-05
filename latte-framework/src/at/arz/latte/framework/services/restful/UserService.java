@@ -24,6 +24,7 @@ import at.arz.latte.framework.persistence.models.Role;
 import at.arz.latte.framework.persistence.models.User;
 import at.arz.latte.framework.restful.dta.RoleData;
 import at.arz.latte.framework.restful.dta.UserData;
+import at.arz.latte.framework.services.restful.exception.LatteValidationException;
 
 /**
  * RESTful service for user management

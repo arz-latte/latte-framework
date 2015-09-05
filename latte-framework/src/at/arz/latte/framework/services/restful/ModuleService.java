@@ -20,6 +20,7 @@ import javax.ws.rs.core.MediaType;
 import at.arz.latte.framework.persistence.beans.ModuleManagementBean;
 import at.arz.latte.framework.persistence.models.Module;
 import at.arz.latte.framework.restful.dta.ModuleData;
+import at.arz.latte.framework.services.restful.exception.LatteValidationException;
 
 /**
  * RESTful service for module management

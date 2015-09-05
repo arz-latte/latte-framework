@@ -73,8 +73,10 @@ public class FrameworkManagementBean {
 			return null;
 		}
 
-		MenuData menuData = new MenuData(menu.getName(), menu.getUrl(), menu.getOrder(), menu.getSubOrder());
+		// main menu entry
+		MenuData menuData = new MenuData(menu.getName(), menu.getUrl(), menu.getOrder());
 
+		// sub menu entries
 		if (menu.getSubMenus() != null && !menu.getSubMenus().isEmpty()) {
 			for (SubMenu subMenu : menu.getSubMenus()) {
 				menuData.addSubMenu(getSubMenuDataRec(subMenu, permissions));
@@ -102,8 +104,8 @@ public class FrameworkManagementBean {
 			return null;
 		}
 
-		SubMenuData subMenuData = new SubMenuData(menu.getName(), menu.getUrl(), menu.getType(), menu.getGroup());
-
+		SubMenuData subMenuData = new SubMenuData(menu.getName(), menu.getUrl(), menu.getScript(), menu.getType(), menu.getGroup(), menu.getDisabled());
+		
 		// recursive add sub menus
 		if (menu.getSubMenus() != null && !menu.getSubMenus().isEmpty()) {
 			for (SubMenu subMenu : menu.getSubMenus()) {

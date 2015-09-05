@@ -1,4 +1,4 @@
-package at.arz.latte.framework.services.restful;
+package at.arz.latte.framework.services.restful.exception;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;

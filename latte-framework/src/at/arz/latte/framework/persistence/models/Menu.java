@@ -46,8 +46,6 @@ public class Menu implements Serializable {
 	@NotNull
 	private int order;
 
-	private Integer subOrder;
-
 	@Size(min = 1, max = 31)
 	private String permission;
 
@@ -100,14 +98,6 @@ public class Menu implements Serializable {
 		this.order = order;
 	}
 
-	public Integer getSubOrder() {
-		return subOrder;
-	}
-
-	public void setSubOrder(Integer subOrder) {
-		this.subOrder = subOrder;
-	}
-
 	public String getPermission() {
 		return permission;
 	}
@@ -139,8 +129,8 @@ public class Menu implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Menu [id=" + id + ", name=" + name + ", url=" + url + ", order=" + order + ", subOrder=" + subOrder
-				+ ", permission=" + permission + ", subMenus=" + subMenus + ", lastModified=" + lastModified + "]";
+		return "Menu [id=" + id + ", name=" + name + ", url=" + url + ", order=" + order + ", permission=" + permission
+				+ ", subMenus=" + subMenus + ", lastModified=" + lastModified + "]";
 	}
 
 	// ----------------------- dta to entity -----------------------
@@ -155,7 +145,6 @@ public class Menu implements Serializable {
 		menu.setName(menuData.getName());
 		menu.setUrl(menuData.getUrl());
 		menu.setOrder(menuData.getOrder());
-		menu.setSubOrder(menuData.getSubOrder());
 		menu.setPermission(menuData.getPermission());
 		menu.setLastModified(menuData.getLastModified());
 

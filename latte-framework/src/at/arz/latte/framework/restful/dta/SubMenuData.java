@@ -11,8 +11,6 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import at.arz.latte.framework.validator.Url;
-
 @XmlRootElement(name = "submenu")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class SubMenuData implements Serializable {
@@ -23,10 +21,11 @@ public class SubMenuData implements Serializable {
 	@Size(min = 1, max = 63)
 	private String name;
 
-	@Url
-	@NotNull
-	@Size(max = 255)
+	@Size(max = 511)
 	private String url;
+
+	@Size(max = 511)
+	private String script;
 
 	@Size(max = 31)
 	private String type;
@@ -37,7 +36,7 @@ public class SubMenuData implements Serializable {
 	@Size(min = 1, max = 31)
 	private String permission;
 
-	private Boolean denied;
+	private Boolean disabled;
 
 	@XmlElement(name = "submenu")
 	private List<SubMenuData> subMenus;
@@ -66,15 +65,18 @@ public class SubMenuData implements Serializable {
 	 * 
 	 * @param name
 	 * @param url
+	 * @param script
 	 * @param type
 	 * @param group
 	 */
-	public SubMenuData(String name, String url, String type, String group) {
+	public SubMenuData(String name, String url, String script, String type, String group, Boolean disabled) {
 		this();
 		this.name = name;
 		this.url = url;
+		this.script = script;
 		this.type = type;
 		this.group = group;
+		this.disabled = disabled;
 	}
 
 	public String getName() {
@@ -91,6 +93,14 @@ public class SubMenuData implements Serializable {
 
 	public void setUrl(String url) {
 		this.url = url;
+	}
+
+	public String getScript() {
+		return script;
+	}
+
+	public void setScript(String script) {
+		this.script = script;
 	}
 
 	public String getType() {
@@ -117,12 +127,12 @@ public class SubMenuData implements Serializable {
 		this.permission = permission;
 	}
 
-	public Boolean isDenied() {
-		return denied;
+	public Boolean getDisabled() {
+		return disabled;
 	}
 
-	public void setDenied(Boolean denied) {
-		this.denied = denied;
+	public void setDisabled(Boolean disabled) {
+		this.disabled = disabled;
 	}
 
 	public List<SubMenuData> getSubMenus() {
@@ -141,8 +151,8 @@ public class SubMenuData implements Serializable {
 
 	@Override
 	public String toString() {
-		return "SubMenuData [name=" + name + ", url=" + url + ", type=" + type + ", group=" + group + ", permission="
-				+ permission + ", denied=" + denied + ", subMenus=" + subMenus + "]";
+		return "SubMenuData [name=" + name + ", url=" + url + ", script=" + script + ", type=" + type + ", group="
+				+ group + ", permission=" + permission + ", disabled=" + disabled + ", subMenus=" + subMenus + "]";
 	}
 
 }

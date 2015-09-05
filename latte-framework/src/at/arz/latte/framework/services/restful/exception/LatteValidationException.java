@@ -1,4 +1,4 @@
-package at.arz.latte.framework.services.restful;
+package at.arz.latte.framework.services.restful.exception;
 
 import java.util.HashMap;
 import java.util.Set;

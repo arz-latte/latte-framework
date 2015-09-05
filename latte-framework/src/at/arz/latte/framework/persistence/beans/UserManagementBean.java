@@ -12,7 +12,7 @@ import at.arz.latte.framework.persistence.models.Role;
 import at.arz.latte.framework.persistence.models.User;
 import at.arz.latte.framework.restful.dta.RoleData;
 import at.arz.latte.framework.restful.dta.UserData;
-import at.arz.latte.framework.services.restful.LatteValidationException;
+import at.arz.latte.framework.services.restful.exception.LatteValidationException;
 
 /**
  * bean for user management

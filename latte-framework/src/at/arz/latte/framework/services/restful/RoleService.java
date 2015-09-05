@@ -22,6 +22,7 @@ import at.arz.latte.framework.persistence.models.Permission;
 import at.arz.latte.framework.persistence.models.Role;
 import at.arz.latte.framework.restful.dta.PermissionData;
 import at.arz.latte.framework.restful.dta.RoleData;
+import at.arz.latte.framework.services.restful.exception.LatteValidationException;
 
 /**
  * RESTful service for role management

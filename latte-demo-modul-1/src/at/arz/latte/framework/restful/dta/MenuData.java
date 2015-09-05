@@ -31,11 +31,6 @@ public class MenuData implements Serializable {
 	@NotNull
 	private int order;
 
-	@XmlElement(name = "suborder")
-	private Integer subOrder;
-
-	private Boolean denied;
-
 	@Size(min = 1, max = 31)
 	private String permission;
 
@@ -55,11 +50,6 @@ public class MenuData implements Serializable {
 		this.name = name;
 		this.url = url;
 		this.order = order;
-	}
-
-	public MenuData(String name, String url, int order, Integer subOrder) {
-		this(name, url, order);
-		this.subOrder = subOrder;
 	}
 
 	public String getName() {
@@ -86,28 +76,12 @@ public class MenuData implements Serializable {
 		this.order = order;
 	}
 
-	public Integer getSubOrder() {
-		return subOrder;
-	}
-
-	public void setSubOrder(Integer subOrder) {
-		this.subOrder = subOrder;
-	}
-
 	public String getPermission() {
 		return permission;
 	}
 
 	public void setPermission(String permission) {
 		this.permission = permission;
-	}
-
-	public Boolean getDenied() {
-		return denied;
-	}
-
-	public void setDenied(Boolean denied) {
-		this.denied = denied;
 	}
 
 	public List<SubMenuData> getSubMenus() {
@@ -134,9 +108,8 @@ public class MenuData implements Serializable {
 
 	@Override
 	public String toString() {
-		return "MenuData [name=" + name + ", url=" + url + ", order=" + order + ", subOrder=" + subOrder + ", denied="
-				+ denied + ", permission=" + permission + ", subMenus=" + subMenus + ", lastModified=" + lastModified
-				+ "]";
+		return "MenuData [name=" + name + ", url=" + url + ", order=" + order + ", permission=" + permission
+				+ ", subMenus=" + subMenus + ", lastModified=" + lastModified + "]";
 	}
 
 }
