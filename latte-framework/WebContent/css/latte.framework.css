@@ -29,6 +29,15 @@
 #sidebar .navbar li.submenu {
 	background-color: #f0f0f0;
 }
+#sidebar .navbar li.submenu-1>a {
+    padding: 15px 20px 15px 25px !important;
+}
+#sidebar .navbar li.submenu-2>a {
+    padding: 15px 20px 15px 30px !important;
+}
+#sidebar .navbar li.submenu-31>a {
+    padding: 15px 20px 15px 35px !important;
+}
 
 /* -------------------------------------------------------------------- */
 /* content area															*/

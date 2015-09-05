@@ -32,6 +32,17 @@ var app = {
 	},
 
 	/**
+	 * toggle sidebar with submenu
+	 */
+	toggleSideBar : function() {
+		if ($("#sidebar").is(":visible")) {
+			app.hideSideBar();
+		} else {
+			app.showSideBar();
+		}
+	},
+
+	/**
 	 * enable all submenus by specific attribute and value
 	 * 
 	 * @param attribute
@@ -395,7 +406,7 @@ var app = {
 			// store each module separate
 			$.each(data.module, function(index, m) {
 				localStorage.setItem("module-" + m.id, JSON.stringify(m));
-				ids.push(""+m.id);	// $.inArray is strict
+				ids.push("" + m.id); // $.inArray is strict
 			});
 
 			// store ids of modules
@@ -406,7 +417,7 @@ var app = {
 			if (id != null && $.inArray(id, ids) == -1) {
 				localStorage.removeItem("module-id");
 			}
-			
+
 			app.initMainMenu();
 
 		}).fail(function() {
@@ -431,7 +442,6 @@ var app = {
 			// main menu (module name)
 			var $entry = $("<li/>").append($("<a/>", {
 				href : module.menu.url,
-				text : module.menu.name,
 				'data-id' : module.id,
 				on : {
 					click : function() {
@@ -439,7 +449,9 @@ var app = {
 						app.initSubMenu();
 					}
 				}
-			}));
+			}).append(module.menu.name + " ", $("<span/>", {
+				'class' : "badge"
+			})));
 
 			// module currently inactive
 			if (!module.running) {
@@ -607,17 +619,33 @@ var app = {
 
 				localStorage.removeItem("initialized");
 				app.loadModules();
+			} else
+			// notify
+			if (data.message == "notify") {
+				var module = JSON.parse(localStorage.getItem("module-" + id));
+				app.showInfoMessage("Nachricht von " + module.menu.name);
+
+				var $span = $("#main-menu-left").find("[data-id=" + id + "]")
+						.find("span");
+
+				if ($span.text() == "") {
+					$span.text(1);
+				} else {
+					$span.text(parseInt($span.text()) + 1);
+				}
 			} else {
-				app.showInfoMessage(data.message);
+				console.log(msg);
+				app.showInfoMessage(msg);
 			}
 		};
 
 		app.ws.onerror = function(evt) {
-			app.showErrorMessage(evt);
+			app.showErrorMessage("WebSocketfehler");
+			console.log(evt);
 		};
 
 		app.ws.onclose = function() {
-			app.showWarningMessage("Verbindung zum Server geschlossen");
+			app.showWarningMessage("WebSocket geschlossen");
 		};
 	},
 

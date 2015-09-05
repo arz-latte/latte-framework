@@ -26,4 +26,18 @@
         <url>#</url>
         <permission>user</permission>
     </submenu>
+    <submenu>
+        <name>Kompilieren</name>
+        <url>#</url>
+	    <submenu>
+	        <name>EAR</name>
+	        <url>#</url>
+	        <type>ear</type>
+	    </submenu>
+	    <submenu>
+	        <name>WAR</name>
+	        <url>#</url>
+	        <type>war</type>
+	    </submenu>
+    </submenu>
 </menu>

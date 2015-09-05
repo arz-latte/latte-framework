@@ -2,7 +2,6 @@ package at.arz.latte.framework.services.schedule;
 
 import java.net.MalformedURLException;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
 
 import javax.ejb.DependsOn;

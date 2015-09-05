@@ -38,7 +38,7 @@ public class SubMenu implements Serializable {
 
 	@Url
 	@NotNull
-	@Size(max = 511)
+	@Size(max = 255)
 	private String url;
 
 	@Size(max = 31)
