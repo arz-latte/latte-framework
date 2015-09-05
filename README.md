@@ -16,31 +16,15 @@ either log in as administrator with admin@arz.at / admin<br/>
 or log in as user with user@arz.at / user
 
 <h3>Module-Configuration 'service-config.xml':</h3>
-<code>
-&lt;menu&gt;
-    &lt;name&gt;Demo Modul 1&lt;/name&gt;
-    &lt;url&gt;http://localhost:8080/demo1/index.html&lt;/url&gt;
-    &lt;order&gt;10&lt;/order&gt;
-    &lt;submenu&gt;
-		&lt;name&gt;SubMenü für user&lt;/name&gt;			
-		&lt;!--  optional: relativ or absolute path (uses # if missing) --&gt;
-		&lt;url&gt;index.html&lt;/url&gt;
-		&lt;!--  optional: on click function: only in combination with missing url or '#' --&gt;
-		&lt;script&gt;appDemo.demoFunction("ok")&lt;/script&gt;
-		&lt;!--  optional: required permission for this entry --&gt;
-		&lt;permission&gt;user&lt;/permission&gt;
-		&lt;!--  optional: disable this menu entry --&gt;
-		&lt;disabled&gt;false&lt;/disabled&gt;
-		
-		&lt;!--  optional: add type class to this menu entry --&gt;
-		&lt;type&gt;t&lt;/type&gt;
-		&lt;!--  optional: add type class to this menu entry --&gt;
-		&lt;group&gt;g&lt;/group&gt;
-		&lt;!-- optional: recursive sub menu structure --&gt;
-		&lt;submenu&gt;
-			&lt;!-- same as above --&gt;
-	    &lt;/submenu&gt;
-    &lt;/submenu&gt;
-&lt;/menu&gt;
-</code>
-
+name: module name, e.g. Demo Modul 1<br/>
+url: link when clicking on module, e.g. http://localhost:8080/demo1/index.html<br/>
+order: sorting order for module, e.g. 10<br/>
+submenu:<br/>
+- name: menu name<br/>
+- url: optional menu link either relativ or absolute path (automatically uses # if missing, e.g index.html<br/>
+- script: optional on click function, only in combination with missing url or '#', e.g. appDemo.demoFunction("ok")<br/>
+- permission: optional permission for this entry<br/>
+- disabled: optional disable this menu entry<br/>
+- type: optional type class to this menu entry<br/>
+- group: optional group class to this menu entry<br/>
+- submenu: optional recursive sub menu structure<br/>
