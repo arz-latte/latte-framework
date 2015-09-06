@@ -214,7 +214,7 @@ INSERT INTO latte_seq (key0, value0) VALUES ('Permission.ID', 50);
 --
 
 INSERT INTO menus (id, lastmodified, name, order0, url, version, permission_id) VALUES (1, 1441566232053, 'Administration', 20, 'http://localhost:8080/latte/index.html', 97, NULL);
-INSERT INTO menus (id, lastmodified, name, order0, url, version, permission_id) VALUES (2, 1441566207813, 'Demo Modul 1', 10, 'http://localhost:8080/demo1/index.html', 96, NULL);
+INSERT INTO menus (id, lastmodified, name, order0, url, version, permission_id) VALUES (2, 1441569057118, 'Demo Modul 1', 10, 'http://localhost:8080/demo1/index.html', 96, NULL);
 
 
 --
@@ -222,7 +222,7 @@ INSERT INTO menus (id, lastmodified, name, order0, url, version, permission_id) 
 --
 
 INSERT INTO modules (id, enabled, "interval", lastmodified, name, provider, running, url, version, menu_id) VALUES (1, true, 10, 1441566232053, 'Administration', 'ARZ', true, 'http://localhost:8080/latte/api/v1/administration', 98, 1);
-INSERT INTO modules (id, enabled, "interval", lastmodified, name, provider, running, url, version, menu_id) VALUES (2, true, 10, 1441566207813, 'Demo Modul 1', 'ARZ', true, 'http://localhost:8080/demo1/api/v1/demo', 99, 2);
+INSERT INTO modules (id, enabled, "interval", lastmodified, name, provider, running, url, version, menu_id) VALUES (2, true, 10, 1441569057118, 'Demo Modul 1', 'ARZ', true, 'http://localhost:8080/demo1/api/v1/demo', 99, 2);
 
 
 --
