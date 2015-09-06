@@ -1,5 +1,7 @@
 --
 -- pg_dump -U latte --column-inserts latte
+--
+--
 -- PostgreSQL database dump
 --
 
@@ -51,8 +53,9 @@ CREATE TABLE menus (
     lastmodified bigint,
     name character varying(255),
     order0 integer,
-    permission character varying(255),
-    url character varying(255)
+    url character varying(255),
+    version integer,
+    permission_id bigint
 );
 
 
@@ -71,6 +74,7 @@ CREATE TABLE modules (
     provider character varying(255),
     running boolean,
     url character varying(255),
+    version integer,
     menu_id bigint
 );
 
@@ -83,7 +87,8 @@ ALTER TABLE modules OWNER TO latte;
 
 CREATE TABLE permissions (
     id bigint NOT NULL,
-    name character varying(255)
+    name character varying(255),
+    version integer
 );
 
 
@@ -95,7 +100,8 @@ ALTER TABLE permissions OWNER TO latte;
 
 CREATE TABLE roles (
     id bigint NOT NULL,
-    name character varying(255)
+    name character varying(255),
+    version integer
 );
 
 
@@ -123,11 +129,12 @@ CREATE TABLE submenus (
     group0 character varying(255),
     name character varying(255),
     order0 integer,
-    permission character varying(255),
     script character varying(511),
     type character varying(255),
     url character varying(511),
+    version integer,
     menu_id bigint,
+    permission_id bigint,
     submenu_id bigint
 );
 
@@ -143,7 +150,8 @@ CREATE TABLE users (
     email character varying(255),
     firstname character varying(255),
     lastname character varying(255),
-    password character varying(255)
+    password character varying(255),
+    version integer
 );
 
 
@@ -205,33 +213,33 @@ INSERT INTO latte_seq (key0, value0) VALUES ('Permission.ID', 50);
 -- Data for Name: menus; Type: TABLE DATA; Schema: public; Owner: latte
 --
 
-INSERT INTO menus (id, lastmodified, name, order0, permission, url) VALUES (2, 1441305820705, 'Administration', 20, NULL, 'http://localhost:8080/latte/index.html');
-INSERT INTO menus (id, lastmodified, name, order0, permission, url) VALUES (1, 1441451696928, 'Demo Modul 1', 10, NULL, 'http://localhost:8080/demo1/index.html');
+INSERT INTO menus (id, lastmodified, name, order0, url, version, permission_id) VALUES (1, 1441566232053, 'Administration', 20, 'http://localhost:8080/latte/index.html', 97, NULL);
+INSERT INTO menus (id, lastmodified, name, order0, url, version, permission_id) VALUES (2, 1441566207813, 'Demo Modul 1', 10, 'http://localhost:8080/demo1/index.html', 96, NULL);
 
 
 --
 -- Data for Name: modules; Type: TABLE DATA; Schema: public; Owner: latte
 --
 
-INSERT INTO modules (id, enabled, "interval", lastmodified, name, provider, running, url, menu_id) VALUES (2, true, 10, 1441451696928, 'Demo Modul 1', 'ARZ', true, 'http://localhost:8080/demo1/api/v1/demo', 1);
-INSERT INTO modules (id, enabled, "interval", lastmodified, name, provider, running, url, menu_id) VALUES (1, true, 10, 1441305820705, 'Administration', 'ARZ', true, 'http://localhost:8080/latte/api/v1/administration', 2);
+INSERT INTO modules (id, enabled, "interval", lastmodified, name, provider, running, url, version, menu_id) VALUES (1, true, 10, 1441566232053, 'Administration', 'ARZ', true, 'http://localhost:8080/latte/api/v1/administration', 98, 1);
+INSERT INTO modules (id, enabled, "interval", lastmodified, name, provider, running, url, version, menu_id) VALUES (2, true, 10, 1441566207813, 'Demo Modul 1', 'ARZ', true, 'http://localhost:8080/demo1/api/v1/demo', 99, 2);
 
 
 --
 -- Data for Name: permissions; Type: TABLE DATA; Schema: public; Owner: latte
 --
 
-INSERT INTO permissions (id, name) VALUES (1, 'admin');
-INSERT INTO permissions (id, name) VALUES (2, 'user');
+INSERT INTO permissions (id, name, version) VALUES (1, 'admin', 8);
+INSERT INTO permissions (id, name, version) VALUES (2, 'user', 3);
 
 
 --
 -- Data for Name: roles; Type: TABLE DATA; Schema: public; Owner: latte
 --
 
-INSERT INTO roles (id, name) VALUES (1, 'tomcat');
-INSERT INTO roles (id, name) VALUES (2, 'Administrator');
-INSERT INTO roles (id, name) VALUES (3, 'Benutzer');
+INSERT INTO roles (id, name, version) VALUES (1, 'tomcat', 1);
+INSERT INTO roles (id, name, version) VALUES (2, 'Administrator', 1);
+INSERT INTO roles (id, name, version) VALUES (3, 'Benutzer', 1);
 
 
 --
@@ -246,26 +254,26 @@ INSERT INTO roles_permissions (role_id, permission_id) VALUES (3, 2);
 -- Data for Name: submenus; Type: TABLE DATA; Schema: public; Owner: latte
 --
 
-INSERT INTO submenus (id, disabled, group0, name, order0, permission, script, type, url, menu_id, submenu_id) VALUES (3, NULL, NULL, 'SubMenü 2', 1, NULL, NULL, NULL, NULL, NULL, 1);
-INSERT INTO submenus (id, disabled, group0, name, order0, permission, script, type, url, menu_id, submenu_id) VALUES (11, NULL, NULL, 'Benutzer', 1, 'admin', NULL, NULL, 'http://localhost:8080/latte/user.html', 2, NULL);
-INSERT INTO submenus (id, disabled, group0, name, order0, permission, script, type, url, menu_id, submenu_id) VALUES (4, NULL, NULL, 'SubSubMenü für admin', 0, 'admin', NULL, NULL, NULL, NULL, 3);
-INSERT INTO submenus (id, disabled, group0, name, order0, permission, script, type, url, menu_id, submenu_id) VALUES (8, NULL, NULL, 'EAR', 0, NULL, 'alert("ok")', 'ear', NULL, NULL, 7);
-INSERT INTO submenus (id, disabled, group0, name, order0, permission, script, type, url, menu_id, submenu_id) VALUES (6, true, NULL, 'Deaktiviert', 2, NULL, NULL, 'war', NULL, 1, NULL);
-INSERT INTO submenus (id, disabled, group0, name, order0, permission, script, type, url, menu_id, submenu_id) VALUES (9, NULL, NULL, 'WAR', 1, NULL, 'appDemo.functionTest("ok")', 'war', NULL, NULL, 7);
-INSERT INTO submenus (id, disabled, group0, name, order0, permission, script, type, url, menu_id, submenu_id) VALUES (1, NULL, NULL, 'Demo Modul 1', 0, NULL, NULL, NULL, 'http://localhost:8080/demo1/index.html', 1, NULL);
-INSERT INTO submenus (id, disabled, group0, name, order0, permission, script, type, url, menu_id, submenu_id) VALUES (2, NULL, NULL, 'SubMenü für user', 0, 'user', NULL, NULL, '#', NULL, 1);
-INSERT INTO submenus (id, disabled, group0, name, order0, permission, script, type, url, menu_id, submenu_id) VALUES (12, NULL, NULL, 'Rollen', 2, 'admin', NULL, NULL, 'http://localhost:8080/latte/role.html', 2, NULL);
-INSERT INTO submenus (id, disabled, group0, name, order0, permission, script, type, url, menu_id, submenu_id) VALUES (5, false, NULL, 'Menü 2', 1, NULL, NULL, NULL, NULL, 1, NULL);
-INSERT INTO submenus (id, disabled, group0, name, order0, permission, script, type, url, menu_id, submenu_id) VALUES (10, NULL, NULL, 'Module', 0, 'admin', NULL, NULL, 'http://localhost:8080/latte/module.html', 2, NULL);
-INSERT INTO submenus (id, disabled, group0, name, order0, permission, script, type, url, menu_id, submenu_id) VALUES (7, NULL, NULL, 'Kompilieren', 3, NULL, NULL, NULL, NULL, 1, NULL);
+INSERT INTO submenus (id, disabled, group0, name, order0, script, type, url, version, menu_id, permission_id, submenu_id) VALUES (5, NULL, NULL, 'SubMenü für user', 0, NULL, NULL, '#', 3, NULL, 2, 4);
+INSERT INTO submenus (id, disabled, group0, name, order0, script, type, url, version, menu_id, permission_id, submenu_id) VALUES (12, NULL, NULL, 'WAR', 1, 'appDemo.functionTest("ok")', 'war', NULL, 3, NULL, NULL, 10);
+INSERT INTO submenus (id, disabled, group0, name, order0, script, type, url, version, menu_id, permission_id, submenu_id) VALUES (9, true, NULL, 'Deaktiviert', 2, NULL, 'war', NULL, 3, 2, NULL, NULL);
+INSERT INTO submenus (id, disabled, group0, name, order0, script, type, url, version, menu_id, permission_id, submenu_id) VALUES (8, false, NULL, 'Menü 2', 1, NULL, NULL, NULL, 3, 2, NULL, NULL);
+INSERT INTO submenus (id, disabled, group0, name, order0, script, type, url, version, menu_id, permission_id, submenu_id) VALUES (1, NULL, NULL, 'Module', 0, NULL, NULL, 'http://localhost:8080/latte/module.html', 4, 1, 1, NULL);
+INSERT INTO submenus (id, disabled, group0, name, order0, script, type, url, version, menu_id, permission_id, submenu_id) VALUES (11, NULL, NULL, 'EAR', 0, 'alert("ok")', 'ear', NULL, 3, NULL, NULL, 10);
+INSERT INTO submenus (id, disabled, group0, name, order0, script, type, url, version, menu_id, permission_id, submenu_id) VALUES (10, NULL, NULL, 'Kompilieren', 3, NULL, NULL, NULL, 3, 2, NULL, NULL);
+INSERT INTO submenus (id, disabled, group0, name, order0, script, type, url, version, menu_id, permission_id, submenu_id) VALUES (7, NULL, NULL, 'SubSubMenü für admin', 0, NULL, NULL, NULL, 3, NULL, 1, 6);
+INSERT INTO submenus (id, disabled, group0, name, order0, script, type, url, version, menu_id, permission_id, submenu_id) VALUES (3, NULL, NULL, 'Rollen', 2, NULL, NULL, 'http://localhost:8080/latte/role.html', 4, 1, 1, NULL);
+INSERT INTO submenus (id, disabled, group0, name, order0, script, type, url, version, menu_id, permission_id, submenu_id) VALUES (2, NULL, NULL, 'Benutzer', 1, NULL, NULL, 'http://localhost:8080/latte/user.html', 4, 1, 1, NULL);
+INSERT INTO submenus (id, disabled, group0, name, order0, script, type, url, version, menu_id, permission_id, submenu_id) VALUES (6, NULL, NULL, 'SubMenü 2', 1, NULL, NULL, NULL, 3, NULL, NULL, 4);
+INSERT INTO submenus (id, disabled, group0, name, order0, script, type, url, version, menu_id, permission_id, submenu_id) VALUES (4, NULL, NULL, 'Demo Modul', 0, NULL, NULL, 'http://localhost:8080/demo1/index.html', 3, 2, NULL, NULL);
 
 
 --
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: latte
 --
 
-INSERT INTO users (id, email, firstname, lastname, password) VALUES (1, 'admin@arz.at', 'Admin', 'Admin', 'admin');
-INSERT INTO users (id, email, firstname, lastname, password) VALUES (2, 'user@arz.at', 'User', 'User', 'user');
+INSERT INTO users (id, email, firstname, lastname, password, version) VALUES (1, 'admin@arz.at', 'Admin', 'Admin', 'admin', 2);
+INSERT INTO users (id, email, firstname, lastname, password, version) VALUES (2, 'user@arz.at', 'User', 'User', 'user', 2);
 
 
 --
@@ -359,6 +367,14 @@ ALTER TABLE ONLY users
 
 
 --
+-- Name: menus_permission_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: latte
+--
+
+ALTER TABLE ONLY menus
+    ADD CONSTRAINT menus_permission_id_fkey FOREIGN KEY (permission_id) REFERENCES permissions(id) DEFERRABLE;
+
+
+--
 -- Name: modules_menu_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: latte
 --
 
@@ -388,6 +404,14 @@ ALTER TABLE ONLY roles_permissions
 
 ALTER TABLE ONLY submenus
     ADD CONSTRAINT submenus_menu_id_fkey FOREIGN KEY (menu_id) REFERENCES menus(id) DEFERRABLE;
+
+
+--
+-- Name: submenus_permission_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: latte
+--
+
+ALTER TABLE ONLY submenus
+    ADD CONSTRAINT submenus_permission_id_fkey FOREIGN KEY (permission_id) REFERENCES permissions(id) DEFERRABLE;
 
 
 --
@@ -427,4 +451,3 @@ GRANT ALL ON SCHEMA public TO PUBLIC;
 --
 -- PostgreSQL database dump complete
 --
-

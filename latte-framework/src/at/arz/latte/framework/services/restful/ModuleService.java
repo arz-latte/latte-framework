@@ -15,14 +15,11 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.SecurityContext;
 
 import at.arz.latte.framework.persistence.beans.ModuleManagementBean;
 import at.arz.latte.framework.persistence.beans.UserManagementBean;
 import at.arz.latte.framework.persistence.models.Module;
-import at.arz.latte.framework.persistence.models.User;
 import at.arz.latte.framework.restful.dta.ModuleData;
 import at.arz.latte.framework.services.restful.exception.LatteValidationException;
 

@@ -27,7 +27,6 @@
         <name>Deaktiviert</name>
         <disabled>true</disabled>
         <type>war</type>
-        <permission>admin</permission>
     </submenu>
     <submenu>
         <name>Kompilieren</name>
@@ -40,7 +39,6 @@
 	        <name>WAR</name>
 	        <script>appDemo.functionTest("ok")</script>
 	        <type>war</type>
-	        <permission>asdf</permission>
 	    </submenu>
     </submenu>
 </menu>

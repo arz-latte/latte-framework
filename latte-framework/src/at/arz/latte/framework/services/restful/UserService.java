@@ -17,8 +17,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.apache.openjpa.persistence.EntityExistsException;
-
 import at.arz.latte.framework.persistence.beans.UserManagementBean;
 import at.arz.latte.framework.persistence.models.Role;
 import at.arz.latte.framework.persistence.models.User;
