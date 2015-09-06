@@ -2,6 +2,7 @@ package at.arz.latte.framework.persistence.models;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -12,15 +13,16 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
+import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import at.arz.latte.framework.restful.dta.SubMenuData;
-import at.arz.latte.framework.validator.Url;
 
 @Entity
 @Table(name = "submenus")
@@ -51,8 +53,8 @@ public class SubMenu implements Serializable {
 	@Size(max = 31)
 	private String group;
 
-	@Size(min = 1, max = 31)
-	private String permission;
+	@ManyToOne
+	private Permission permission;
 
 	private Boolean disabled;
 
@@ -63,6 +65,9 @@ public class SubMenu implements Serializable {
 	@JoinColumn(name = "submenu_id")
 	@OrderColumn(name = "order")
 	private List<SubMenu> subMenus;
+
+	@Version
+	private int version;
 
 	/**
 	 * JPA consturctor
@@ -120,11 +125,11 @@ public class SubMenu implements Serializable {
 		this.group = group;
 	}
 
-	public String getPermission() {
+	public Permission getPermission() {
 		return permission;
 	}
 
-	public void setPermission(String permission) {
+	public void setPermission(Permission permission) {
 		this.permission = permission;
 	}
 
@@ -159,24 +164,34 @@ public class SubMenu implements Serializable {
 
 	@Override
 	public String toString() {
-		return "SubMenu [id=" + id + ", name=" + name + ", url=" + url + ", script=" + script + ", type=" + type
-				+ ", group=" + group + ", permission=" + permission + ", disabled=" + disabled + ", order=" + order
-				+ ", subMenus=" + subMenus + "]";
+		return "SubMenu [name=" + name + ", permission=" + permission + ", subMenus=" + subMenus + "]";
 	}
 
 	// ----------------------- dta to entity -----------------------
-
+	
 	/**
 	 * convert submenu data from REST to submenu entity
 	 * 
 	 * @return
 	 */
-	public static SubMenu getSubMenuRec(SubMenuData subMenuData) {
+	public static SubMenu getSubMenuRec(SubMenuData subMenuData, HashMap<String, Permission> permissions) {
 		SubMenu subMenu = new SubMenu();
 		subMenu.setName(subMenuData.getName());
 		subMenu.setUrl(subMenuData.getUrl());
 		subMenu.setScript(subMenuData.getScript());
-		subMenu.setPermission(subMenuData.getPermission());
+
+		if (subMenuData.getPermission() != null) {
+
+			// check if permission already exists
+			Permission permission = permissions.get(subMenuData.getPermission());
+			if (permission == null) {
+				permission = new Permission(subMenuData.getPermission());
+				permissions.put(permission.getName(), permission);
+			}
+
+			subMenu.setPermission(permission);
+		}
+
 		subMenu.setDisabled(subMenuData.getDisabled());
 		subMenu.setType(subMenuData.getType());
 		subMenu.setGroup(subMenuData.getGroup());
@@ -184,7 +199,7 @@ public class SubMenu implements Serializable {
 		List<SubMenuData> subMenusData = subMenuData.getSubMenus();
 		if (subMenusData != null && !subMenusData.isEmpty()) {
 			for (SubMenuData s : subMenusData) {
-				subMenu.addSubMenu(getSubMenuRec(s));
+				subMenu.addSubMenu(getSubMenuRec(s, permissions));
 			}
 		}
 

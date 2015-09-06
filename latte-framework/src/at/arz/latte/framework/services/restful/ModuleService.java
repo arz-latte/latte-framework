@@ -15,10 +15,14 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.SecurityContext;
 
 import at.arz.latte.framework.persistence.beans.ModuleManagementBean;
+import at.arz.latte.framework.persistence.beans.UserManagementBean;
 import at.arz.latte.framework.persistence.models.Module;
+import at.arz.latte.framework.persistence.models.User;
 import at.arz.latte.framework.restful.dta.ModuleData;
 import at.arz.latte.framework.services.restful.exception.LatteValidationException;
 
@@ -34,6 +38,9 @@ public class ModuleService {
 
 	@EJB
 	private ModuleManagementBean bean;
+
+	@EJB
+	private UserManagementBean userBean;
 
 	@Inject
 	private Validator validator;
@@ -57,7 +64,6 @@ public class ModuleService {
 	@Path("create.json")
 	@Produces(MediaType.APPLICATION_JSON)
 	public ModuleData createModule(ModuleData moduleData) {
-
 		Set<ConstraintViolation<Object>> violations = requestValidation(moduleData);
 		if (!violations.isEmpty()) {
 			throw new LatteValidationException(400, violations);
@@ -73,7 +79,6 @@ public class ModuleService {
 	@Path("update.json")
 	@Produces(MediaType.APPLICATION_JSON)
 	public ModuleData updateModule(ModuleData moduleData) {
-
 		Set<ConstraintViolation<Object>> violations = requestValidation(moduleData);
 		if (!violations.isEmpty()) {
 			throw new LatteValidationException(400, violations);

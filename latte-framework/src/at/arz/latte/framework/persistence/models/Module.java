@@ -17,6 +17,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
+import javax.persistence.Version;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -94,11 +95,12 @@ public class Module implements Serializable {
 	@Column(name = "lastmodified")
 	private Long lastModified;
 
-	// ------- only for transmisstion to client -------
-
 	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	@JoinColumn(name = "menu_id")
 	private Menu menu;
+
+	@Version
+	private int version;
 
 	/**
 	 * JPA consturctor

@@ -1,8 +1,6 @@
 package at.arz.latte.framework.persistence.beans;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -71,7 +69,7 @@ public class ModuleManagementBean {
 		module.setUrl(url);
 		module.setInterval(interval);
 		module.setEnabled(enabled);
-		if(running != null) {
+		if (running != null) {
 			module.setRunning(running);
 		}
 		return module;
@@ -91,6 +89,54 @@ public class ModuleManagementBean {
 	}
 
 	/**
+	 * update permissions of module via REST-service
+	 * 
+	 * @param moduleId
+	 * @param menu
+	 */
+	public void updatePermissions(Menu menu) {
+		
+		Permission permission = menu.getPermission();
+		if (permission != null) {
+
+			// find permission in db
+			List<Permission> storedPermission = em.createNamedQuery(Permission.QUERY_GET_BY_NAME, Permission.class)
+					.setParameter("name", menu.getPermission().getName()).getResultList();
+			
+			if (storedPermission.isEmpty()) {
+				em.persist(permission);
+			}
+		}
+
+		// recursive store submenu permissions
+		storeSubMenuPermissionsRec(menu.getSubMenus());
+	}
+
+	private void storeSubMenuPermissionsRec(List<SubMenu> subMenus) {
+		
+		for (SubMenu menu : subMenus) {
+
+			Permission permission = menu.getPermission();
+			if (permission != null) {
+				
+				// find permission in db
+				List<Permission> storedPermission = em.createNamedQuery(Permission.QUERY_GET_BY_NAME, Permission.class)
+						.setParameter("name", menu.getPermission().getName()).getResultList();
+
+				if (storedPermission.isEmpty()) {
+					Permission p = new Permission(permission.getName());
+					System.out.println("store " + p);
+					
+					em.persist(p);
+				}
+			}
+			
+			// recursive store submenu permissions
+			storeSubMenuPermissionsRec(menu.getSubMenus());
+		}
+	}
+
+	/**
 	 * update menu of module via REST-service
 	 * 
 	 * @param moduleId
@@ -98,83 +144,55 @@ public class ModuleManagementBean {
 	 * @return
 	 */
 	public Module updateModuleMenu(Long moduleId, Menu menu) {
-
+		
+		updatePermissions(menu);
+		
+		
 		Module module = updateModuleRunning(moduleId, true);
-
 		module.setLastModified(menu.getLastModified());
 		
 		// update menu entry
-		Menu old = module.getMenu();
-		if (old != null) {
-			old.setLastModified(menu.getLastModified());
-			old.setName(menu.getName());
-			old.setOrder(menu.getOrder());
-			old.setPermission(menu.getPermission());
-			old.setUrl(menu.getUrl());
-			old.setSubMenus(menu.getSubMenus());
-		} else {
-			module.setMenu(menu);
-		}
-
+		module.setMenu(menu);
+		getMenuPermissionsRec(module);
+		
 		return module;
+	}
+
+	private void getMenuPermissionsRec(Module module) {
+
+		Menu menu = module.getMenu();
+		if (menu.getPermission() != null) {
+			
+			Permission permission = em.createNamedQuery(Permission.QUERY_GET_BY_NAME, Permission.class)
+					.setParameter("name", menu.getPermission().getName()).getSingleResult();
+
+			menu.setPermission(permission);
+		}
+		
+		// get recursive submenu permissions
+		getSubMenuPermissionsRec(module, menu.getSubMenus());
+	}
+
+	private void getSubMenuPermissionsRec(Module module, List<SubMenu> subMenus) {
+
+		for (SubMenu menu : subMenus) {
+
+			if (menu.getPermission() != null) {
+				
+				Permission permission = em.createNamedQuery(Permission.QUERY_GET_BY_NAME, Permission.class)
+						.setParameter("name", "admin").getSingleResult();
+		
+				menu.setPermission(permission);
+			}
+			
+			// get recursive submenu permissions
+			getSubMenuPermissionsRec(module, menu.getSubMenus());
+		}
 	}
 
 	public void deleteModule(Long moduleId) {
 		Module toBeDeleted = getModule(moduleId);
 		em.remove(toBeDeleted);
-	}
-	
-	/**
-	 * store permissions of module via REST-service
-	 * 
-	 * @param menu
-	 */
-	public void storeModulePermissions(Menu menu) {
-
-		Set<String> permissions = new HashSet<>();
-		
-		// permission from mainmenu
-		if (menu.getPermission() != null) {
-			permissions.add(menu.getPermission());
-		}
-		
-		// permissions from submenu
-		extractPermissionsRec(menu.getSubMenus(), permissions);
-				
-		System.out.println(permissions);
-
-		// store all permissions (ignore duplicates)
-		for (String permission : permissions) {
-
-			// check if permission already exists
-			List<Permission> duplicates = em.createNamedQuery(Permission.QUERY_GET_BY_NAME, Permission.class)
-					.setParameter("name", permission).getResultList();
-
-			if (duplicates.isEmpty()) {
-				em.persist(new Permission(permission));
-			}
-		}
-	}
-
-	/**
-	 * extract permissions from menu
-	 * 
-	 * @param menus
-	 * @param permissions
-	 */
-	private Set<String> extractPermissionsRec(List<SubMenu> menus, Set<String> permissions) {
-		if (menus != null) {
-
-			for (SubMenu submenu : menus) {
-				String permission = submenu.getPermission();
-				if (permission != null) {
-					permissions.add(permission);
-				}
-				extractPermissionsRec(submenu.getSubMenus(), permissions);
-			}
-		}
-
-		return permissions;
 	}
 
 }

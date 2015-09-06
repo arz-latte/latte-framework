@@ -2,6 +2,7 @@ package at.arz.latte.framework.persistence.models;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -12,10 +13,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
+import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -46,8 +49,8 @@ public class Menu implements Serializable {
 	@NotNull
 	private int order;
 
-	@Size(min = 1, max = 31)
-	private String permission;
+	@ManyToOne
+	private Permission permission;
 
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	@JoinColumn(name = "menu_id")
@@ -57,6 +60,9 @@ public class Menu implements Serializable {
 	@NotNull
 	@Column(name = "lastmodified")
 	private Long lastModified;
+
+	@Version
+	private int version;
 
 	/**
 	 * JPA consturctor
@@ -98,11 +104,11 @@ public class Menu implements Serializable {
 		this.order = order;
 	}
 
-	public String getPermission() {
+	public Permission getPermission() {
 		return permission;
 	}
 
-	public void setPermission(String permission) {
+	public void setPermission(Permission permission) {
 		this.permission = permission;
 	}
 
@@ -129,8 +135,7 @@ public class Menu implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Menu [id=" + id + ", name=" + name + ", url=" + url + ", order=" + order + ", permission=" + permission
-				+ ", subMenus=" + subMenus + ", lastModified=" + lastModified + "]";
+		return "Menu [name=" + name + ", permission=" + permission + ", subMenus=" + subMenus + "]";
 	}
 
 	// ----------------------- dta to entity -----------------------
@@ -141,17 +146,25 @@ public class Menu implements Serializable {
 	 * @return
 	 */
 	public static Menu getMenuRec(MenuData menuData) {
+
+		// replace unique permission objects
+		HashMap<String, Permission> permissions = new HashMap<>();
+
 		Menu menu = new Menu();
 		menu.setName(menuData.getName());
 		menu.setUrl(menuData.getUrl());
 		menu.setOrder(menuData.getOrder());
-		menu.setPermission(menuData.getPermission());
+		if (menuData.getPermission() != null) {
+			Permission p = new Permission(menuData.getPermission());
+			permissions.put(p.getName(), p);
+			menu.setPermission(p);
+		}
 		menu.setLastModified(menuData.getLastModified());
 
 		List<SubMenuData> subMenusData = menuData.getSubMenus();
 		if (subMenusData != null && !subMenusData.isEmpty()) {
 			for (SubMenuData s : subMenusData) {
-				menu.addSubMenu(SubMenu.getSubMenuRec(s));
+				menu.addSubMenu(SubMenu.getSubMenuRec(s, permissions));
 			}
 		}
 

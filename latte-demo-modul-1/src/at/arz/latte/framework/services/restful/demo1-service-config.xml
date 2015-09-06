@@ -4,7 +4,7 @@
     <url>http://localhost:8080/demo1/index.html</url>
     <order>10</order>
     <submenu>
-        <name>Demo Modul 1</name>
+        <name>Demo Modul</name>
         <url>http://localhost:8080/demo1/index.html</url>
 	    <submenu>
 	        <name>SubMenü für user</name>
@@ -27,6 +27,7 @@
         <name>Deaktiviert</name>
         <disabled>true</disabled>
         <type>war</type>
+        <permission>admin</permission>
     </submenu>
     <submenu>
         <name>Kompilieren</name>
@@ -39,6 +40,7 @@
 	        <name>WAR</name>
 	        <script>appDemo.functionTest("ok")</script>
 	        <type>war</type>
+	        <permission>asdf</permission>
 	    </submenu>
     </submenu>
 </menu>

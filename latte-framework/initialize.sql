@@ -1,4 +1,5 @@
 --
+-- pg_dump -U latte --column-inserts latte
 -- PostgreSQL database dump
 --
 

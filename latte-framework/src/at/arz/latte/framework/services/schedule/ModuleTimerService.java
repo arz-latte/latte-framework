@@ -1,6 +1,7 @@
 package at.arz.latte.framework.services.schedule;
 
 import java.net.MalformedURLException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -22,6 +23,7 @@ import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 import at.arz.latte.framework.persistence.beans.ModuleManagementBean;
 import at.arz.latte.framework.persistence.models.Menu;
 import at.arz.latte.framework.persistence.models.Module;
+import at.arz.latte.framework.persistence.models.Permission;
 import at.arz.latte.framework.restful.dta.MenuData;
 import at.arz.latte.framework.services.restful.exception.LatteValidationException;
 import at.arz.latte.framework.websockets.WebsocketEndpoint;
@@ -70,7 +72,7 @@ public class ModuleTimerService {
 				modulesSize = modules.size();
 				websocket.chat(new WebsocketMessage("delete-module"));
 			}
-
+			
 			// check status of modules
 			for (Module module : modules) {
 				int checkInterval = module.getInterval();
@@ -103,11 +105,8 @@ public class ModuleTimerService {
 			// got response -> check version
 			if (module.getLastModified() == null || module.getLastModified() < menuData.getLastModified()) {
 
-				System.out.println("save: " + menuData);
-
 				Menu menu = Menu.getMenuRec(menuData);
 				bean.updateModuleMenu(module.getId(), menu);
-				bean.storeModulePermissions(menu);
 
 				websocket.chat(new WebsocketMessage("update-module", module.getId().toString()));
 			} else if (!module.getRunning()) {

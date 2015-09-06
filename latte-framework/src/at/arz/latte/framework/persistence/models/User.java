@@ -14,6 +14,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
+import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -66,6 +67,9 @@ public class User implements Serializable {
 
 	@ManyToMany
 	private Set<Role> role = new HashSet<Role>();
+	
+	@Version
+	private int version;
 
 	/**
 	 * JPA consturctor
