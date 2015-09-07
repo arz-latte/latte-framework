@@ -9,6 +9,11 @@
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
 	</welcome-file-list>
+	
+	<error-page>
+		<error-code>401</error-code>
+		<location>/securitycheck</location>
+	</error-page>
 
 	<security-constraint>
 		<web-resource-collection>
@@ -16,7 +21,14 @@
 			<url-pattern>/css/*</url-pattern>
 			<url-pattern>/fonts/*</url-pattern>
 			<url-pattern>/js/*</url-pattern>
+			<url-pattern>/securitycheck</url-pattern>
+			<url-pattern>/login.html</url-pattern>
+			<url-pattern>/error.html</url-pattern>
 		</web-resource-collection>
+		<!--
+		public resources: leeres auth-constraint daher nicht löschen! 
+		<auth-constraint></auth-constraint>
+		 -->
 	</security-constraint>
 	
 	<security-constraint>
@@ -31,8 +43,8 @@
 			<web-resource-name>whole app requires authentication</web-resource-name>
 			<url-pattern>/*</url-pattern>
 		</web-resource-collection>
-	<auth-constraint>
-			<role-name>tomcat</role-name>
+		<auth-constraint>
+				<role-name>tomcat</role-name>
 		</auth-constraint>
 		<user-data-constraint>
 			<transport-guarantee>NONE</transport-guarantee>
@@ -40,11 +52,8 @@
 	</security-constraint>
 	
 	<login-config>
-		<auth-method>FORM</auth-method>
-		<form-login-config>
-			<form-login-page>/login.html</form-login-page>
-			<form-error-page>/error.html</form-error-page>
-		</form-login-config>
+		<auth-method>BASIC</auth-method>
+		<realm-name>latte</realm-name>
 	</login-config>
 	
 </web-app>
