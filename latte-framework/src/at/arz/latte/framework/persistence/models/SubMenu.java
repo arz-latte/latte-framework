@@ -47,9 +47,15 @@ public class SubMenu implements Serializable {
 	@Column(length = 511)
 	private String script;
 
+	/**
+	 * type attribute, separate multiple values with comma ','
+	 */
 	@Size(max = 31)
 	private String type;
 
+	/**
+	 * group attribute, separate multiple values with comma ','
+	 */
 	@Size(max = 31)
 	private String group;
 
@@ -164,11 +170,13 @@ public class SubMenu implements Serializable {
 
 	@Override
 	public String toString() {
-		return "SubMenu [name=" + name + ", permission=" + permission + ", subMenus=" + subMenus + "]";
+		return "SubMenu [id=" + id + ", name=" + name + ", url=" + url + ", script=" + script + ", type=" + type
+				+ ", group=" + group + ", permission=" + permission + ", disabled=" + disabled + ", order=" + order
+				+ ", subMenus=" + subMenus + ", version=" + version + "]";
 	}
 
 	// ----------------------- dta to entity -----------------------
-	
+
 	/**
 	 * convert submenu data from REST to submenu entity
 	 * 

@@ -40,5 +40,9 @@
 	        <script>appDemo.functionTest("ok")</script>
 	        <type>war</type>
 	    </submenu>
+	    <submenu>
+	        <name>EAR &amp; WAR</name>
+	        <type>ear,war</type>
+	    </submenu>
     </submenu>
 </menu>

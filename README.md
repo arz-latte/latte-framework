@@ -25,6 +25,6 @@ submenu:<br/>
 - script: optional on click function, only in combination with missing url or '#', e.g. appDemo.demoFunction("ok")<br/>
 - permission: optional permission for this entry<br/>
 - disabled: optional disable this menu entry<br/>
-- type: optional type class to this menu entry<br/>
-- group: optional group class to this menu entry<br/>
+- type: optional type class to this menu entry, separate multiple values with comma ','<br/>
+- group: optional group class to this menu entry, separate multiple values with comma ','<br/>
 - submenu: optional recursive sub menu structure<br/>
