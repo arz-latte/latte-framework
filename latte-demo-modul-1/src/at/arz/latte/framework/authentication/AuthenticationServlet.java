@@ -14,15 +14,20 @@ public class AuthenticationServlet extends HttpServlet {
 
 	private static final String REDIRECT_COOKIE_NAME = "_redirect_dst";
 
-	private final static String loginPath = "http://localhost:8080/latte/login.html";
+	private final static String loginPath = "/latte/login.html";
 
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
 		String currentURL = (String) req.getAttribute("javax.servlet.error.request_uri");
-		System.out.println("demo1 got unauthenticated request:" + currentURL);
 		res.reset();
 		Cookie cookie = new Cookie(REDIRECT_COOKIE_NAME, currentURL);
 		cookie.setMaxAge(-1);
+		cookie.setPath("/");
 		res.addCookie(cookie);
+		res.addDateHeader("Date", System.currentTimeMillis());
+		res.addDateHeader("Expires", 786297600000l);
+		res.addHeader("Cache-Control", "no-cache, no-store");
+		res.setContentType("text/plain");
 		res.sendRedirect(loginPath);
 	}
+	
 }

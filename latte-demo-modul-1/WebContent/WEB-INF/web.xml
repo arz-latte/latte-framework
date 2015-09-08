@@ -46,6 +46,7 @@
 	</login-config>
 	
 	<security-role>
-		<role-name>latte</role-name>
+		<role-name>tomcate</role-name>
 	</security-role>
+	
 </web-app>
