@@ -135,7 +135,8 @@ public class Menu implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Menu [name=" + name + ", permission=" + permission + ", subMenus=" + subMenus + "]";
+		return "Menu [id=" + id + ", name=" + name + ", url=" + url + ", order=" + order + ", permission=" + permission
+				+ ", subMenus=" + subMenus + ", lastModified=" + lastModified + ", version=" + version + "]";
 	}
 
 	// ----------------------- dta to entity -----------------------

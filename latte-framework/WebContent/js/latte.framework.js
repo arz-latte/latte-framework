@@ -52,8 +52,11 @@ var app = {
 
 		$("#side-menu").find("li").each(function(i, li) {
 			var $li = $(li);
-			if ($li.data(attribute) == value && !$li.data("disabled")) {
-				$li.removeClass("disabled");
+			if ($li.data(attribute)) {
+				var values = $li.data(attribute).split(",");				
+				if ($.inArray(value, values) >= 0 && !$li.data("disabled")) {
+					$li.removeClass("disabled");
+				}
 			}
 		});
 	},
