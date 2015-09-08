@@ -24,7 +24,6 @@ import javax.validation.constraints.Size;
 
 import at.arz.latte.framework.restful.dta.MenuData;
 import at.arz.latte.framework.restful.dta.SubMenuData;
-import at.arz.latte.framework.validator.Url;
 
 @Entity
 @Table(name = "menus")
@@ -41,7 +40,6 @@ public class Menu implements Serializable {
 	@Size(min = 1, max = 63)
 	private String name;
 
-	@Url
 	@NotNull
 	@Size(max = 511)
 	private String url;

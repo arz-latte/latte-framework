@@ -22,8 +22,6 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import at.arz.latte.framework.validator.Url;
-
 /**
  * persistent entity for a module
  * 
@@ -62,10 +60,9 @@ public class Module implements Serializable {
 	private String provider;
 
 	/**
-	 * address of the REST-service of the module, used for checking module
-	 * status, e.g. http://localhost:8080/Modul1/api/v1/module
+	 * relative address of the REST-service of the module, used for checking module
+	 * status, e.g. /Modul1/api/v1/module
 	 */
-	@Url
 	@NotNull
 	@Size(max = 511)
 	private String url;
@@ -199,18 +196,6 @@ public class Module implements Serializable {
 		return "Module [id=" + id + ", name=" + name + ", provider=" + provider + ", url=" + url + ", interval="
 				+ interval + ", running=" + running + ", enabled=" + enabled + ", lastModified=" + lastModified
 				+ ", menu=" + menu + "]";
-	}
-
-	// ------------------- helper -------------------
-
-	public String getUrlHost() throws MalformedURLException {
-		URL u = new URL(url);
-		return u.getProtocol() + "://" + u.getAuthority();
-	}
-
-	public String getUrlPath() throws MalformedURLException {
-		URL u = new URL(url);
-		return u.getPath();
 	}
 
 }

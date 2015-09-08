@@ -19,7 +19,9 @@
 			<property name="javax.persistence.schema-generation.database.action" value="create" />
 			<property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(ForeignKeys=true)" />
 			<property name="openjpa.jdbc.MappingDefaults"
-				value="ForeignKeyDeleteAction=restrict,JoinForeignKeyDeleteAction=restrict" />
+				value="ForeignKeyDeleteAction=restrict,JoinForeignKeyDeleteAction=restrict" />				
+			<property name="openjpa.Log" value="DefaultLevel=WARN, Runtime=INFO, Tool=INFO, SQL=TRACE"/>
+			<property name="openjpa.ConnectionFactoryProperties" value="PrintParameters=true" />
 		</properties>
 	</persistence-unit>
 </persistence>

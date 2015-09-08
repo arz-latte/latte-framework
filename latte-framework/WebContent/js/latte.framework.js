@@ -441,7 +441,7 @@ var app = {
 		var ids = JSON.parse(localStorage.getItem('modules'));
 		$.each(ids, function(index, id) {
 			var module = JSON.parse(localStorage.getItem('module-' + id));
-
+			
 			// main menu (module name)
 			var $entry = $("<li/>").append($("<a/>", {
 				href : module.menu.url,
@@ -463,10 +463,17 @@ var app = {
 
 			$mainMenuLeft.append($entry);
 
-			// initialize submenu of current active module
-			if (localStorage.getItem("module-id") == id) {
-				app.initSubMenu();
+			// check location with module url
+			if (window.location.pathname == module.menu.url || 
+					window.location.pathname + "index.html" == module.menu.url) {
+				localStorage.setItem("module-id", module.id);
 			}
+			
+			// initialize submenu of current active module
+			if (localStorage.getItem("module-id") == module.id) {
+				app.initSubMenu();
+			}			
+			
 		});
 
 	},

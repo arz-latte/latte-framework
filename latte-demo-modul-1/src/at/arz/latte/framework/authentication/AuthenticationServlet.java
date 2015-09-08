@@ -14,7 +14,7 @@ public class AuthenticationServlet extends HttpServlet {
 
 	private static final String REDIRECT_COOKIE_NAME = "_redirect_dst";
 
-	private final static String loginPath = "/latte/login.html";
+	private final static String LOGIN_FORM_URI = "/latte/login.html";
 
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
 		String currentURL = (String) req.getAttribute("javax.servlet.error.request_uri");
@@ -27,7 +27,7 @@ public class AuthenticationServlet extends HttpServlet {
 		res.addDateHeader("Expires", 786297600000l);
 		res.addHeader("Cache-Control", "no-cache, no-store");
 		res.setContentType("text/plain");
-		res.sendRedirect(loginPath);
+		res.sendRedirect(LOGIN_FORM_URI);
 	}
 	
 }

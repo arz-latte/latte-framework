@@ -1,6 +1,7 @@
 package at.arz.latte.framework.services.schedule;
 
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.util.List;
 import java.util.Set;
 
@@ -12,7 +13,10 @@ import javax.inject.Inject;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriBuilder;
+import javax.ws.rs.core.UriInfo;
 
 import org.apache.cxf.jaxrs.client.ClientWebApplicationException;
 import org.apache.cxf.jaxrs.client.WebClient;
@@ -46,6 +50,9 @@ public class ModuleTimerService {
 	@Inject
 	private Validator validator;
 
+	// todo
+	private static final String FRAMEWORK_URI = "http://localhost:8080";
+
 	/**
 	 * wait 10 seconds before start
 	 */
@@ -57,10 +64,11 @@ public class ModuleTimerService {
 	private void checkModules() {
 
 		counter++;
-
+		
 		if (counter >= 0) {
-			List<Module> modules = bean.getAllEnabledModules();
 
+			List<Module> modules = bean.getAllEnabledModules();
+			
 			// notify clients if number of enabled modules changed
 			if (modulesSize < modules.size()) {				
 				modulesSize = modules.size();
@@ -84,7 +92,7 @@ public class ModuleTimerService {
 	private void checkStatus(Module module) {
 
 		try {
-			WebClient client = setupClient(module.getUrlHost(), module.getUrlPath() + "/status.json");
+			WebClient client = setupClient(FRAMEWORK_URI, module.getUrl() + "/status.json");
 
 			// send lastModified of module to client
 			if (module.getLastModified() != null) {
@@ -127,9 +135,6 @@ public class ModuleTimerService {
 
 				websocket.chat(new WebsocketMessage("deactivate-module", module.getId().toString()));
 			}
-
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
 		}
 	}
 
