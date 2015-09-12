@@ -73,7 +73,7 @@ public class SubMenu implements Serializable {
 	private List<SubMenu> subMenus;
 
 	@Version
-	private int version;
+	private long version;
 
 	/**
 	 * JPA consturctor
@@ -172,7 +172,7 @@ public class SubMenu implements Serializable {
 	public String toString() {
 		return "SubMenu [id=" + id + ", name=" + name + ", url=" + url + ", script=" + script + ", type=" + type
 				+ ", group=" + group + ", permission=" + permission + ", disabled=" + disabled + ", order=" + order
-				+ ", subMenus=" + subMenus + ", version=" + version + "]";
+				+ ", subMenus=" + subMenus + "]";
 	}
 
 	// ----------------------- dta to entity -----------------------

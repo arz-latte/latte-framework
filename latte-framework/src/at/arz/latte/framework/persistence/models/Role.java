@@ -50,7 +50,7 @@ public class Role implements Serializable {
 	private Set<Permission> permission = new HashSet<Permission>();
 	
 	@Version
-	private int version;
+	private long version;
 
 	/**
 	 * JPA consturctor

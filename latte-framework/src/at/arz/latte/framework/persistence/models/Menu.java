@@ -60,7 +60,7 @@ public class Menu implements Serializable {
 	private Long lastModified;
 
 	@Version
-	private int version;
+	private long version;
 
 	/**
 	 * JPA consturctor
@@ -134,7 +134,7 @@ public class Menu implements Serializable {
 	@Override
 	public String toString() {
 		return "Menu [id=" + id + ", name=" + name + ", url=" + url + ", order=" + order + ", permission=" + permission
-				+ ", subMenus=" + subMenus + ", lastModified=" + lastModified + ", version=" + version + "]";
+				+ ", subMenus=" + subMenus + ", lastModified=" + lastModified + "]";
 	}
 
 	// ----------------------- dta to entity -----------------------

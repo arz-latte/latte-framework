@@ -1,7 +1,5 @@
 package at.arz.latte.framework.services.schedule;
 
-import java.net.MalformedURLException;
-import java.net.URI;
 import java.util.List;
 import java.util.Set;
 
@@ -13,10 +11,7 @@ import javax.inject.Inject;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
 
 import org.apache.cxf.jaxrs.client.ClientWebApplicationException;
 import org.apache.cxf.jaxrs.client.WebClient;
@@ -68,7 +63,7 @@ public class ModuleTimerService {
 		if (counter >= 0) {
 
 			List<Module> modules = bean.getAllEnabledModules();
-			
+		
 			// notify clients if number of enabled modules changed
 			if (modulesSize < modules.size()) {				
 				modulesSize = modules.size();

@@ -1,8 +1,6 @@
 package at.arz.latte.framework.persistence.models;
 
 import java.io.Serializable;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -97,7 +95,7 @@ public class Module implements Serializable {
 	private Menu menu;
 
 	@Version
-	private int version;
+	private long version;
 
 	/**
 	 * JPA consturctor

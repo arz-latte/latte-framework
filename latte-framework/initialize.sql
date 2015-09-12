@@ -54,7 +54,7 @@ CREATE TABLE menus (
     name character varying(255),
     order0 integer,
     url character varying(255),
-    version integer,
+    version bigint,
     permission_id bigint
 );
 
@@ -74,7 +74,7 @@ CREATE TABLE modules (
     provider character varying(255),
     running boolean,
     url character varying(255),
-    version integer,
+    version bigint,
     menu_id bigint
 );
 
@@ -88,7 +88,7 @@ ALTER TABLE modules OWNER TO latte;
 CREATE TABLE permissions (
     id bigint NOT NULL,
     name character varying(255),
-    version integer
+    version bigint
 );
 
 
@@ -101,7 +101,7 @@ ALTER TABLE permissions OWNER TO latte;
 CREATE TABLE roles (
     id bigint NOT NULL,
     name character varying(255),
-    version integer
+    version bigint
 );
 
 
@@ -132,7 +132,7 @@ CREATE TABLE submenus (
     script character varying(511),
     type character varying(255),
     url character varying(511),
-    version integer,
+    version bigint,
     menu_id bigint,
     permission_id bigint,
     submenu_id bigint
@@ -151,7 +151,7 @@ CREATE TABLE users (
     firstname character varying(255),
     lastname character varying(255),
     password character varying(255),
-    version integer
+    version bigint
 );
 
 

@@ -69,7 +69,7 @@ public class User implements Serializable {
 	private Set<Role> role = new HashSet<Role>();
 	
 	@Version
-	private int version;
+	private long version;
 
 	/**
 	 * JPA consturctor

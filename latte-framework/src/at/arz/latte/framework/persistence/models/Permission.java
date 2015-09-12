@@ -48,7 +48,7 @@ public class Permission implements Serializable {
 	private String name;
 
 	@Version
-	private int version;
+	private long version;
 
 	/**
 	 * JPA consturctor
