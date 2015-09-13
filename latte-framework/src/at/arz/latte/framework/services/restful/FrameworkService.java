@@ -3,7 +3,9 @@ package at.arz.latte.framework.services.restful;
 import java.util.List;
 
 import javax.ejb.EJB;
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.SessionScoped;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -26,7 +28,7 @@ import at.arz.latte.framework.websockets.models.WebsocketMessage;
  * Dominik Neuner {@link "mailto:dominik@neuner-it.at"}
  *
  */
-@RequestScoped
+@SessionScoped
 @Path("framework")
 public class FrameworkService {
 
@@ -35,39 +37,65 @@ public class FrameworkService {
 
 	@EJB
 	private UserManagementBean userBean;
-	
+
 	@EJB
 	private WebsocketEndpoint websocket;
+
+	@Context
+	private HttpServletRequest request;
 
 	@Context
 	protected SecurityContext sc;
 
 	/**
-	 * get informations from currently logged in user
+	 * get informations of currently logged in user
+	 * 
 	 * @return
 	 */
 	@GET
 	@Path("user.json")
 	@Produces(MediaType.APPLICATION_JSON)
 	public UserData getUserData() {
-		User user = userBean.getUser(sc.getUserPrincipal().getName());
+		User user = initSessionData();
 		return new UserData(user.getId(), user.getFirstName(), user.getLastName(), user.getEmail());
 	}
-	
+
 	/**
 	 * get initialization data of all modules
+	 * 
 	 * @return
 	 */
 	@GET
 	@Path("init.json")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<ModuleData> getInitData() {
-		String email = sc.getUserPrincipal().getName();
-		return frameworkBean.getAll(email);
+		List<String> permissions = (List<String>) request.getSession().getAttribute("permissions");
+		return frameworkBean.getAll(permissions);
+	}
+
+	private User initSessionData() {
+		HttpSession session = request.getSession();
+		User user = (User) session.getAttribute("user");
+
+		if (user == null) {
+			user = userBean.getUser(sc.getUserPrincipal().getName());
+			System.out.println(session.getId());
+			
+			System.out.println("set user " + user);
+			session.setAttribute("user", user);
+
+			List<String> permissions = userBean.getUserPermissions(user.getId());
+
+			System.out.println("set permissions " + permissions);
+			session.setAttribute("permissions", permissions);
+		}
+
+		return user;
 	}
 
 	/**
 	 * notify all clients about something via websocket
+	 * 
 	 * @return
 	 */
 	@POST

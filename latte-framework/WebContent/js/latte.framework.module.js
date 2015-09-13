@@ -16,41 +16,54 @@ var appModule = {
 			$modules.find("tr:has(td)").remove(); // clear
 
 			$.each(data.module, function(index, module) {
-				var $name = $("<td/>").append(module.name);
-				
-				version = "";
-				if (module.lastmodified) {
-					var dt = new Date(module.lastmodified);					
-					var h = dt.getHours() < 10 ? "0" + dt.getHours() : dt.getHours();
-					var m = dt.getMinutes() < 10 ? "0" + dt.getMinutes() : dt.getMinutes();
-					var s = dt.getSeconds() < 10 ? "0" + dt.getSeconds() : dt.getSeconds();					
-					var d = dt.getDate() < 10 ? "0" + dt.getDate() : dt.getDate();
-					var n = dt.getMonth() < 9 ? "0" + (dt.getMonth()+1) : dt.getMonth()+1;					
-					version = d + "." + n + "." + dt.getFullYear() + " " + h + ":" + m +":" + s;	
-				}
-				var $version = $("<td/>").append(version);
-				
-				var $provider = $("<td/>").append(module.provider);
-				var $running = $("<td/>")
-						.append(module.running ? "ja" : "nein");
-				var $enabled = $("<td/>")
-						.append(module.enabled ? "ja" : "nein");
-
-				var $row = $("<tr/>").attr("data-id", module.id);
-				$row.append($name).append($provider).append($version).append(
-						$running).append($enabled);
-
+				var $row = appModule.parseModuleRow(module);
 				$modules.append($row);
 			});
 
 			$("#list-filter").keyup();
+		}).error(function(error) {
+			if (error.status == 403) {
+				app.showErrorMessage("Keine Berechtigung")
+			} else {
+				app.showErrorMessage("Fehler " + error.statusText)
+			}
 		});
+	},
+
+	parseModuleRow : function(module) {
+		var $name = $("<td/>").append(module.name);
+
+		version = "";
+		if (module.lastmodified) {
+			var dt = new Date(module.lastmodified);
+			var h = dt.getHours() < 10 ? "0" + dt.getHours() : dt.getHours();
+			var m = dt.getMinutes() < 10 ? "0" + dt.getMinutes() : dt
+					.getMinutes();
+			var s = dt.getSeconds() < 10 ? "0" + dt.getSeconds() : dt
+					.getSeconds();
+			var d = dt.getDate() < 10 ? "0" + dt.getDate() : dt.getDate();
+			var n = dt.getMonth() < 9 ? "0" + (dt.getMonth() + 1) : dt
+					.getMonth() + 1;
+			version = d + "." + n + "." + dt.getFullYear() + " " + h + ":" + m
+					+ ":" + s;
+		}
+		var $version = $("<td/>").append(version);
+
+		var $provider = $("<td/>").append(module.provider);
+		var $running = $("<td/>").append(module.running ? "ja" : "nein");
+		var $enabled = $("<td/>").append(module.enabled ? "ja" : "nein");
+
+		var $row = $("<tr/>").attr("data-id", module.id);
+		$row.append($name).append($provider).append($version).append($running)
+				.append($enabled);
+
+		return $row;
 	},
 
 	addNewModule : function() {
 		$("#btn-delete-module").hide();
 		appAdmin.enterEditMode();
-		appModule.currentId = null;	
+		appModule.currentId = null;
 	},
 
 	showModule : function() {
@@ -140,7 +153,7 @@ var appModule = {
 	restoreModule : function() {
 		appAdmin.leaveEditMode();
 		appModule.currentId = null;
-		return false;		
+		return false;
 	},
 
 };
