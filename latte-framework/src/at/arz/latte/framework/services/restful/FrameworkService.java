@@ -80,7 +80,7 @@ public class FrameworkService {
 		if (user == null) {
 			user = userBean.getUser(sc.getUserPrincipal().getName());
 			System.out.println(session.getId());
-			
+
 			System.out.println("set user " + user);
 			session.setAttribute("user", user);
 
