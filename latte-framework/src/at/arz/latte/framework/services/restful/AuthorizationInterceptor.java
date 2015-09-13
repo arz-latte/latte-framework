@@ -3,6 +3,8 @@ package at.arz.latte.framework.services.restful;
 import java.io.IOException;
 
 import javax.ejb.EJB;
+import javax.enterprise.context.SessionScoped;
+import javax.inject.Inject;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;

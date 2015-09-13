@@ -31,7 +31,7 @@ import at.arz.latte.framework.websockets.models.WebsocketMessage;
 public class FrameworkService {
 
 	@EJB
-	private FrameworkManagementBean bean;
+	private FrameworkManagementBean frameworkBean;
 
 	@EJB
 	private UserManagementBean userBean;
@@ -63,7 +63,7 @@ public class FrameworkService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<ModuleData> getInitData() {
 		String email = sc.getUserPrincipal().getName();
-		return bean.getAll(email);
+		return frameworkBean.getAll(email);
 	}
 
 	/**
