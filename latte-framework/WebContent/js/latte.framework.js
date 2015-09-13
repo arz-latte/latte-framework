@@ -401,7 +401,7 @@ var app = {
 
 		$.ajax({
 			url : app.API_LATTE + app.PATH_FRAMEWORK + "/init.json",
-			async : false,
+			async : true,
 		}).done(function(data) {
 
 			var ids = [];
@@ -469,11 +469,17 @@ var app = {
 				localStorage.setItem("module-id", module.id);
 			}
 			
+			// check locations with sumenu urls
+			$.each(module.menu.submenu, function(index, submenu) {
+				if (window.location.pathname == submenu.url) {
+					localStorage.setItem("module-id", module.id);
+				}
+			});
+			
 			// initialize submenu of current active module
 			if (localStorage.getItem("module-id") == module.id) {
 				app.initSubMenu();
-			}			
-			
+			}
 		});
 
 	},

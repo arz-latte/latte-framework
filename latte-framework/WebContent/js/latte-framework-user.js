@@ -25,6 +25,12 @@ var appUser = {
 			});
 
 			$("#list-filter").keyup();
+		}).error(function(error) {
+			if (error.status == 403) {
+				app.showErrorMessage("Keine Berechtigung")
+			} else {
+				app.showErrorMessage("Fehler " + error.statusText)
+			}
 		});
 	},
 

@@ -30,4 +30,11 @@ public class DemoModuleRestfulService extends AbstractModuleHelper {
 		return loadAndCacheServiceConfig("demo1-service-config.xml", lastModified);
 	}
 
+	@GET
+	@Path("useronly.json")
+	@Produces({ MediaType.APPLICATION_JSON })
+	public String checkUserPermission() {
+		return "access ok";
+	}
+
 }

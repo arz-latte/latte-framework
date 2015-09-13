@@ -24,8 +24,7 @@ import javax.validation.constraints.Size;
 @NamedQueries({
 		@NamedQuery(name = Permission.QUERY_GETALL_BASE, query = "SELECT new at.arz.latte.framework.restful.dta.PermissionData(p.id, p.name) FROM Permission p ORDER BY p.name"),
 		@NamedQuery(name = Permission.QUERY_GETALL, query = "SELECT p FROM Permission p"),
-		@NamedQuery(name = Permission.QUERY_GET_BY_USER_AND_PERMISSION, query = "SELECT p FROM User u JOIN u.role r JOIN r.permission p WHERE u.email = :email AND p.name = :permission"),
-		@NamedQuery(name = Permission.QUERY_GET_NAME_BY_USER, query = "SELECT DISTINCT p.name FROM User u JOIN u.role r JOIN r.permission p WHERE u.email = :email"), })
+		@NamedQuery(name = Permission.QUERY_GET_NAME_BY_USER, query = "SELECT p.name FROM User u JOIN u.role r JOIN r.permission p WHERE u.id = :id"), })
 @Entity
 @Table(name = "permissions")
 public class Permission implements Serializable {
@@ -34,8 +33,7 @@ public class Permission implements Serializable {
 
 	public static final String QUERY_GETALL_BASE = "Permission.GetAllBase";
 	public static final String QUERY_GETALL = "Permission.GetAll";
-	public static final String QUERY_GET_BY_USER_AND_PERMISSION = "Permission.GetByUserAndPermission";
-	public static final String QUERY_GET_NAME_BY_USER = "Permission.GetByUser";
+	public static final String QUERY_GET_NAME_BY_USER = "Permission.GetNameByUser";
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "Permission.ID")

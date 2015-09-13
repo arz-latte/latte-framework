@@ -30,17 +30,13 @@ public class FrameworkManagementBean {
 	/**
 	 * get all modules with their menus for REST-service
 	 * 
-	 * @param email
+	 * @param permissions
 	 * @return
 	 */
-	public List<ModuleData> getAll(String email) {
+	public List<ModuleData> getAll(List<String> permissions) {
 
 		List<ModuleData> modulesData = new ArrayList<>();
 
-		// get permissions of user
-		List<String> permissions = em.createNamedQuery(Permission.QUERY_GET_NAME_BY_USER, String.class)
-				.setParameter("email", email).getResultList();
-		
 		// get modules
 		List<Module> modules = em.createNamedQuery(Module.QUERY_GETALL_ENABLED_SORTED, Module.class).getResultList();
 		for (Module module : modules) {
@@ -66,7 +62,7 @@ public class FrameworkManagementBean {
 	 * @param menu
 	 * @return menu structure or null if permission for all submenus is missing
 	 */
-	public MenuData getMenuData(Menu menu, List<String> permissions) {
+	private MenuData getMenuData(Menu menu, List<String> permissions) {
 
 		// ignore module if user has no permission
 		if (menu.getPermission() != null && !permissions.contains(menu.getPermission().getName())) {
@@ -97,7 +93,7 @@ public class FrameworkManagementBean {
 	 * @param menu
 	 * @return
 	 */
-	public SubMenuData getSubMenuDataRec(SubMenu menu, List<String> permissions) {
+	private SubMenuData getSubMenuDataRec(SubMenu menu, List<String> permissions) {
 
 		// ignore submenu if user has no permission
 		if (menu.getPermission() != null && !permissions.contains(menu.getPermission().getName())) {

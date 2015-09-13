@@ -1,5 +1,5 @@
 --
--- pg_dump -U latte --column-inserts latte
+-- pg_dump -U latte --column-inserts latte > backup.sql
 --
 --
 -- PostgreSQL database dump
@@ -213,24 +213,24 @@ INSERT INTO latte_seq (key0, value0) VALUES ('Permission.ID', 50);
 -- Data for Name: menus; Type: TABLE DATA; Schema: public; Owner: latte
 --
 
-INSERT INTO menus (id, lastmodified, name, order0, url, version, permission_id) VALUES (1, 1441566232053, 'Administration', 20, 'http://localhost:8080/latte/index.html', 97, NULL);
-INSERT INTO menus (id, lastmodified, name, order0, url, version, permission_id) VALUES (2, 1441569057118, 'Demo Modul 1', 10, 'http://localhost:8080/demo1/index.html', 96, NULL);
+INSERT INTO menus (id, lastmodified, name, order0, url, version, permission_id) VALUES (2, 1441731900694, 'Demo Modul 1', 10, '/demo1/index.html', 94, NULL);
+INSERT INTO menus (id, lastmodified, name, order0, url, version, permission_id) VALUES (1, 1441731842613, 'Administration', 20, '/latte/index.html', 95, NULL);
 
 
 --
 -- Data for Name: modules; Type: TABLE DATA; Schema: public; Owner: latte
 --
 
-INSERT INTO modules (id, enabled, "interval", lastmodified, name, provider, running, url, version, menu_id) VALUES (1, true, 10, 1441566232053, 'Administration', 'ARZ', true, 'http://localhost:8080/latte/api/v1/administration', 98, 1);
-INSERT INTO modules (id, enabled, "interval", lastmodified, name, provider, running, url, version, menu_id) VALUES (2, true, 10, 1441569057118, 'Demo Modul 1', 'ARZ', true, 'http://localhost:8080/demo1/api/v1/demo', 99, 2);
+INSERT INTO modules (id, enabled, "interval", lastmodified, name, provider, running, url, version, menu_id) VALUES (2, true, 10, 1441731900694, 'Demo Modul 1', 'ARZ', true, 'http://localhost:8080/demo1/api/v1/demo', 97, 2);
+INSERT INTO modules (id, enabled, "interval", lastmodified, name, provider, running, url, version, menu_id) VALUES (1, true, 10, 1441731842613, 'Administration', 'ARZ', true, 'http://localhost:8080/latte/api/v1/administration', 96, 1);
 
 
 --
 -- Data for Name: permissions; Type: TABLE DATA; Schema: public; Owner: latte
 --
 
-INSERT INTO permissions (id, name, version) VALUES (1, 'admin', 8);
-INSERT INTO permissions (id, name, version) VALUES (2, 'user', 3);
+INSERT INTO permissions (id, name, version) VALUES (1, 'admin', 1);
+INSERT INTO permissions (id, name, version) VALUES (2, 'user', 1);
 
 
 --
@@ -254,26 +254,27 @@ INSERT INTO roles_permissions (role_id, permission_id) VALUES (3, 2);
 -- Data for Name: submenus; Type: TABLE DATA; Schema: public; Owner: latte
 --
 
-INSERT INTO submenus (id, disabled, group0, name, order0, script, type, url, version, menu_id, permission_id, submenu_id) VALUES (5, NULL, NULL, 'SubMenü für user', 0, NULL, NULL, '#', 3, NULL, 2, 4);
-INSERT INTO submenus (id, disabled, group0, name, order0, script, type, url, version, menu_id, permission_id, submenu_id) VALUES (12, NULL, NULL, 'WAR', 1, 'appDemo.functionTest("ok")', 'war', NULL, 3, NULL, NULL, 10);
-INSERT INTO submenus (id, disabled, group0, name, order0, script, type, url, version, menu_id, permission_id, submenu_id) VALUES (9, true, NULL, 'Deaktiviert', 2, NULL, 'war', NULL, 3, 2, NULL, NULL);
-INSERT INTO submenus (id, disabled, group0, name, order0, script, type, url, version, menu_id, permission_id, submenu_id) VALUES (8, false, NULL, 'Menü 2', 1, NULL, NULL, NULL, 3, 2, NULL, NULL);
-INSERT INTO submenus (id, disabled, group0, name, order0, script, type, url, version, menu_id, permission_id, submenu_id) VALUES (1, NULL, NULL, 'Module', 0, NULL, NULL, 'http://localhost:8080/latte/module.html', 4, 1, 1, NULL);
-INSERT INTO submenus (id, disabled, group0, name, order0, script, type, url, version, menu_id, permission_id, submenu_id) VALUES (11, NULL, NULL, 'EAR', 0, 'alert("ok")', 'ear', NULL, 3, NULL, NULL, 10);
-INSERT INTO submenus (id, disabled, group0, name, order0, script, type, url, version, menu_id, permission_id, submenu_id) VALUES (10, NULL, NULL, 'Kompilieren', 3, NULL, NULL, NULL, 3, 2, NULL, NULL);
-INSERT INTO submenus (id, disabled, group0, name, order0, script, type, url, version, menu_id, permission_id, submenu_id) VALUES (7, NULL, NULL, 'SubSubMenü für admin', 0, NULL, NULL, NULL, 3, NULL, 1, 6);
-INSERT INTO submenus (id, disabled, group0, name, order0, script, type, url, version, menu_id, permission_id, submenu_id) VALUES (3, NULL, NULL, 'Rollen', 2, NULL, NULL, 'http://localhost:8080/latte/role.html', 4, 1, 1, NULL);
-INSERT INTO submenus (id, disabled, group0, name, order0, script, type, url, version, menu_id, permission_id, submenu_id) VALUES (2, NULL, NULL, 'Benutzer', 1, NULL, NULL, 'http://localhost:8080/latte/user.html', 4, 1, 1, NULL);
-INSERT INTO submenus (id, disabled, group0, name, order0, script, type, url, version, menu_id, permission_id, submenu_id) VALUES (6, NULL, NULL, 'SubMenü 2', 1, NULL, NULL, NULL, 3, NULL, NULL, 4);
-INSERT INTO submenus (id, disabled, group0, name, order0, script, type, url, version, menu_id, permission_id, submenu_id) VALUES (4, NULL, NULL, 'Demo Modul', 0, NULL, NULL, 'http://localhost:8080/demo1/index.html', 3, 2, NULL, NULL);
+INSERT INTO submenus (id, disabled, group0, name, order0, script, type, url, version, menu_id, permission_id, submenu_id) VALUES (4, NULL, NULL, 'Demo Modul', 0, NULL, NULL, '/demo1/index.html', 1, 2, NULL, NULL);
+INSERT INTO submenus (id, disabled, group0, name, order0, script, type, url, version, menu_id, permission_id, submenu_id) VALUES (9, true, NULL, 'Deaktiviert', 2, NULL, 'war', NULL, 1, 2, NULL, NULL);
+INSERT INTO submenus (id, disabled, group0, name, order0, script, type, url, version, menu_id, permission_id, submenu_id) VALUES (8, false, NULL, 'Menü 2', 1, NULL, NULL, NULL, 1, 2, NULL, NULL);
+INSERT INTO submenus (id, disabled, group0, name, order0, script, type, url, version, menu_id, permission_id, submenu_id) VALUES (10, NULL, NULL, 'Kompilieren', 3, NULL, NULL, NULL, 1, 2, NULL, NULL);
+INSERT INTO submenus (id, disabled, group0, name, order0, script, type, url, version, menu_id, permission_id, submenu_id) VALUES (6, NULL, NULL, 'SubMenü 2', 1, NULL, NULL, NULL, 1, NULL, NULL, 4);
+INSERT INTO submenus (id, disabled, group0, name, order0, script, type, url, version, menu_id, permission_id, submenu_id) VALUES (12, NULL, NULL, 'WAR', 1, 'appDemo.functionTest("ok")', 'war', NULL, 1, NULL, NULL, 10);
+INSERT INTO submenus (id, disabled, group0, name, order0, script, type, url, version, menu_id, permission_id, submenu_id) VALUES (11, NULL, NULL, 'EAR', 0, 'alert("ok")', 'ear', NULL, 1, NULL, NULL, 10);
+INSERT INTO submenus (id, disabled, group0, name, order0, script, type, url, version, menu_id, permission_id, submenu_id) VALUES (5, NULL, NULL, 'SubMenü für user', 0, NULL, NULL, '/demo1/api/v1/demo/useronly.json', 1, NULL, 2, 4);
+INSERT INTO submenus (id, disabled, group0, name, order0, script, type, url, version, menu_id, permission_id, submenu_id) VALUES (13, NULL, NULL, 'EAR & WAR', 2, NULL, 'ear,war', NULL, 1, NULL, NULL, 10);
+INSERT INTO submenus (id, disabled, group0, name, order0, script, type, url, version, menu_id, permission_id, submenu_id) VALUES (7, NULL, NULL, 'SubSubMenü für admin', 0, NULL, NULL, NULL, 1, NULL, 1, 6);
+INSERT INTO submenus (id, disabled, group0, name, order0, script, type, url, version, menu_id, permission_id, submenu_id) VALUES (3, NULL, NULL, 'Rollen', 2, NULL, NULL, '/latte/role.html', 2, 1, 1, NULL);
+INSERT INTO submenus (id, disabled, group0, name, order0, script, type, url, version, menu_id, permission_id, submenu_id) VALUES (2, NULL, NULL, 'Benutzer', 1, NULL, NULL, '/latte/user.html', 2, 1, 1, NULL);
+INSERT INTO submenus (id, disabled, group0, name, order0, script, type, url, version, menu_id, permission_id, submenu_id) VALUES (1, NULL, NULL, 'Module', 0, NULL, NULL, '/latte/module.html', 2, 1, 1, NULL);
 
 
 --
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: latte
 --
 
-INSERT INTO users (id, email, firstname, lastname, password, version) VALUES (1, 'admin@arz.at', 'Admin', 'Admin', 'admin', 2);
-INSERT INTO users (id, email, firstname, lastname, password, version) VALUES (2, 'user@arz.at', 'User', 'User', 'user', 2);
+INSERT INTO users (id, email, firstname, lastname, password, version) VALUES (1, 'admin@arz.at', 'Admin', 'Admin', 'admin', 1);
+INSERT INTO users (id, email, firstname, lastname, password, version) VALUES (2, 'user@arz.at', 'User', 'User', 'user', 1);
 
 
 --

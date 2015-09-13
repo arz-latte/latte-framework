@@ -8,7 +8,7 @@
         <url>/demo1/index.html</url>
 	    <submenu>
 	        <name>SubMenü für user</name>
-	        <url>#</url>
+	        <url>/demo1/api/v1/demo/useronly.json</url>
 	        <permission>user</permission>
 	    </submenu>
 	    <submenu>

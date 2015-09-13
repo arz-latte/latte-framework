@@ -23,9 +23,15 @@ var appRole = {
 			});
 
 			$("#list-filter").keyup();
+		}).error(function(error) {
+			if (error.status == 403) {
+				app.showErrorMessage("Keine Berechtigung")
+			} else {
+				app.showErrorMessage("Fehler " + error.statusText)
+			}
 		});
 	},
-	
+
 	loadPermissions : function() {
 		$.getJSON(appRole.API_ROLES + "/permissions.json", function(data) {
 
@@ -60,15 +66,21 @@ var appRole = {
 					// fill form
 					var r = data.role;
 					$("[name=input-name]").val(r.name);
-					
+
 					if (r.permission) {
 						var $permission = $("[name=select-permission]");
 						if (r.permission.length > 0) {
 							$.each(r.permission, function(index, permission) {
-								$permission.find("option[value='" + permission.id + "']").prop("selected", true);
+								$permission
+										.find(
+												"option[value='"
+														+ permission.id + "']")
+										.prop("selected", true);
 							});
 						} else {
-							$permission.find("option[value='" + r.permission.id + "']").prop("selected", true);
+							$permission.find(
+									"option[value='" + r.permission.id + "']")
+									.prop("selected", true);
 						}
 					}
 				});
@@ -81,9 +93,12 @@ var appRole = {
 		r.name = $("[name=input-name]").val();
 
 		r.permission = [];
-		$("[name=select-permission]").find(":selected").each(function(index, selected) {
-			r.permission.push({"id" : $(selected).val()});
-		});
+		$("[name=select-permission]").find(":selected").each(
+				function(index, selected) {
+					r.permission.push({
+						"id" : $(selected).val()
+					});
+				});
 
 		if (r.id > 0) {
 
@@ -123,12 +138,10 @@ var appRole = {
 	deleteRole : function() {
 		var choice = confirm("Sind Sie sicher?");
 		if (choice == true) {
-			$.ajax(
-					{
-						url : appRole.API_ROLES + "/delete.json/"
-								+ appRole.currentId,
-						type : "DELETE",
-					}).done(function(data) {
+			$.ajax({
+				url : appRole.API_ROLES + "/delete.json/" + appRole.currentId,
+				type : "DELETE",
+			}).done(function(data) {
 				app.showSuccessMessage("Rolle gel&ouml;scht");
 				appRole.loadRoles();
 			}).fail(function() {
@@ -151,7 +164,7 @@ var appRole = {
 // ready & event handlers
 // ===========================================================================
 function initRole() {
-	
+
 	appAdmin.init();
 
 	$("#btn-load").on("click", appRole.loadRoles);
