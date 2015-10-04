@@ -2,7 +2,7 @@
 <menu>
     <name>Administration</name>
     <url>/latte/admin/user.html</url>
-    <order>20</order>
+    <order>100</order>
     <permission>admin</permission>
     <submenu>
         <name>Module</name>

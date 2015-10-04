@@ -55,7 +55,7 @@ public class ModuleTimerService {
 	 */
 	private int counter = -10;
 
-	private int modulesSize;
+	private Integer modulesSize;
 
 	@Schedule(second = "*/1", minute = "*", hour = "*", persistent = false)
 	private void checkModules() {
@@ -67,7 +67,9 @@ public class ModuleTimerService {
 			List<Module> modules = bean.getAllEnabledModules();
 		
 			// notify clients if number of enabled modules changed
-			if (modulesSize < modules.size()) {				
+			if (modulesSize == null) {
+				modulesSize = modules.size();	// first time
+			} else if (modulesSize < modules.size()) {				
 				modulesSize = modules.size();
 				websocket.chat(new WebsocketMessage("new-module"));
 				
@@ -96,7 +98,7 @@ public class ModuleTimerService {
 				client.query("lastModified", module.getLastModified());
 			}
 
-			// get menu
+			// get menu from client
 			MenuData menuData = client.get(MenuData.class);
 
 			// valiate menu response data

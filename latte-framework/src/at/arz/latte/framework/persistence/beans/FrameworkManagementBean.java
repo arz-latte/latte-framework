@@ -35,24 +35,11 @@ public class FrameworkManagementBean {
 	public List<ModuleData> getAll(List<String> permissions) {
 
 		List<ModuleData> modulesData = new ArrayList<>();
-
-		// load administration menu if user has "admin"-permission
-		if(permissions.contains("admin")) {
-			ModuleData moduleData = new ModuleData();
-			moduleData.setId(0L);
-			moduleData.setRunning(true);
-			moduleData.setMenu(getMenuData(InitializationBean.ADMIN_MENU, permissions));
-
-			// ignore module if user has no permission to submenus
-			if (moduleData.getMenu() != null) {
-				modulesData.add(moduleData);
-			}
-		}
 		
-		// get modules
+		// get modules from database
 		List<Module> modules = em.createNamedQuery(Module.QUERY_GETALL_ENABLED_SORTED, Module.class).getResultList();
 		for (Module module : modules) {
-
+			
 			ModuleData moduleData = new ModuleData();
 			moduleData.setId(module.getId());
 			moduleData.setRunning(module.getRunning());
@@ -65,6 +52,29 @@ public class FrameworkManagementBean {
 			}
 		}
 
+		// load and sort administration menu if user has "admin"-permission
+		if(permissions.contains("admin")) {
+			ModuleData moduleData = new ModuleData();
+			moduleData.setId(0L);
+			moduleData.setRunning(true);
+			moduleData.setMenu(getMenuData(InitializationBean.ADMIN_MENU, permissions));
+			
+			// sort admin menu
+			boolean added = false;
+			for(int i = 0; i < modulesData.size(); i++) { 
+				MenuData menuData = modulesData.get(i).getMenu();
+				if (menuData.getOrder() > moduleData.getMenu().getOrder()) {
+					modulesData.add(i, moduleData);
+					added = true;
+					break;
+				}
+			}
+			
+			if (!added) {
+				modulesData.add(moduleData);
+			}
+		}		
+
 		return modulesData;
 	}
 
@@ -75,7 +85,7 @@ public class FrameworkManagementBean {
 	 * @return menu structure or null if permission for all submenus is missing
 	 */
 	private MenuData getMenuData(Menu menu, List<String> permissions) {
-
+		
 		// ignore module if user has no permission
 		if (menu.getPermission() != null && !permissions.contains(menu.getPermission().getName())) {
 			return null;

@@ -450,16 +450,19 @@ var app = {
 			// main menu (module name)
 			var $entry = $("<li/>").append($("<a/>", {
 				href : module.menu.url,
-				'module-id' : module.id,
-				on : {
-					click : function() {
-						localStorage.setItem("module-id", module.id);
-						app.initSubMenu();
-					}
-				}
+				'module-id' : module.id
 			}).append(module.menu.name + " ", $("<span/>", {
 				'class' : "badge"
 			})));
+			
+			$entry.on("click", function() {
+				if (!$(this).hasClass("disabled")) {
+					localStorage.setItem("module-id", module.id);
+					app.initSubMenu();
+				} else {
+					return false;
+				}
+			});
 
 			// module currently inactive
 			if (!module.running) {
@@ -548,7 +551,11 @@ var app = {
 		// add javacript function
 		if (menu.script) {
 			$entry.on("click", function() {
-				new Function(menu.script).call(this);
+				if (!$(this).hasClass("disabled")) {				
+					new Function(menu.script).call(this);
+				} else {
+					return false;
+				}
 			});
 		}
 
