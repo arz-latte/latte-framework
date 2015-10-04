@@ -15,7 +15,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
 
 import at.arz.latte.framework.persistence.beans.FrameworkManagementBean;
-import at.arz.latte.framework.persistence.beans.UserManagementBean;
+import at.arz.latte.framework.persistence.beans.PermissionManagementBean;
 import at.arz.latte.framework.persistence.models.User;
 import at.arz.latte.framework.restful.dta.ModuleData;
 import at.arz.latte.framework.restful.dta.UserData;
@@ -36,7 +36,7 @@ public class FrameworkService {
 	private FrameworkManagementBean frameworkBean;
 
 	@EJB
-	private UserManagementBean userBean;
+	private PermissionManagementBean permissionBean;
 
 	@EJB
 	private WebsocketEndpoint websocket;
@@ -69,24 +69,26 @@ public class FrameworkService {
 	@Path("init.json")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<ModuleData> getInitData() {
+		initSessionData();
 		List<String> permissions = (List<String>) request.getSession().getAttribute("permissions");
 		return frameworkBean.getAll(permissions);
 	}
 
+	/**
+	 * get user data and store them in a session for later reuse
+	 * 
+	 * @return
+	 */
 	private User initSessionData() {
 		HttpSession session = request.getSession();
 		User user = (User) session.getAttribute("user");
 
 		if (user == null) {
-			user = userBean.getUser(sc.getUserPrincipal().getName());
-			System.out.println(session.getId());
-
-			System.out.println("set user " + user);
+			
+			user = permissionBean.getUser(sc.getUserPrincipal().getName());
 			session.setAttribute("user", user);
 
-			List<String> permissions = userBean.getUserPermissions(user.getId());
-
-			System.out.println("set permissions " + permissions);
+			List<String> permissions = permissionBean.getUserPermissions(sc.getUserPrincipal().getName());
 			session.setAttribute("permissions", permissions);
 		}
 

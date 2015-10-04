@@ -11,6 +11,12 @@ import org.junit.Test;
 import at.arz.latte.framework.restful.dta.MenuData;
 import at.arz.latte.framework.restful.dta.SubMenuData;
 
+/**
+ * test class for creating a demo configuration file
+ * 
+ * Dominik Neuner {@link "mailto:dominik@neuner-it.at"}
+ *
+ */
 public class ConfigFileTest {
 
 	@Test

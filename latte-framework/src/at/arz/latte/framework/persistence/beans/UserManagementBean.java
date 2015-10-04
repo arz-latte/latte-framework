@@ -8,7 +8,6 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import at.arz.latte.framework.persistence.models.Permission;
 import at.arz.latte.framework.persistence.models.Group;
 import at.arz.latte.framework.persistence.models.User;
 import at.arz.latte.framework.restful.dta.GroupData;
@@ -45,29 +44,6 @@ public class UserManagementBean {
 			// fetch eager
 		}
 		return u;
-	}
-
-	/**
-	 * get user by unique email (login credentials in session)
-	 * 
-	 * @param email
-	 * @return
-	 */
-	public User getUser(String email) {
-		User user = em.createNamedQuery(User.QUERY_GET_BY_EMAIL, User.class).setParameter("email", email)
-				.getSingleResult();
-		return user;
-	}
-
-	/**
-	 * get list of all permissions for an user
-	 * 
-	 * @param userId
-	 * @return
-	 */
-	public List<String> getUserPermissions(Long userId) {
-		return em.createNamedQuery(Permission.QUERY_GET_NAME_BY_USER, String.class).setParameter("id", userId)
-				.getResultList();
 	}
 
 	public User createUser(User user, Set<GroupData> groupData) {

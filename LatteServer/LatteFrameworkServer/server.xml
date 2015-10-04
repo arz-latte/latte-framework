@@ -114,27 +114,22 @@
              available for use by the Realm.  -->
         <Realm className="org.apache.catalina.realm.UserDatabaseRealm" resourceName="UserDatabase"/>
         
-        <Realm  className="org.apache.catalina.realm.JDBCRealm"
-             driverName="org.postgresql.Driver"
-          connectionURL="jdbc:postgresql://localhost/latte"
-         connectionName="latte" connectionPassword="latte"
-                 userTable="tc_realm_users" userNameCol="username" userCredCol="password"
-          userRoleTable="tc_realm_roles" roleNameCol="rolename" />
+        <Realm className="org.apache.catalina.realm.JDBCRealm" connectionName="latte" connectionPassword="latte" connectionURL="jdbc:postgresql://localhost/latte" driverName="org.postgresql.Driver" roleNameCol="rolename" userCredCol="password" userNameCol="username" userRoleTable="tc_realm_roles" userTable="tc_realm_users"/>
       </Realm>
 
       <Host appBase="webapps" autoDeploy="true" name="localhost" unpackWARs="true">
 
         <!-- SingleSignOn valve, share authentication between web applications
              Documentation at: /docs/config/valve.html -->
-        <Valve className="org.apache.catalina.authenticator.SingleSignOn" />
+        <Valve className="org.apache.catalina.authenticator.SingleSignOn"/>
 
         <!-- Access log processes all example.
              Documentation at: /docs/config/valve.html
              Note: The pattern used is equivalent to using pattern="common" -->
         <Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs" pattern="%h %l %u %t &quot;%r&quot; %s %b" prefix="localhost_access_log." suffix=".txt"/>
 
-      <Context docBase="latte-demo-modul-1" path="/demo1" reloadable="true" source="org.eclipse.jst.jee.server:latte-demo-modul-1"/>
-      <Context docBase="latte-framework" path="/latte" reloadable="true" source="org.eclipse.jst.jee.server:latte-framework"/></Host>
+      
+      <Context docBase="latte-framework" path="/latte" reloadable="true" source="org.eclipse.jst.jee.server:latte-framework"/><Context docBase="latte-demo-modul" path="/demo" reloadable="true" source="org.eclipse.jst.jee.server:latte-demo-modul"/></Host>
     </Engine>
   </Service>
 </Server>

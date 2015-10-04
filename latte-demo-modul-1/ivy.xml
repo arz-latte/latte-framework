@@ -2,24 +2,30 @@
 <ivy-module version="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
        
-    <info organisation="at.arz.latte" module="latte-demo-modul" revision="1.0.0">
+    <info organisation="at.arz.latte" module="Latte Framework" revision="1.0.0">
 	</info>
 	
 	<configurations>
 		<conf name="default"/>
 		<conf name="compile"/>
 		<conf name="provided"/>
-		<conf name="runtime"/>
-		<conf name="optional"/>
+		<conf name="war-lib"/>
+		<conf name="test" visibility="private"/>
 	</configurations>
 	
 	<dependencies>
 		<dependency org="org.codehaus.jettison" name="jettison" rev="1.3.7" conf="compile->default"/>
-	<!--	<dependency org="javax" name="javaee-api" rev="6.0" conf="provided->default"/>-->
-		<dependency org="org.apache.cxf" name="cxf-rt-frontend-jaxrs" rev="2.6.16" conf="provided->default"/>
-		<dependency org="junit" name="junit" rev="4.12" conf="provided->default"/>	
+		<dependency org="org.apache.cxf" name="cxf-rt-frontend-jaxrs" rev="2.6.16" conf="compile->default"/>
 
+		<dependency org="org.apache.tomcat" name="tomcat-websocket-api" rev="7.0.50" conf="provided->default"/>
+
+		<dependency org="org.glassfish" name="javax.json" rev="1.0.4" conf="war-lib->default"/>
+
+		<dependency org="org.postgresql" name="postgresql" rev="9.4-1201-jdbc41" conf="provided->default"/>
+		<dependency org="org.apache.derby" name="derby" rev="10.11.1.1" conf="test->default"/>
 		<dependency org="org.apache.openejb" name="tomee-embedded" rev="1.7.2" conf="provided->default"/>
+		
+		<dependency org="junit" name="junit" rev="4.12" conf="test->default"/>
 	</dependencies>
 	
 </ivy-module>

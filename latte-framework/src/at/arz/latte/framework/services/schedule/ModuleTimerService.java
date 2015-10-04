@@ -47,6 +47,8 @@ public class ModuleTimerService {
 
 	// todo
 	private static final String FRAMEWORK_URI = "http://localhost:8080";
+	
+	private static final String CONFIG_PATH = "/api/config/status.json";
 
 	/**
 	 * wait 10 seconds before start
@@ -87,7 +89,7 @@ public class ModuleTimerService {
 	private void checkStatus(Module module) {
 
 		try {
-			WebClient client = setupClient(FRAMEWORK_URI, module.getUrl() + "/status.json");
+			WebClient client = setupClient(FRAMEWORK_URI, module.getUrl() + CONFIG_PATH);
 
 			// send lastModified of module to client
 			if (module.getLastModified() != null) {
@@ -107,7 +109,6 @@ public class ModuleTimerService {
 			if (module.getLastModified() == null || module.getLastModified() < menuData.getLastModified()) {
 
 				Menu menu = Menu.getMenuRec(menuData);
-				System.out.println("save: " + menuData);
 				bean.updateModuleMenu(module.getId(), menu);
 
 				websocket.chat(new WebsocketMessage("update-module", module.getId().toString()));

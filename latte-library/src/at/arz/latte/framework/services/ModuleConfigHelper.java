@@ -33,7 +33,7 @@ public class ModuleConfigHelper {
 	private Validator validator;
 
 	/**
-	 * storage for menu structure
+	 * storage for caching service config (menu structure)
 	 */
 	private static Map<String, MenuData> menu = new HashMap<String, MenuData>();
 
@@ -50,7 +50,7 @@ public class ModuleConfigHelper {
 	public MenuData loadAndCacheServiceConfig(URL url, Long lastModified)
 			throws JAXBException, IOException, LatteValidationException {
 
-		String path = url.getPath();
+		String path = url.getPath();// .getPath();
 		if (menu.size() == 0 || lastModified == null || lastModified < menu.get(path).getLastModified()) {
 			menu.put(path, loadServiceConfig(url));
 		}
@@ -66,7 +66,7 @@ public class ModuleConfigHelper {
 	 * @throws JAXBException
 	 * @throws IOException
 	 */
-	public MenuData loadServiceConfig(URL url) throws JAXBException, IOException, LatteValidationException {
+	private MenuData loadServiceConfig(URL url) throws JAXBException, IOException, LatteValidationException {
 
 		File file = new File(url.getPath());
 

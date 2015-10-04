@@ -1,22 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <menu>
-    <name>Demo Modul 1</name>
-    <url>/demo1/index.html</url>
+    <name>Demo Modul</name>
+    <url>/demo/index.html</url>
     <order>10</order>
+    <permission>demo</permission>
     <submenu>
         <name>Demo Modul</name>
-        <url>/demo1/index.html</url>
+        <url>/demo/index.html</url>
 	    <submenu>
-	        <name>SubMenü für user</name>
-	        <url>/demo1/api/v1/demo/useronly.json</url>
-	        <permission>user</permission>
-	    </submenu>
-	    <submenu>
-	        <name>SubMenü 2</name>
-			<submenu>
-				<name>SubSubMenü für admin</name>
-				<permission>admin</permission>
-			</submenu>
+	        <name>SubMenü für admin</name>
+	        <url>/demo/api/demo/adminonly.json</url>
+			<permission>admin</permission>
 	    </submenu>
     </submenu>
     <submenu>

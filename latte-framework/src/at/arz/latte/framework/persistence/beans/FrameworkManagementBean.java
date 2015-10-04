@@ -1,15 +1,11 @@
 package at.arz.latte.framework.persistence.beans;
 
-import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.xml.bind.JAXBException;
 
 import at.arz.latte.framework.persistence.models.Menu;
 import at.arz.latte.framework.persistence.models.Module;
@@ -17,8 +13,6 @@ import at.arz.latte.framework.persistence.models.SubMenu;
 import at.arz.latte.framework.restful.dta.MenuData;
 import at.arz.latte.framework.restful.dta.ModuleData;
 import at.arz.latte.framework.restful.dta.SubMenuData;
-import at.arz.latte.framework.services.ModuleConfigHelper;
-import at.arz.latte.framework.services.restful.exception.LatteValidationException;
 
 /**
  * bean for framework management
@@ -32,14 +26,6 @@ public class FrameworkManagementBean {
 	@PersistenceContext(unitName = "latte-unit")
 	private EntityManager em;
 
-	@EJB
-	private ModuleConfigHelper configHelper;
-	
-	/**
-	 * cache administration menu
-	 */
-	private static Menu adminMenu;
-
 	/**
 	 * get all modules with their menus for REST-service
 	 * 
@@ -48,40 +34,26 @@ public class FrameworkManagementBean {
 	 */
 	public List<ModuleData> getAll(List<String> permissions) {
 
-		String config = "administration-service-config.xml";
-
 		List<ModuleData> modulesData = new ArrayList<>();
 
-		// load administration service config
-		if (adminMenu == null) {
-		
-			try {
-				URL url = getClass().getResource("../../services/restful/admin/" + config);
-				MenuData menuData = configHelper.loadServiceConfig(url);
-				adminMenu = Menu.getMenuRec(menuData);				
-				System.out.println("---- load admin menu ----");
-				System.out.println(adminMenu);
-			} catch (JAXBException | IOException | LatteValidationException ex) {
-				System.out.println("Exception while loading administration-service-config: " + ex.getMessage());
-			}
-		}
-		
-		// load administration menu if user has permission
-		ModuleData moduleData = new ModuleData();
-		moduleData.setId(0L);
-		moduleData.setRunning(true);
-		moduleData.setMenu(getMenuData(adminMenu, permissions));
+		// load administration menu if user has "admin"-permission
+		if(permissions.contains("admin")) {
+			ModuleData moduleData = new ModuleData();
+			moduleData.setId(0L);
+			moduleData.setRunning(true);
+			moduleData.setMenu(getMenuData(InitializationBean.ADMIN_MENU, permissions));
 
-		// ignore module if user has no permission to submenus
-		if (moduleData.getMenu() != null) {
-			modulesData.add(moduleData);
+			// ignore module if user has no permission to submenus
+			if (moduleData.getMenu() != null) {
+				modulesData.add(moduleData);
+			}
 		}
 		
 		// get modules
 		List<Module> modules = em.createNamedQuery(Module.QUERY_GETALL_ENABLED_SORTED, Module.class).getResultList();
 		for (Module module : modules) {
 
-			moduleData = new ModuleData();
+			ModuleData moduleData = new ModuleData();
 			moduleData.setId(module.getId());
 			moduleData.setRunning(module.getRunning());
 

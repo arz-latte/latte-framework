@@ -1,4 +1,4 @@
-package at.arz.latte.framework.services.restful.config;
+package at.arz.latte.framework.services.restful;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -10,7 +10,7 @@ import javax.ws.rs.core.Application;
 import at.arz.latte.framework.services.restful.DemoModuleRestfulService;
 
 @ApplicationScoped
-@ApplicationPath("/api/v1")
+@ApplicationPath("/api")
 public class DemoModuleConfiguration extends Application {
 
 	private Set<Class<?>> applicationClasses;
@@ -25,6 +25,7 @@ public class DemoModuleConfiguration extends Application {
 
 	private void initApplicationClasses() {
 		applicationClasses = new HashSet<Class<?>>();
+		applicationClasses.add(DemoModuleConfigurationRestfulService.class);
 		applicationClasses.add(DemoModuleRestfulService.class);
 	}
 }

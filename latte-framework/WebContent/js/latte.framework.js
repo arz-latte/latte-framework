@@ -643,8 +643,9 @@ var app = {
 			// module update available (menu changed)
 			if (data.message == "update-module") {
 				var module = JSON.parse(localStorage.getItem("module-" + id));
-				app.showInfoMessage(module.menu.name + " aktualisiert");
-
+				if (module && module.menu) {
+					app.showInfoMessage(module.menu.name + " aktualisiert");
+				}
 				localStorage.removeItem("initialized");
 				app.loadModules();
 			} else

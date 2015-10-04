@@ -1,6 +1,6 @@
 var appDemo = {
 
-	API_DEMO : 'http://localhost:8080/demo1',
+	API_DEMO : 'http://localhost:8080/demo',
 		
 	enableEAR : function() {
 		app.disableSubMenuByAttribute("type", "war");

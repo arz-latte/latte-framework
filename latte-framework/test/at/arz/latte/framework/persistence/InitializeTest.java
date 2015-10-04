@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 
 import org.junit.After;
 import org.junit.Before;
@@ -11,6 +12,7 @@ import org.junit.Test;
 
 import at.arz.latte.framework.persistence.JpaPersistenceSetup;
 import at.arz.latte.framework.persistence.models.Module;
+import at.arz.latte.framework.persistence.models.Permission;
 import at.arz.latte.framework.persistence.models.Group;
 import at.arz.latte.framework.persistence.models.User;
 
@@ -29,43 +31,72 @@ public class InitializeTest  {
 	}
 
 	@Test
-	public void createModule() {
+	public void createAuthenticationViews() {
+
+		String rolesView = "CREATE OR REPLACE VIEW tc_realm_roles AS " + "SELECT users.email AS username, groups.name AS rolename "
+				+ "FROM (users LEFT JOIN ( SELECT users_groups.user_id, groups_1.name "
+				+ "FROM (groups groups_1 LEFT JOIN users_groups ON ((users_groups.group_id = groups_1.id)))) groups ON ((groups.user_id = users.id))); ";
+
+		String usersView = "CREATE OR REPLACE VIEW tc_realm_users AS SELECT users.email AS username, users.password FROM users;";
+
 		em.getTransaction().begin();
-
-		Module m = new Module("Administration", "ARZ", "http://localhost:8080/latte/api/v1/administration", 10, true);
-		em.persist(m);
-
-		m = new Module("Demo Modul 1", "ARZ", "http://localhost:8080/demo1/api/v1/demo", 10, true);
-		em.persist(m);
-
+		
+		Query q = em.createNativeQuery(rolesView);
+		q.executeUpdate();
+		
+		q = em.createNativeQuery(usersView);
+		q.executeUpdate();
+		
 		em.getTransaction().commit();
 	}
 
 	@Test
-	public void createUserAndRole() {
+	public void createDefaultUsers() {
 		em.getTransaction().begin();
 		
-		Group r1 = new Group("tomcat");
-		Group r2 = new Group("Administrator");
-		Group r3 = new Group("Benutzer");
-		em.persist(r1);
-		em.persist(r2);
-		em.persist(r3);
+		// permissions
+		Permission pAdmin = new Permission("admin");
+		em.persist(pAdmin);
+
+		Permission pDemo = new Permission("demo");
+		em.persist(pDemo);
 		
-		User u1 = new User("Admin", "Admin", "admin@arz.at", "admin");
+		// groups
+		Group gUser = new Group("LatteUser");	// required for authentication
+		em.persist(gUser);
+		
+		Group gDemo = new Group("LatteDemo");	// required for demo
+		Set<Permission> permissions = new HashSet<>();
+		permissions.add(pDemo);
+		gDemo.setPermission(permissions);
+		em.persist(gDemo);
+
+		Group gAdmin = new Group("LatteAdministrator");	// required for administration
+		permissions = new HashSet<>();
+		permissions.add(pAdmin);
+		gAdmin.setPermission(permissions);
+		em.persist(gAdmin);
+		
+		// users
+		User uAdmin = new User("Admin", "Admin", "admin@arz.at", "admin");
 		Set<Group> groups = new HashSet<>();
-		groups.add(r1);
-		groups.add(r2);
-		u1.setGroup(groups);
-		em.persist(u1);
+		groups.add(gUser);
+		groups.add(gDemo);
+		groups.add(gAdmin);
+		uAdmin.setGroup(groups);
+		em.persist(uAdmin);		
 
-		User u2 = new User("User", "User", "user@arz.at", "user");
+		User uDemo = new User("User", "User", "user@arz.at", "user");
 		groups = new HashSet<>();
-		groups.add(r1);
-		groups.add(r3);
-		u2.setGroup(groups);
-		em.persist(u2);
-
+		groups.add(gUser);
+		groups.add(gDemo);
+		uDemo.setGroup(groups);
+		em.persist(uDemo);		
+		
+		// demo module
+		Module mDemo = new Module("Demo", "ARZ", "demo", 60, true);
+		em.persist(mDemo);
+		
 		em.getTransaction().commit();
 	}
 
