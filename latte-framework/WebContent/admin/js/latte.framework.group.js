@@ -1,25 +1,25 @@
-var appRole = {
+var appGroup = {
 
-	API_ROLES : 'api/v1/roles',
+	API_GROUPS : 'api/groups',
 
 	currentId : null,
 
-	loadRoles : function() {
+	loadGroups : function() {
 		appAdmin.leaveEditMode();
-		appRole.currentId = null;
+		appGroup.currentId = null;
 
-		$.getJSON(appRole.API_ROLES + "/all.json", function(data) {
+		$.getJSON(appGroup.API_GROUPS + "/all.json", function(data) {
 
-			var $roles = $("#roles");
-			$roles.find("tr:has(td)").remove(); // clear
+			var $groups = $("#groups");
+			$groups.find("tr:has(td)").remove(); // clear
 
-			$.each(data.role, function(index, role) {
-				var $name = $("<td/>").append(role.name);
+			$.each(data.group, function(index, group) {
+				var $name = $("<td/>").append(group.name);
 
-				var $row = $("<tr/>").attr("data-id", role.id);
+				var $row = $("<tr/>").attr("data-id", group.id);
 				$row.append($name);
 
-				$roles.append($row);
+				$groups.append($row);
 			});
 
 			$("#list-filter").keyup();
@@ -33,7 +33,7 @@ var appRole = {
 	},
 
 	loadPermissions : function() {
-		$.getJSON(appRole.API_ROLES + "/permissions.json", function(data) {
+		$.getJSON(appGroup.API_GROUPS + "/permissions.json", function(data) {
 
 			var $permissions = $("[name=select-permission]");
 			$permissions.find("option").remove(); // clear
@@ -47,30 +47,30 @@ var appRole = {
 		});
 	},
 
-	addNewRole : function() {
-		$("#btn-delete-role").hide();
+	addNewGroup : function() {
+		$("#btn-delete").hide();
 		appAdmin.enterEditMode();
-		appRole.currentId = null;
+		appGroup.currentId = null;
 	},
 
-	showRole : function() {
-		$("#btn-delete-role").show();
+	showGroup : function() {
+		$("#btn-delete").show();
 		appAdmin.enterEditMode();
-		appRole.currentId = null;
+		appGroup.currentId = null;
 
-		// load role details
-		appRole.currentId = $(this).attr("data-id");
-		$.getJSON(appRole.API_ROLES + "/get.json/" + appRole.currentId,
+		// load group details
+		appGroup.currentId = $(this).attr("data-id");
+		$.getJSON(appGroup.API_GROUPS + "/get.json/" + appGroup.currentId,
 				function(data) {
 
 					// fill form
-					var r = data.role;
-					$("[name=input-name]").val(r.name);
+					var g = data.group;
+					$("[name=input-name]").val(g.name);
 
-					if (r.permission) {
+					if (g.permission) {
 						var $permission = $("[name=select-permission]");
-						if (r.permission.length > 0) {
-							$.each(r.permission, function(index, permission) {
+						if (g.permission.length > 0) {
+							$.each(g.permission, function(index, permission) {
 								$permission
 										.find(
 												"option[value='"
@@ -79,54 +79,54 @@ var appRole = {
 							});
 						} else {
 							$permission.find(
-									"option[value='" + r.permission.id + "']")
+									"option[value='" + g.permission.id + "']")
 									.prop("selected", true);
 						}
 					}
 				});
 	},
 
-	storeRole : function() {
+	storeGroup : function() {
 		// copy form to model
-		var r = {};
-		r.id = appRole.currentId;
-		r.name = $("[name=input-name]").val();
+		var g = {};
+		g.id = appGroup.currentId;
+		g.name = $("[name=input-name]").val();
 
-		r.permission = [];
+		g.permission = [];
 		$("[name=select-permission]").find(":selected").each(
 				function(index, selected) {
-					r.permission.push({
+					g.permission.push({
 						"id" : $(selected).val()
 					});
 				});
 
-		if (r.id > 0) {
+		if (g.id > 0) {
 
 			$.ajax({
-				url : appRole.API_ROLES + "/update.json",
+				url : appGroup.API_GROUPS + "/update.json",
 				type : "PUT",
 				data : JSON.stringify({
-					"role" : r
+					"group" : g
 				}),
 				contentType : "application/json; charset=UTF-8",
 			}).done(function(data) {
-				app.showSuccessMessage("Rolle aktualisiert");
-				appRole.loadRoles();
+				app.showSuccessMessage("Gruppe aktualisiert");
+				appGroup.loadGroups();
 			}).fail(function(error) {
 				appAdmin.validateData(error);
 			});
 		} else {
 
 			$.ajax({
-				url : appRole.API_ROLES + "/create.json",
+				url : appGroup.API_GROUPS + "/create.json",
 				type : "POST",
 				data : JSON.stringify({
-					"role" : r
+					"group" : g
 				}),
 				contentType : "application/json; charset=UTF-8",
 			}).done(function(data) {
-				app.showSuccessMessage("Rolle erstellt");
-				appRole.loadRoles();
+				app.showSuccessMessage("Gruppe erstellt");
+				appGroup.loadGroups();
 			}).fail(function(error) {
 				appAdmin.validateData(error);
 			});
@@ -135,15 +135,15 @@ var appRole = {
 		return false;
 	},
 
-	deleteRole : function() {
+	deleteGroup : function() {
 		var choice = confirm("Sind Sie sicher?");
 		if (choice == true) {
 			$.ajax({
-				url : appRole.API_ROLES + "/delete.json/" + appRole.currentId,
+				url : appGroup.API_GROUPS + "/delete.json/" + appGroup.currentId,
 				type : "DELETE",
 			}).done(function(data) {
-				app.showSuccessMessage("Rolle gel&ouml;scht");
-				appRole.loadRoles();
+				app.showSuccessMessage("Gruppe gel&ouml;scht");
+				appGroup.loadGroups();
 			}).fail(function() {
 				app.showErrorMessage("Fehler");
 			});
@@ -152,9 +152,9 @@ var appRole = {
 		return false;
 	},
 
-	restoreRole : function() {
+	restoreGroup : function() {
 		appAdmin.leaveEditMode();
-		appRole.currentId = null;
+		appGroup.currentId = null;
 		return false;
 	},
 
@@ -163,21 +163,21 @@ var appRole = {
 // ===========================================================================
 // ready & event handlers
 // ===========================================================================
-function initRole() {
+function initGroup() {
 
 	appAdmin.init();
 
-	$("#btn-load").on("click", appRole.loadRoles);
-	$("#btn-add").on("click", appRole.addNewRole);
+	$("#btn-load").on("click", appGroup.loadGroups);
+	$("#btn-add").on("click", appGroup.addNewGroup);
 
-	$("#btn-store").on("click", appRole.storeRole);
-	$("#btn-delete").on("click", appRole.deleteRole);
-	$("#btn-restore").on("click", appRole.restoreRole);
+	$("#btn-store").on("click", appGroup.storeGroup);
+	$("#btn-delete").on("click", appGroup.deleteGroup);
+	$("#btn-restore").on("click", appGroup.restoreGroup);
 
-	$("#list-area tbody").on("click", "tr", appRole.showRole);
+	$("#list-area tbody").on("click", "tr", appGroup.showGroup);
 
-	appRole.loadRoles();
-	appRole.loadPermissions();
+	appGroup.loadGroups();
+	appGroup.loadPermissions();
 }
 
-$(initRole);
+$(initGroup);

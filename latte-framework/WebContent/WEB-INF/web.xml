@@ -47,6 +47,16 @@
 			<transport-guarantee>NONE</transport-guarantee>
 		</user-data-constraint>
 	</security-constraint>
+	
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>admin resources</web-resource-name>
+			<url-pattern>/admin/*</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+			<role-name>LatteAdministrator</role-name>
+		</auth-constraint>
+	</security-constraint>
 
 	<login-config>
 		<auth-method>BASIC</auth-method>

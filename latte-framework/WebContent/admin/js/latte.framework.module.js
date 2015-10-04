@@ -3,7 +3,7 @@
  */
 var appModule = {
 
-	API_MODULES : 'api/v1/modules',
+	API_MODULES : 'api/modules',
 
 	currentId : null,
 
@@ -61,13 +61,13 @@ var appModule = {
 	},
 
 	addNewModule : function() {
-		$("#btn-delete-module").hide();
+		$("#btn-delete").hide();
 		appAdmin.enterEditMode();
 		appModule.currentId = null;
 	},
 
 	showModule : function() {
-		$("#btn-delete-module").show();
+		$("#btn-delete").show();
 		appAdmin.enterEditMode();
 		appModule.currentId = null;
 

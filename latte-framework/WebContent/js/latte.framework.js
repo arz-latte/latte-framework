@@ -1,11 +1,11 @@
 /**
- * version 31.08.2015
+ * version 04.10.2015
  */
 var app = {
 
 	API_LATTE : 'http://localhost:8080/latte',
 	PATH_INDEX : '/index.html',
-	PATH_FRAMEWORK : '/api/v1/framework',
+	PATH_FRAMEWORK : '/api/framework',
 
 	API_WEBSOCKET : 'ws://localhost:8080/latte/ws',
 
@@ -202,7 +202,12 @@ var app = {
 		}).append($button, $("<a/>", {
 			'class' : "navbar-brand",
 			href : app.API_LATTE + app.PATH_INDEX,
-			text : "Latte"
+			text : "Latte",
+			on : {
+				click : function() {
+					localStorage.removeItem("module-id");
+				}
+			}
 		}));
 
 		var $mainMenuLeft = $("<ul/>", {
@@ -349,7 +354,7 @@ var app = {
 	},
 
 	/**
-	 * initialize user menu
+	 * initialize user menu (located in main/top menu right side)
 	 */
 	initUserMenu : function() {
 		var user = JSON.parse(localStorage.getItem('user'));
@@ -409,7 +414,7 @@ var app = {
 			// store each module separate
 			$.each(data.module, function(index, m) {
 				localStorage.setItem("module-" + m.id, JSON.stringify(m));
-				ids.push("" + m.id); // $.inArray is strict
+				ids.push("" + m.id); // convert to string -> $.inArray is strict
 			});
 
 			// store ids of modules
@@ -463,13 +468,13 @@ var app = {
 
 			$mainMenuLeft.append($entry);
 
-			// check location with module url
+			// check location with module url			
 			if (window.location.pathname == module.menu.url || 
 					window.location.pathname + "index.html" == module.menu.url) {
 				localStorage.setItem("module-id", module.id);
 			}
 			
-			// check locations with sumenu urls
+			// check locations with submenu urls
 			$.each(module.menu.submenu, function(index, submenu) {
 				if (window.location.pathname == submenu.url) {
 					localStorage.setItem("module-id", module.id);

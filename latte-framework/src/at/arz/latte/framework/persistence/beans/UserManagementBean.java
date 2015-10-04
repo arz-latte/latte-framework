@@ -9,9 +9,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import at.arz.latte.framework.persistence.models.Permission;
-import at.arz.latte.framework.persistence.models.Role;
+import at.arz.latte.framework.persistence.models.Group;
 import at.arz.latte.framework.persistence.models.User;
-import at.arz.latte.framework.restful.dta.RoleData;
+import at.arz.latte.framework.restful.dta.GroupData;
 import at.arz.latte.framework.restful.dta.UserData;
 import at.arz.latte.framework.services.restful.exception.LatteValidationException;
 
@@ -31,8 +31,8 @@ public class UserManagementBean {
 		return em.createNamedQuery(User.QUERY_GETALL_BASE, UserData.class).getResultList();
 	}
 
-	public List<RoleData> getAllRolesData() {
-		return em.createNamedQuery(Role.QUERY_GETALL_BASE, RoleData.class).getResultList();
+	public List<GroupData> getAllGroupsData() {
+		return em.createNamedQuery(Group.QUERY_GETALL_BASE, GroupData.class).getResultList();
 	}
 
 	public List<User> getAllUsers() {
@@ -41,7 +41,7 @@ public class UserManagementBean {
 
 	public User getUser(Long userId) {
 		User u = em.find(User.class, userId);
-		for (Role r : u.getRole()) {
+		for (Group r : u.getGroup()) {
 			// fetch eager
 		}
 		return u;
@@ -70,24 +70,24 @@ public class UserManagementBean {
 				.getResultList();
 	}
 
-	public User createUser(User user, Set<RoleData> roleData) {
+	public User createUser(User user, Set<GroupData> groupData) {
 
 		checkDuplicateUser(user.getId(), user.getEmail());
 
 		em.persist(user);
 
-		Set<Role> roles = new HashSet<>();
-		for (RoleData r : roleData) {
-			Role role = em.find(Role.class, r.getId());
-			roles.add(role);
+		Set<Group> groups = new HashSet<>();
+		for (GroupData r : groupData) {
+			Group group = em.find(Group.class, r.getId());
+			groups.add(group);
 		}
-		user.setRole(roles);
+		user.setGroup(groups);
 
 		return user;
 	}
 
 	public User updateUser(Long id, String firstName, String lastName, String email, String password,
-			Set<RoleData> roleData) {
+			Set<GroupData> groupData) {
 
 		checkDuplicateUser(id, email);
 
@@ -97,12 +97,12 @@ public class UserManagementBean {
 		user.setEmail(email);
 		user.setPassword(password);
 
-		Set<Role> roles = new HashSet<>();
-		for (RoleData r : roleData) {
-			Role role = em.find(Role.class, r.getId());
-			roles.add(role);
+		Set<Group> groups = new HashSet<>();
+		for (GroupData g : groupData) {
+			Group group = em.find(Group.class, g.getId());
+			groups.add(group);
 		}
-		user.setRole(roles);
+		user.setGroup(groups);
 
 		return user;
 	}

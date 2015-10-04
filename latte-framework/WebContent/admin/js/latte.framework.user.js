@@ -1,6 +1,6 @@
 var appUser = {
 
-	API_USERS : 'api/v1/users',
+	API_USERS : 'api/users',
 
 	currentId : null,
 
@@ -34,29 +34,29 @@ var appUser = {
 		});
 	},
 
-	loadRoles : function() {
-		$.getJSON(appUser.API_USERS + "/roles.json", function(data) {
+	loadGroups : function() {
+		$.getJSON(appUser.API_USERS + "/groups.json", function(data) {
 
-			var $roles = $("[name=select-role]");
-			$roles.find("option").remove(); // clear
+			var $groups = $("[name=select-group]");
+			$groups.find("option").remove(); // clear
 
-			$.each(data.role, function(index, role) {
+			$.each(data.group, function(index, group) {
 				var $option = $('<option />');
-				$option.attr('value', role.id).text(role.name);
+				$option.attr('value', group.id).text(group.name);
 
-				$roles.append($option);
+				$groups.append($option);
 			});
 		});
 	},
 
 	addNewUser : function() {
-		$("#btn-delete-user").hide();
+		$("#btn-delete").hide();
 		appAdmin.enterEditMode();
 		appUser.currentId = null;
 	},
 
 	showUser : function() {
-		$("#btn-delete-user").show();
+		$("#btn-delete").show();
 		appAdmin.enterEditMode();
 		appUser.currentId = null;
 
@@ -72,14 +72,14 @@ var appUser = {
 					$("[name=input-email]").val(u.email);
 					$("[name=input-password]").val(u.password);
 					
-					if (u.role) {
-						var $role = $("[name=select-role]");
-						if (u.role.length > 0) {
-							$.each(u.role, function(index, role) {
-								$role.find("option[value='" + role.id + "']").prop("selected", true);
+					if (u.group) {
+						var $group = $("[name=select-group]");
+						if (u.group.length > 0) {
+							$.each(u.group, function(index, group) {
+								$group.find("option[value='" + group.id + "']").prop("selected", true);
 							});
 						} else {
-							$role.find("option[value='" + u.role.id + "']").prop("selected", true);
+							$group.find("option[value='" + u.group.id + "']").prop("selected", true);
 						}
 					}
 				});
@@ -94,9 +94,9 @@ var appUser = {
 		u.email = $("[name=input-email]").val();
 		u.password = $("[name=input-password]").val();
 
-		u.role = [];
-		$("[name=select-role]").find(":selected").each(function(index, selected) {
-			u.role.push({"id" : $(selected).val()});
+		u.group = [];
+		$("[name=select-group]").find(":selected").each(function(index, selected) {
+			u.group.push({"id" : $(selected).val()});
 		});
 
 		console.log(u);
@@ -177,7 +177,7 @@ function initUser() {
 
 	$("#list-area tbody").on("click", "tr", appUser.showUser);
 
-	appUser.loadRoles();
+	appUser.loadGroups();
 	appUser.loadUsers();
 }
 

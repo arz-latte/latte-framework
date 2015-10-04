@@ -40,7 +40,7 @@ public class UserData {
 	@Size(min = 1, max = 63)
 	private String password;
 
-	private Set<RoleData> role = new HashSet<RoleData>();
+	private Set<GroupData> group = new HashSet<GroupData>();
 
 	public UserData() {
 	}
@@ -101,16 +101,16 @@ public class UserData {
 		this.password = password;
 	}
 
-	public Set<RoleData> getRole() {
-		return role;
+	public Set<GroupData> getGroup() {
+		return group;
 	}
 
-	public void setRole(Set<RoleData> role) {
-		this.role = role;
+	public void setGroup(Set<GroupData> group) {
+		this.group = group;
 	}
 
-	public void addRole(RoleData role) {
-		this.role.add(role);
+	public void addGroup(GroupData group) {
+		this.group.add(group);
 	}
 
 	@Override
@@ -121,7 +121,7 @@ public class UserData {
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
 		result = prime * result + ((password == null) ? 0 : password.hashCode());
-		result = prime * result + ((role == null) ? 0 : role.hashCode());
+		result = prime * result + ((group == null) ? 0 : group.hashCode());
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		return result;
 	}
@@ -155,10 +155,10 @@ public class UserData {
 				return false;
 		} else if (!password.equals(other.password))
 			return false;
-		if (role == null) {
-			if (other.role != null)
+		if (group == null) {
+			if (other.group != null)
 				return false;
-		} else if (!role.equals(other.role))
+		} else if (!group.equals(other.group))
 			return false;
 		if (email == null) {
 			if (other.email != null)
@@ -171,7 +171,7 @@ public class UserData {
 	@Override
 	public String toString() {
 		return "UserData [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email
-				+ ", password=" + password + ", role=" + role + "]";
+				+ ", password=" + password + ", group=" + group + "]";
 	}
 
 }

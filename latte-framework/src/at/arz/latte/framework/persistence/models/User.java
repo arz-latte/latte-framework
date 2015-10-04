@@ -66,7 +66,7 @@ public class User implements Serializable {
 	private String password;
 
 	@ManyToMany
-	private Set<Role> role = new HashSet<Role>();
+	private Set<Group> group = new HashSet<Group>();
 	
 	@Version
 	private long version;
@@ -129,12 +129,12 @@ public class User implements Serializable {
 		this.password = password;
 	}
 
-	public Set<Role> getRole() {
-		return role;
+	public Set<Group> getGroup() {
+		return group;
 	}
 
-	public void setRole(Set<Role> role) {
-		this.role = role;
+	public void setGroup(Set<Group> group) {
+		this.group = group;
 	}
 
 	@Override
@@ -145,7 +145,7 @@ public class User implements Serializable {
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
 		result = prime * result + ((password == null) ? 0 : password.hashCode());
-		result = prime * result + ((role == null) ? 0 : role.hashCode());
+		result = prime * result + ((group == null) ? 0 : group.hashCode());
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		return result;
 	}
@@ -179,10 +179,10 @@ public class User implements Serializable {
 				return false;
 		} else if (!password.equals(other.password))
 			return false;
-		if (role == null) {
-			if (other.role != null)
+		if (group == null) {
+			if (other.group != null)
 				return false;
-		} else if (!role.equals(other.role))
+		} else if (!group.equals(other.group))
 			return false;
 		if (email == null) {
 			if (other.email != null)

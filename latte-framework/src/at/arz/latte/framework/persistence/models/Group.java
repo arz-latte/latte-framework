@@ -19,50 +19,50 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 /**
- * persistent entity for a role
+ * persistent entity for a group
  * 
  * Dominik Neuner {@link "mailto:dominik@neuner-it.at"}
  *
  */
 @NamedQueries({
-		@NamedQuery(name = Role.QUERY_GETALL_BASE, query = "SELECT new at.arz.latte.framework.restful.dta.RoleData(r.id, r.name) FROM Role r ORDER BY r.name"),
-		@NamedQuery(name = Role.QUERY_GET_BY_NAME, query = "SELECT r FROM Role r WHERE r.name = :name") })
+		@NamedQuery(name = Group.QUERY_GETALL_BASE, query = "SELECT new at.arz.latte.framework.restful.dta.GroupData(g.id, g.name) FROM Group g ORDER BY g.name"),
+		@NamedQuery(name = Group.QUERY_GET_BY_NAME, query = "SELECT g FROM Group g WHERE g.name = :name") })
 @Entity
-@Table(name = "roles")
-public class Role implements Serializable {
+@Table(name = "groups")
+public class Group implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	public static final String QUERY_GETALL_BASE = "Role.GetAllBase";
-	public static final String QUERY_GET_BY_NAME = "Role.GetByName";
+	public static final String QUERY_GETALL_BASE = "Group.GetAllBase";
+	public static final String QUERY_GET_BY_NAME = "Group.GetByName";
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE, generator = "Role.ID")
-	@TableGenerator(name = "Role.ID", table = "latte_seq", pkColumnName = "KEY", pkColumnValue = "Role.ID", valueColumnName = "VALUE")
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "Group.ID")
+	@TableGenerator(name = "Group.ID", table = "latte_seq", pkColumnName = "KEY", pkColumnValue = "Group.ID", valueColumnName = "VALUE")
 	private Long id;
 
 	@NotNull
-	@Column(unique=true)
+	@Column(unique = true)
 	@Size(min = 1, max = 63)
 	private String name;
 
 	@ManyToMany
 	private Set<Permission> permission = new HashSet<Permission>();
-	
+
 	@Version
 	private long version;
 
 	/**
 	 * JPA consturctor
 	 */
-	public Role() {
+	public Group() {
 		super();
 	}
 
 	/**
 	 * used for creation via REST-service or JUnit
 	 */
-	public Role(String name) {
+	public Group(String name) {
 		this();
 		this.name = name;
 	}
@@ -70,7 +70,7 @@ public class Role implements Serializable {
 	/**
 	 * used for creation via REST-service or JUnit
 	 */
-	public Role(Long id) {
+	public Group(Long id) {
 		this();
 		this.id = id;
 	}
@@ -117,7 +117,7 @@ public class Role implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Role other = (Role) obj;
+		Group other = (Group) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;
@@ -138,7 +138,7 @@ public class Role implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Role [id=" + id + ", name=" + name + ", permission=" + permission + "]";
+		return "Group [id=" + id + ", name=" + name + ", permission=" + permission + "]";
 	}
 
 }

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<menu>
+    <name>Administration</name>
+    <url>/latte/admin/user.html</url>
+    <order>20</order>
+    <permission>admin</permission>
+    <submenu>
+        <name>Module</name>
+        <url>/latte/admin/module.html</url>
+    </submenu>
+    <submenu>
+        <name>Benutzer</name>
+        <url>/latte/admin/user.html</url>
+    </submenu>
+    <submenu>
+        <name>Gruppen</name>
+        <url>/latte/admin/group.html</url>
+    </submenu>
+</menu>

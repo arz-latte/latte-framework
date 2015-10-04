@@ -1,4 +1,4 @@
-package at.arz.latte.framework.services.restful.config;
+package at.arz.latte.framework.services.restful.admin;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -7,11 +7,9 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
-import at.arz.latte.framework.services.restful.AdministrationService;
-import at.arz.latte.framework.services.restful.FrameworkService;
-import at.arz.latte.framework.services.restful.ModuleService;
-import at.arz.latte.framework.services.restful.RoleService;
-import at.arz.latte.framework.services.restful.UserService;
+import at.arz.latte.framework.services.restful.admin.ModuleService;
+import at.arz.latte.framework.services.restful.admin.GroupService;
+import at.arz.latte.framework.services.restful.admin.UserService;
 
 /**
  * initialization of RESTful Service classes
@@ -20,8 +18,8 @@ import at.arz.latte.framework.services.restful.UserService;
  *
  */
 @ApplicationScoped
-@ApplicationPath("/api/v1")
-public class FrameworkConfiguration extends Application {
+@ApplicationPath("/admin/api")
+public class AdministrationConfiguration extends Application {
 
 	private Set<Class<?>> applicationClasses;
 
@@ -37,8 +35,6 @@ public class FrameworkConfiguration extends Application {
 		applicationClasses = new HashSet<Class<?>>();
 		applicationClasses.add(ModuleService.class);
 		applicationClasses.add(UserService.class);
-		applicationClasses.add(RoleService.class);
-		applicationClasses.add(AdministrationService.class);
-		applicationClasses.add(FrameworkService.class);
+		applicationClasses.add(GroupService.class);
 	}
 }

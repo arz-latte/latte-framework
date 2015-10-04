@@ -25,10 +25,6 @@ public class ModuleManagementBean {
 	@PersistenceContext(unitName = "latte-unit")
 	private EntityManager em;
 
-	public void initAllModules() {
-		em.createNamedQuery(Module.STOP_ALL).executeUpdate();
-	}
-
 	public List<ModuleData> getAllModulesData() {
 		return em.createNamedQuery(Module.QUERY_GETALL_BASE, ModuleData.class).getResultList();
 	}

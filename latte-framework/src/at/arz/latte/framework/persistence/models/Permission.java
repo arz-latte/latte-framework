@@ -24,7 +24,7 @@ import javax.validation.constraints.Size;
 @NamedQueries({
 		@NamedQuery(name = Permission.QUERY_GETALL_BASE, query = "SELECT new at.arz.latte.framework.restful.dta.PermissionData(p.id, p.name) FROM Permission p ORDER BY p.name"),
 		@NamedQuery(name = Permission.QUERY_GETALL, query = "SELECT p FROM Permission p"),
-		@NamedQuery(name = Permission.QUERY_GET_NAME_BY_USER, query = "SELECT p.name FROM User u JOIN u.role r JOIN r.permission p WHERE u.id = :id"), })
+		@NamedQuery(name = Permission.QUERY_GET_NAME_BY_USER, query = "SELECT p.name FROM User u JOIN u.group g JOIN g.permission p WHERE u.id = :id"), })
 @Entity
 @Table(name = "permissions")
 public class Permission implements Serializable {

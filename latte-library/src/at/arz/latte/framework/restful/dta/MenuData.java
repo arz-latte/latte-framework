@@ -28,6 +28,10 @@ public class MenuData implements Serializable {
 	@NotNull
 	private int order;
 
+	/**
+	 * default permission for whole module/menu
+	 */
+	@NotNull
 	@Size(min = 1, max = 31)
 	private String permission;
 
@@ -36,7 +40,7 @@ public class MenuData implements Serializable {
 
 	@XmlElement(name = "lastmodified")
 	private Long lastModified;
-
+	
 	public MenuData() {
 		super();
 		subMenus = new ArrayList<>();

@@ -1,4 +1,4 @@
-package at.arz.latte.framework.services.restful;
+package at.arz.latte.framework.services.restful.admin;
 
 import java.util.List;
 import java.util.Set;
@@ -17,25 +17,25 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import at.arz.latte.framework.persistence.beans.RoleManagementBean;
+import at.arz.latte.framework.persistence.beans.GroupManagementBean;
 import at.arz.latte.framework.persistence.models.Permission;
-import at.arz.latte.framework.persistence.models.Role;
+import at.arz.latte.framework.persistence.models.Group;
 import at.arz.latte.framework.restful.dta.PermissionData;
-import at.arz.latte.framework.restful.dta.RoleData;
+import at.arz.latte.framework.restful.dta.GroupData;
 import at.arz.latte.framework.services.restful.exception.LatteValidationException;
 
 /**
- * RESTful service for role management
+ * RESTful service for group management
  * 
  * Dominik Neuner {@link "mailto:dominik@neuner-it.at"}
  *
  */
 @RequestScoped
-@Path("roles")
-public class RoleService {
+@Path("groups")
+public class GroupService {
 
 	@EJB
-	private RoleManagementBean bean;
+	private GroupManagementBean bean;
 
 	@Inject
 	private Validator validator;
@@ -43,8 +43,8 @@ public class RoleService {
 	@GET
 	@Path("all.json")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<RoleData> getAllRoles() {
-		return bean.getAllRolesData();
+	public List<GroupData> getAllGroups() {
+		return bean.getAllGroupsData();
 	}
 
 	@GET
@@ -57,70 +57,70 @@ public class RoleService {
 	@GET
 	@Path("get.json/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public RoleData getRole(@PathParam("id") Long id) {
-		Role role = bean.getRole(id);
-		return toRoleData(role);
+	public GroupData getRole(@PathParam("id") Long id) {
+		Group group = bean.getGroup(id);
+		return toGroupData(group);
 	}
 
 	@POST
 	@Path("create.json")
 	@Produces(MediaType.APPLICATION_JSON)
-	public RoleData createRole(RoleData roleData) {
+	public GroupData createRole(GroupData groupData) {
 
-		Set<ConstraintViolation<Object>> violations = requestValidation(roleData);
+		Set<ConstraintViolation<Object>> violations = requestValidation(groupData);
 		if (!violations.isEmpty()) {
 			throw new LatteValidationException(400, violations);
 		}
 
-		Role role = new Role(roleData.getName());
+		Group group = new Group(groupData.getName());
 
-		return toRoleData(bean.createRole(role, roleData.getPermission()));
+		return toGroupData(bean.createGroup(group, groupData.getPermission()));
 	}
 
 	@PUT
 	@Path("update.json")
 	@Produces(MediaType.APPLICATION_JSON)
-	public RoleData updateRole(RoleData roleData) {
+	public GroupData updateRole(GroupData groupData) {
 
-		Set<ConstraintViolation<Object>> violations = requestValidation(roleData);
+		Set<ConstraintViolation<Object>> violations = requestValidation(groupData);
 		if (!violations.isEmpty()) {
 			throw new LatteValidationException(400, violations);
 		}
 
-		Role role = bean.updateRole(roleData.getId(), roleData.getName(), roleData.getPermission());
+		Group group = bean.updateGroup(groupData.getId(), groupData.getName(), groupData.getPermission());
 
-		return toRoleData(role);
+		return toGroupData(group);
 	}
 
 	@DELETE
 	@Path("delete.json/{id}")
-	public void deleteRole(@PathParam("id") Long roleId) {
-		bean.deleteRole(roleId);
+	public void deleteGroup(@PathParam("id") Long groupId) {
+		bean.deleteGroup(groupId);
 	}
 
-	private Set<ConstraintViolation<Object>> requestValidation(Object roleData) {
-		return validator.validate(roleData);
+	private Set<ConstraintViolation<Object>> requestValidation(Object groupData) {
+		return validator.validate(groupData);
 	}
 
 	/**
 	 * helper for REST service
 	 * 
-	 * @param roleData
+	 * @param group
 	 * @return
 	 */
-	public RoleData toRoleData(Role role) {
-		RoleData roleData = new RoleData();
-		roleData.setId(role.getId());
-		roleData.setName(role.getName());
+	public GroupData toGroupData(Group group) {
+		GroupData groupData = new GroupData();
+		groupData.setId(group.getId());
+		groupData.setName(group.getName());
 
-		if (role.getPermission() != null) {
-			for (Permission permission : role.getPermission()) {
+		if (group.getPermission() != null) {
+			for (Permission permission : group.getPermission()) {
 				PermissionData permissionData = new PermissionData();
 				permissionData.setId(permission.getId());
-				roleData.addPermission(permissionData);
+				groupData.addPermission(permissionData);
 			}
 		}
 		
-		return roleData;
+		return groupData;
 	}
 }

@@ -1,4 +1,4 @@
-package at.arz.latte.framework.services.restful;
+package at.arz.latte.framework.services.restful.admin;
 
 import java.util.List;
 import java.util.Set;
@@ -18,9 +18,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import at.arz.latte.framework.persistence.beans.UserManagementBean;
-import at.arz.latte.framework.persistence.models.Role;
+import at.arz.latte.framework.persistence.models.Group;
 import at.arz.latte.framework.persistence.models.User;
-import at.arz.latte.framework.restful.dta.RoleData;
+import at.arz.latte.framework.restful.dta.GroupData;
 import at.arz.latte.framework.restful.dta.UserData;
 import at.arz.latte.framework.services.restful.exception.LatteValidationException;
 
@@ -48,10 +48,10 @@ public class UserService {
 	}
 
 	@GET
-	@Path("roles.json")
+	@Path("groups.json")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<RoleData> getAllRoles() {
-		return bean.getAllRolesData();
+	public List<GroupData> getAllGroups() {
+		return bean.getAllGroupsData();
 	}
 
 	@GET
@@ -75,7 +75,7 @@ public class UserService {
 		User user = new User(userData.getFirstName(), userData.getLastName(), userData.getEmail(),
 				userData.getPassword());
 
-		return toUserData(bean.createUser(user, userData.getRole()));
+		return toUserData(bean.createUser(user, userData.getGroup()));
 	}
 
 	@PUT
@@ -89,7 +89,7 @@ public class UserService {
 		}
 
 		User user = bean.updateUser(userData.getId(), userData.getFirstName(), userData.getLastName(),
-				userData.getEmail(), userData.getPassword(), userData.getRole());
+				userData.getEmail(), userData.getPassword(), userData.getGroup());
 
 		return toUserData(user);
 	}
@@ -118,11 +118,11 @@ public class UserService {
 		userData.setEmail(user.getEmail());
 		userData.setPassword(user.getPassword());
 
-		if (user.getRole() != null) {
-			for (Role role : user.getRole()) {
-				RoleData roleData = new RoleData();
-				roleData.setId(role.getId());
-				userData.addRole(roleData);
+		if (user.getGroup() != null) {
+			for (Group group : user.getGroup()) {
+				GroupData groupData = new GroupData();
+				groupData.setId(group.getId());
+				userData.addGroup(groupData);
 			}
 		}
 

@@ -10,14 +10,14 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * used to transmit role data to the client, for single view or update
+ * used to transmit group data to the client, for single view or update
  * 
  * Dominik Neuner {@link "mailto:dominik@neuner-it.at"}
  *
  */
-@XmlRootElement(name = "role")
+@XmlRootElement(name = "group")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class RoleData {
+public class GroupData {
 
 	private Long id;
 
@@ -27,7 +27,7 @@ public class RoleData {
 
 	private Set<PermissionData> permission = new HashSet<PermissionData>();
 
-	public RoleData() {
+	public GroupData() {
 	}
 
 	/**
@@ -36,7 +36,7 @@ public class RoleData {
 	 * @param id
 	 * @param name
 	 */
-	public RoleData(Long id, String name) {
+	public GroupData(Long id, String name) {
 		this();
 		this.id = id;
 		this.name = name;
@@ -88,7 +88,7 @@ public class RoleData {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		RoleData other = (RoleData) obj;
+		GroupData other = (GroupData) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;
