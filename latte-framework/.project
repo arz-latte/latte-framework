@@ -3,6 +3,7 @@
 	<name>latte-framework</name>
 	<comment></comment>
 	<projects>
+		<project>latte-library</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
