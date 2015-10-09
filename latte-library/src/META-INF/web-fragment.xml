@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-fragment id="WebFragment_ID" version="3.0"
+	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-fragment_3_0.xsd">
+	<display-name>latte-framework-module</display-name>
+	<name>latte_framework_module</name>
+	<error-page>
+		<error-code>401</error-code>
+		<location>/login</location>
+	</error-page>
+	
+	<servlet>
+		<servlet-name>AuthenticationServlet</servlet-name>
+		<servlet-class>at.arz.latte.framework.authentication.AuthenticationServlet</servlet-class>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>AuthenticationServlet</servlet-name>
+		<url-pattern>/login</url-pattern>
+	</servlet-mapping>
+
+</web-fragment>
