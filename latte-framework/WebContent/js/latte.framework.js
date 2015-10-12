@@ -1,8 +1,10 @@
 /**
  * version 04.10.2015
  */
-var app = {
+'use strict';
 
+var app = {
+	
 	API_LATTE : 'http://localhost:8080/latte',
 	PATH_INDEX : '/index.html',
 	PATH_FRAMEWORK : '/api/framework',
