@@ -61,9 +61,10 @@ public class FrameworkManagementBean {
 			
 			// sort admin menu
 			boolean added = false;
-			for(int i = 0; i < modulesData.size(); i++) { 
-				MenuData menuData = modulesData.get(i).getMenu();
-				if (menuData.getOrder() > moduleData.getMenu().getOrder()) {
+			int adminMenuOrder = InitializationBean.ADMIN_MENU.getOrder();
+			for(int i = 0; i < modules.size(); i++) { 
+				Menu menu = modules.get(i).getMenu();
+				if (menu.getOrder() > adminMenuOrder) {
 					modulesData.add(i, moduleData);
 					added = true;
 					break;
@@ -92,7 +93,7 @@ public class FrameworkManagementBean {
 		}
 
 		// main menu entry
-		MenuData menuData = new MenuData(menu.getName(), menu.getUrl(), menu.getOrder());
+		MenuData menuData = new MenuData(menu.getName(), menu.getUrl());
 
 		// sub menu entries
 		if (menu.getSubMenus() != null && !menu.getSubMenus().isEmpty()) {

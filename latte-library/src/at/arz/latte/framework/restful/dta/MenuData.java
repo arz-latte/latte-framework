@@ -26,7 +26,7 @@ public class MenuData implements Serializable {
 	private String url;
 
 	@NotNull
-	private int order;
+	private Integer order;
 
 	/**
 	 * default permission for whole module/menu
@@ -46,11 +46,10 @@ public class MenuData implements Serializable {
 		subMenus = new ArrayList<>();
 	}
 
-	public MenuData(String name, String url, int order) {
+	public MenuData(String name, String url) {
 		this();
 		this.name = name;
 		this.url = url;
-		this.order = order;
 	}
 
 	public String getName() {
@@ -69,11 +68,11 @@ public class MenuData implements Serializable {
 		this.url = url;
 	}
 
-	public int getOrder() {
+	public Integer getOrder() {
 		return order;
 	}
 
-	public void setOrder(int order) {
+	public void setOrder(Integer order) {
 		this.order = order;
 	}
 
