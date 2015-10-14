@@ -1,15 +1,17 @@
+"use strict";
+
 var appUser = {
 
 	API_USERS : 'api/users',
 
-	currentId : null,
+	URI_USERS : '/latte/api/admin/users',
+	URI_GROUPS : '/latte/api/admin/groups',
 
 	loadUsers : function() {
 		appAdmin.leaveEditMode();
 		appUser.currentId = null;
 
-		$.getJSON(appUser.API_USERS + "/all.json", function(data) {
-
+		latte.call(appUser.URI_USERS, function(data) {
 			var $users = $("#users");
 			$users.find("tr:has(td)").remove(); // clear
 
@@ -35,7 +37,7 @@ var appUser = {
 	},
 
 	loadGroups : function() {
-		$.getJSON(appUser.API_USERS + "/groups.json", function(data) {
+		latte.call(appUser.URI_GROUPS, function(data) {
 
 			var $groups = $("[name=select-group]");
 			$groups.find("option").remove(); // clear
@@ -62,27 +64,28 @@ var appUser = {
 
 		// load user details
 		appUser.currentId = $(this).attr("data-id");
-		$.getJSON(appUser.API_USERS + "/get.json/" + appUser.currentId,
-				function(data) {
+		latte.call(appUser.URI_USERS + "/" + appUser.currentId, function(data) {
 
-					// fill form
-					var u = data.user;
-					$("[name=input-firstName]").val(u.firstName);
-					$("[name=input-lastName]").val(u.lastName);
-					$("[name=input-email]").val(u.email);
-					$("[name=input-password]").val(u.password);
-					
-					if (u.group) {
-						var $group = $("[name=select-group]");
-						if (u.group.length > 0) {
-							$.each(u.group, function(index, group) {
-								$group.find("option[value='" + group.id + "']").prop("selected", true);
-							});
-						} else {
-							$group.find("option[value='" + u.group.id + "']").prop("selected", true);
-						}
-					}
-				});
+			// fill form
+			var u = data.user;
+			$("[name=input-firstName]").val(u.firstName);
+			$("[name=input-lastName]").val(u.lastName);
+			$("[name=input-email]").val(u.email);
+			$("[name=input-password]").val(u.password);
+
+			if (u.group) {
+				var $group = $("[name=select-group]");
+				if (u.group.length > 0) {
+					$.each(u.group, function(index, group) {
+						$group.find("option[value='" + group.id + "']").prop(
+								"selected", true);
+					});
+				} else {
+					$group.find("option[value='" + u.group.id + "']").prop(
+							"selected", true);
+				}
+			}
+		});
 	},
 
 	storeUser : function() {
@@ -95,16 +98,19 @@ var appUser = {
 		u.password = $("[name=input-password]").val();
 
 		u.group = [];
-		$("[name=select-group]").find(":selected").each(function(index, selected) {
-			u.group.push({"id" : $(selected).val()});
-		});
+		$("[name=select-group]").find(":selected").each(
+				function(index, selected) {
+					u.group.push({
+						"id" : $(selected).val()
+					});
+				});
 
 		console.log(u);
-		
+
 		if (u.id > 0) {
 
-			$.ajax({
-				url : appUser.API_USERS + "/update.json",
+			latte.ajax({
+				url : appUser.URI_USERS,
 				type : "PUT",
 				data : JSON.stringify({
 					"user" : u
@@ -118,8 +124,8 @@ var appUser = {
 			});
 		} else {
 
-			$.ajax({
-				url : appUser.API_USERS + "/create.json",
+			latte.ajax({
+				url : appUser.URI_USERS,
 				type : "POST",
 				data : JSON.stringify({
 					"user" : u
@@ -139,8 +145,8 @@ var appUser = {
 	deleteUser : function() {
 		var choice = confirm("Sind Sie sicher?");
 		if (choice == true) {
-			$.ajax({
-				url : appUser.API_USERS + "/delete.json/" + appUser.currentId,
+			latte.ajax({
+				url : appUser.URI_USERS + "/" + appUser.currentId,
 				type : "DELETE",
 			}).done(function(data) {
 				app.showSuccessMessage("Benutzer gel&ouml;scht");
@@ -159,26 +165,23 @@ var appUser = {
 		return false;
 	},
 
+	initModule : function() {
+		appAdmin.init();
+
+		$("#btn-load").on("click", appUser.loadUsers);
+		$("#btn-add").on("click", appUser.addNewUser);
+
+		$("#btn-store").on("click", appUser.storeUser);
+		$("#btn-delete").on("click", appUser.deleteUser);
+		$("#btn-restore").on("click", appUser.restoreUser);
+
+		$("#list-area tbody").on("click", "tr", appUser.showUser);
+
+		appUser.loadGroups();
+		appUser.loadUsers();
+	}
 };
 
-// ===========================================================================
-// ready & event handlers
-// ===========================================================================
-function initUser() {
-
-	appAdmin.init();
-
-	$("#btn-load").on("click", appUser.loadUsers);
-	$("#btn-add").on("click", appUser.addNewUser);
-
-	$("#btn-store").on("click", appUser.storeUser);
-	$("#btn-delete").on("click", appUser.deleteUser);
-	$("#btn-restore").on("click", appUser.restoreUser);
-
-	$("#list-area tbody").on("click", "tr", appUser.showUser);
-
-	appUser.loadGroups();
-	appUser.loadUsers();
-}
-
-$(initUser);
+$(function() {
+	appUser.initModule();
+});

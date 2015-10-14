@@ -1,10 +1,9 @@
-package at.arz.latte.framework.services.restful.admin;
+package at.arz.latte.framework.restapi.admin;
 
 import java.util.List;
 import java.util.Set;
 
-import javax.ejb.EJB;
-import javax.enterprise.context.RequestScoped;
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
@@ -18,44 +17,37 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import at.arz.latte.framework.persistence.beans.GroupManagementBean;
-import at.arz.latte.framework.persistence.models.Permission;
 import at.arz.latte.framework.persistence.models.Group;
-import at.arz.latte.framework.restful.dta.PermissionData;
+import at.arz.latte.framework.persistence.models.Permission;
 import at.arz.latte.framework.restful.dta.GroupData;
+import at.arz.latte.framework.restful.dta.PermissionData;
 import at.arz.latte.framework.services.restful.exception.LatteValidationException;
 
 /**
  * RESTful service for group management
  * 
- * Dominik Neuner {@link "mailto:dominik@neuner-it.at"}
+ * @author Dominik Neuner {@link "mailto:dominik@neuner-it.at"}
+ * @author mrodler
  *
  */
-@RequestScoped
-@Path("groups")
-public class GroupService {
+@Stateless
+@Path("/groups")
+public class GroupAdministration {
 
-	@EJB
+	@Inject
 	private GroupManagementBean bean;
 
 	@Inject
 	private Validator validator;
 
 	@GET
-	@Path("all.json")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<GroupData> getAllGroups() {
 		return bean.getAllGroupsData();
 	}
 
 	@GET
-	@Path("permissions.json")
-	@Produces(MediaType.APPLICATION_JSON)
-	public List<PermissionData> getAllPermissions() {
-		return bean.getAllPermissionsData();
-	}
-
-	@GET
-	@Path("get.json/{id}")
+	@Path("{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public GroupData getRole(@PathParam("id") Long id) {
 		Group group = bean.getGroup(id);
@@ -63,7 +55,6 @@ public class GroupService {
 	}
 
 	@POST
-	@Path("create.json")
 	@Produces(MediaType.APPLICATION_JSON)
 	public GroupData createRole(GroupData groupData) {
 
@@ -78,7 +69,6 @@ public class GroupService {
 	}
 
 	@PUT
-	@Path("update.json")
 	@Produces(MediaType.APPLICATION_JSON)
 	public GroupData updateRole(GroupData groupData) {
 
@@ -93,7 +83,7 @@ public class GroupService {
 	}
 
 	@DELETE
-	@Path("delete.json/{id}")
+	@Path("{id}")
 	public void deleteGroup(@PathParam("id") Long groupId) {
 		bean.deleteGroup(groupId);
 	}

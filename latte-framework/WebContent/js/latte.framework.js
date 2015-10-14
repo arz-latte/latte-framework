@@ -3,6 +3,18 @@
  */
 'use strict';
 
+var latte = {
+		
+	URL_API : "/latte/api",
+
+	call : function (path, message){
+		return $.getJSON(path, message);
+	},
+	ajax : function (message){
+		return $.ajax(message);
+	},
+		
+}
 var app = {
 	
 	API_LATTE : 'http://localhost:8080/latte',

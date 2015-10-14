@@ -3,7 +3,6 @@ package at.arz.latte.framework.services.restful;
 import java.util.List;
 
 import javax.ejb.EJB;
-import javax.enterprise.context.SessionScoped;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.GET;
@@ -28,7 +27,6 @@ import at.arz.latte.framework.websockets.models.WebsocketMessage;
  * Dominik Neuner {@link "mailto:dominik@neuner-it.at"}
  *
  */
-@SessionScoped
 @Path("framework")
 public class FrameworkService {
 

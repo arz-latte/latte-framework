@@ -26,16 +26,20 @@ public class UserManagementBean {
 	@PersistenceContext(unitName = "latte-unit")
 	private EntityManager em;
 
+
 	public List<UserData> getAllUsersData() {
-		return em.createNamedQuery(User.QUERY_GETALL_BASE, UserData.class).getResultList();
+		return em.createNamedQuery(User.QUERY_GETALL_BASE, UserData.class)
+				.getResultList();
 	}
 
 	public List<GroupData> getAllGroupsData() {
-		return em.createNamedQuery(Group.QUERY_GETALL_BASE, GroupData.class).getResultList();
+		return em.createNamedQuery(Group.QUERY_GETALL_BASE, GroupData.class)
+				.getResultList();
 	}
 
 	public List<User> getAllUsers() {
-		return em.createNamedQuery(User.QUERY_GETALL, User.class).getResultList();
+		return em.createNamedQuery(User.QUERY_GETALL, User.class)
+				.getResultList();
 	}
 
 	public User getUser(Long userId) {
@@ -62,8 +66,8 @@ public class UserManagementBean {
 		return user;
 	}
 
-	public User updateUser(Long id, String firstName, String lastName, String email, String password,
-			Set<GroupData> groupData) {
+	public User updateUser(Long id, String firstName, String lastName,
+			String email, String password, Set<GroupData> groupData) {
 
 		checkDuplicateUser(id, email);
 
@@ -96,12 +100,15 @@ public class UserManagementBean {
 	 * @param username
 	 * @throws LatteValidationException
 	 */
-	private void checkDuplicateUser(Long userId, String email) throws LatteValidationException {
-		List<User> duplicates = em.createNamedQuery(User.QUERY_GET_BY_EMAIL, User.class).setParameter("email", email)
-				.getResultList();
+	private void checkDuplicateUser(Long userId, String email)
+			throws LatteValidationException {
+		List<User> duplicates = em
+				.createNamedQuery(User.QUERY_GET_BY_EMAIL, User.class)
+				.setParameter("email", email).getResultList();
 
 		if (duplicates.size() == 1 && !duplicates.get(0).getId().equals(userId)) {
-			throw new LatteValidationException(400, "username", "Eintrag bereits vorhanden");
+			throw new LatteValidationException(400, "username",
+					"Eintrag bereits vorhanden");
 		}
 	}
 

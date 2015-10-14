@@ -2,6 +2,7 @@ package at.arz.latte.framework.persistence.models;
 
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -47,7 +48,7 @@ public class Group implements Serializable {
 	private String name;
 
 	@ManyToMany
-	private Set<Permission> permission = new HashSet<Permission>();
+	private Set<Permission> permissions = new HashSet<Permission>();
 
 	@Version
 	private long version;
@@ -63,8 +64,8 @@ public class Group implements Serializable {
 	 * used for creation via REST-service or JUnit
 	 */
 	public Group(String name) {
-		this();
 		this.name = name;
+		this.permissions=new HashSet<Permission>();
 	}
 
 	/**
@@ -91,13 +92,15 @@ public class Group implements Serializable {
 		this.name = name;
 	}
 
-	public Set<Permission> getPermission() {
-		return permission;
+	public Set<Permission> getPermissions() {
+		return permissions;
+	}
+	
+	public void addPermission(Permission permission){
+		Objects.requireNonNull(permission);
+		this.permissions.add(permission);
 	}
 
-	public void setPermission(Set<Permission> permission) {
-		this.permission = permission;
-	}
 
 	@Override
 	public int hashCode() {
@@ -105,7 +108,7 @@ public class Group implements Serializable {
 		int result = 1;
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((permission == null) ? 0 : permission.hashCode());
+		result = prime * result + ((permissions == null) ? 0 : permissions.hashCode());
 		return result;
 	}
 
@@ -128,17 +131,17 @@ public class Group implements Serializable {
 				return false;
 		} else if (!name.equals(other.name))
 			return false;
-		if (permission == null) {
-			if (other.permission != null)
+		if (permissions == null) {
+			if (other.permissions != null)
 				return false;
-		} else if (!permission.equals(other.permission))
+		} else if (!permissions.equals(other.permissions))
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "Group [id=" + id + ", name=" + name + ", permission=" + permission + "]";
+		return "Group [id=" + id + ", name=" + name + ", permission=" + permissions + "]";
 	}
 
 }

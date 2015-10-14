@@ -66,15 +66,11 @@ public class InitializeTest  {
 		em.persist(gUser);
 		
 		Group gDemo = new Group("LatteDemo");	// required for demo
-		Set<Permission> permissions = new HashSet<>();
-		permissions.add(pDemo);
-		gDemo.setPermission(permissions);
+		gDemo.addPermission(pDemo);
 		em.persist(gDemo);
 
 		Group gAdmin = new Group("LatteAdministrator");	// required for administration
-		permissions = new HashSet<>();
-		permissions.add(pAdmin);
-		gAdmin.setPermission(permissions);
+		gAdmin.addPermission(pAdmin);
 		em.persist(gAdmin);
 		
 		// users

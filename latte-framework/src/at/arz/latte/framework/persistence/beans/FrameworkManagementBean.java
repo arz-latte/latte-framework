@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import at.arz.latte.framework.LatteUser;
 import at.arz.latte.framework.persistence.models.Menu;
 import at.arz.latte.framework.persistence.models.Module;
 import at.arz.latte.framework.persistence.models.SubMenu;
@@ -25,6 +27,9 @@ public class FrameworkManagementBean {
 
 	@PersistenceContext(unitName = "latte-unit")
 	private EntityManager em;
+	
+	@Inject
+	private LatteUser currentUser;
 
 	/**
 	 * get all modules with their menus for REST-service
@@ -33,7 +38,7 @@ public class FrameworkManagementBean {
 	 * @return
 	 */
 	public List<ModuleData> getAll(List<String> permissions) {
-
+		System.out.println(currentUser.getAllPermissions());
 		List<ModuleData> modulesData = new ArrayList<>();
 		
 		// get modules from database

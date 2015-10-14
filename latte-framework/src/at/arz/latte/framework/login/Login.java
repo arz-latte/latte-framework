@@ -1,4 +1,4 @@
-package at.arz.latte.framework.authentication;
+package at.arz.latte.framework.login;
 
 import java.io.IOException;
 import java.util.Objects;
