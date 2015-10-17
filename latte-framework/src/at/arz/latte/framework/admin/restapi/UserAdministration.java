@@ -1,4 +1,4 @@
-package at.arz.latte.framework.restapi.admin;
+package at.arz.latte.framework.admin.restapi;
 
 import java.util.List;
 import java.util.Set;
