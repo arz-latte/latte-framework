@@ -67,7 +67,7 @@ var appAdmin = {
 	 * clear list view filter
 	 */
 	clearListFilter : function() {
-		$("#list-filter").val("");
+		document.getElementById("list-filter").value="";
 		$("tbody tr").show();
 	},
 
@@ -77,8 +77,8 @@ var appAdmin = {
 	enterEditMode : function() {
 		appAdmin.resetFormValidation();
 
-		$("#list-area").hide();
-		$("#edit-area").show();
+		document.getElementById("list-area").style.display="none";
+		document.getElementById("edit-area").style.display="block";
 
 		$("#edit-area form").trigger("reset");
 	},
@@ -87,15 +87,15 @@ var appAdmin = {
 	 * leave edit mode, hide input fields
 	 */
 	leaveEditMode : function() {
-		$("#edit-area").hide();
-		$("#list-area").show();
+		document.getElementById("edit-area").style.display="none";
+		document.getElementById("list-area").style.display="block";
 	},
 
 	/**
 	 * initialize filter
 	 */
 	init : function() {
-		$("#btn-clear-list-filter").on("click", appAdmin.clearListFilter);
-		$("#list-filter").on("keyup", appAdmin.filterList);
+		document.getElementById("btn-clear-list-filter").addEventListener("click", appAdmin.clearListFilter);
+		document.getElementById("list-filter").addEventListener("keyup", appAdmin.filterList);
 	}
 };
