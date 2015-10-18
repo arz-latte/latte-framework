@@ -8,8 +8,8 @@ import javax.xml.bind.Marshaller;
 
 import org.junit.Test;
 
-import at.arz.latte.framework.restful.dta.MenuData;
-import at.arz.latte.framework.restful.dta.SubMenuData;
+import at.arz.latte.framework.restapi.MenuData;
+import at.arz.latte.framework.restapi.SubMenuData;
 
 /**
  * test class for creating a demo configuration file

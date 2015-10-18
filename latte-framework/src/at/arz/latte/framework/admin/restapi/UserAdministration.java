@@ -5,6 +5,8 @@ import java.util.Set;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import javax.ws.rs.DELETE;
@@ -16,19 +18,22 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import at.arz.latte.framework.persistence.beans.UserManagementBean;
-import at.arz.latte.framework.persistence.models.Group;
-import at.arz.latte.framework.persistence.models.User;
-import at.arz.latte.framework.restful.dta.GroupData;
-import at.arz.latte.framework.restful.dta.UserData;
-import at.arz.latte.framework.services.restful.exception.LatteValidationException;
+import at.arz.latte.framework.FrameworkConstants;
+import at.arz.latte.framework.admin.AdminQuery;
+import at.arz.latte.framework.admin.Group;
+import at.arz.latte.framework.admin.User;
+import at.arz.latte.framework.exceptions.LatteValidationException;
+import at.arz.latte.framework.restapi.GroupData;
+import at.arz.latte.framework.restapi.UserData;
+import at.arz.latte.framework.util.Functions;
+import at.arz.latte.framework.util.JPA;
 
 @Stateless
 @Path("/users")
 public class UserAdministration {
 
-	@Inject
-	private UserManagementBean bean;
+	@PersistenceContext(unitName = FrameworkConstants.JPA_UNIT)
+	private EntityManager em;
 
 	@Inject
 	private Validator validator;
@@ -36,15 +41,16 @@ public class UserAdministration {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<UserData> allUsers() {
-		return bean.getAllUsersData();
+		return Functions.map(AdminMapper.USER_TO_USERDATA, new AdminQuery(em).allUsers());
 	}
 
 	@GET
 	@Path("{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public UserData userWithId(@PathParam("id") Long id) {
-		User user = bean.getUser(id);
-		return toUserData(user);
+		User user = em.find(User.class, id);
+		JPA.fetchAll(user.getGroup());
+		return AdminMapper.USER_TO_USERDATA.apply(user);
 	}
 
 	@POST
@@ -56,10 +62,12 @@ public class UserAdministration {
 			throw new LatteValidationException(400, violations);
 		}
 
-		User user = new User(userData.getFirstName(), userData.getLastName(),
-				userData.getEmail(), userData.getPassword());
+		User user = new User(	userData.getFirstName(),
+								userData.getLastName(),
+								userData.getEmail(),
+								userData.getPassword());
 
-		return toUserData(bean.createUser(user, userData.getGroup()));
+		return toUserData(new UserEditor(em).createUser(user, userData.getGroup()));
 	}
 
 	@PUT
@@ -71,9 +79,12 @@ public class UserAdministration {
 			throw new LatteValidationException(400, violations);
 		}
 
-		User user = bean.updateUser(userData.getId(), userData.getFirstName(),
-				userData.getLastName(), userData.getEmail(),
-				userData.getPassword(), userData.getGroup());
+		User user = new UserEditor(em).updateUser(	userData.getId(),
+												userData.getFirstName(),
+												userData.getLastName(),
+												userData.getEmail(),
+												userData.getPassword(),
+												userData.getGroup());
 
 		return toUserData(user);
 	}
@@ -81,7 +92,7 @@ public class UserAdministration {
 	@DELETE
 	@Path("{id}")
 	public void deleteUser(@PathParam("id") Long userId) {
-		bean.deleteUser(userId);
+		new UserEditor(em).deleteUser(userId);
 	}
 
 	private Set<ConstraintViolation<Object>> requestValidation(Object userData) {

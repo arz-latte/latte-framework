@@ -15,7 +15,9 @@ public class AuthenticationServlet extends HttpServlet {
 
 	private final static String LOGIN_FORM_URI = "/latte/login.html";
 
-	public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
+	public	void
+			doGet(HttpServletRequest req, HttpServletResponse res)	throws IOException,
+																	ServletException {
 		String currentURL = (String) req.getAttribute("javax.servlet.error.request_uri");
 		res.reset();
 		Cookie cookie = new Cookie(REDIRECT_COOKIE_NAME, currentURL);
@@ -28,5 +30,5 @@ public class AuthenticationServlet extends HttpServlet {
 		res.setContentType("text/plain");
 		res.sendRedirect(LOGIN_FORM_URI);
 	}
-	
+
 }

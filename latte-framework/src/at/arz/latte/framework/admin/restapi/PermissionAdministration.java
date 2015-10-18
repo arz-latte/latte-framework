@@ -3,14 +3,17 @@ package at.arz.latte.framework.admin.restapi;
 import java.util.List;
 
 import javax.ejb.Stateless;
-import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import at.arz.latte.framework.persistence.beans.GroupManagementBean;
-import at.arz.latte.framework.restful.dta.PermissionData;
+import at.arz.latte.framework.FrameworkConstants;
+import at.arz.latte.framework.admin.AdminQuery;
+import at.arz.latte.framework.restapi.PermissionData;
+import at.arz.latte.framework.util.Functions;
 
 /**
  * RESTful service for group management
@@ -23,13 +26,14 @@ import at.arz.latte.framework.restful.dta.PermissionData;
 @Path("/permissions")
 public class PermissionAdministration {
 
-	@Inject
-	private GroupManagementBean bean;
+	@PersistenceContext(unitName = FrameworkConstants.JPA_UNIT)
+	private EntityManager em;
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<PermissionData> getAllPermissions() {
-		return bean.getAllPermissionsData();
+	public List<PermissionData> allPermissions() {
+		return Functions.map(	AdminMapper.MAP_TO_PERMISSIONDATA,
+								new AdminQuery(em).allPermissions());
 	}
 
 }

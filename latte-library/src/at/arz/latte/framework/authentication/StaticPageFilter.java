@@ -13,13 +13,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * statische html Seiten sollen vom Browser nicht gecached werden. 
+ * statische html Seiten sollen vom Browser nicht gecached werden.
  */
 @WebFilter("*.html")
 public class StaticPageFilter implements Filter {
 
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-		HttpServletResponse httpResponse=(HttpServletResponse) response;
+	public void doFilter(	ServletRequest request,
+							ServletResponse response,
+							FilterChain chain)	throws IOException,
+												ServletException {
+		HttpServletResponse httpResponse = (HttpServletResponse) response;
 		httpResponse.addHeader("Cache-Control", "no-cache, no-store");
 		chain.doFilter(request, response);
 	}

@@ -10,6 +10,8 @@ import javax.persistence.Persistence;
 import org.apache.derby.jdbc.EmbeddedDataSource;
 import org.postgresql.ds.PGSimpleDataSource;
 
+import at.arz.latte.framework.FrameworkConstants;
+
 public class JpaPersistenceSetup {
 
 	private static EntityManagerFactory entityMangerFactory;
@@ -30,7 +32,7 @@ public class JpaPersistenceSetup {
 		EmbeddedDataSource dataSource = createDerbyDB();
 		properties.put("openjpa.ConnectionFactory", dataSource);
 		properties.put("openjpa.ConnectionFactory2", dataSource);
-		entityMangerFactory = Persistence.createEntityManagerFactory("latte-unit", properties);
+		entityMangerFactory = Persistence.createEntityManagerFactory(FrameworkConstants.JPA_UNIT, properties);
 	}
 
 	private static EmbeddedDataSource createDerbyDB() {
@@ -45,7 +47,7 @@ public class JpaPersistenceSetup {
 		PGSimpleDataSource dataSource = createPostgreDB();
 		properties.put("openjpa.ConnectionFactory", dataSource);
 		properties.put("openjpa.ConnectionFactory2", dataSource);
-		entityMangerFactory = Persistence.createEntityManagerFactory("latte-unit", properties);
+		entityMangerFactory = Persistence.createEntityManagerFactory(FrameworkConstants.JPA_UNIT, properties);
 		
 	}
 	

@@ -3,23 +3,16 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
 	version="2.0">
 
-	<persistence-unit name="latte-unit">	
+	<persistence-unit name="latte-library">	
 		<jta-data-source>java:comp/env/jdbc/latte</jta-data-source>
 		<non-jta-data-source>java:comp/env/jdbc/latte</non-jta-data-source>
-		<class>at.arz.latte.framework.persistence.models.Module</class>
-		<class>at.arz.latte.framework.persistence.models.Menu</class>
-		<class>at.arz.latte.framework.persistence.models.SubMenu</class>
-		<class>at.arz.latte.framework.persistence.models.User</class>
-		<class>at.arz.latte.framework.persistence.models.Group</class>
-		<class>at.arz.latte.framework.persistence.models.Permission</class>
+		<class>at.arz.latte.framework.authorization.AuthorizationGroup</class>
+		<class>at.arz.latte.framework.authorization.AuthorizationPermission</class>
+		<class>at.arz.latte.framework.authorization.AuthorizationUser</class>
 
 		<properties>
 			<property name="openjpa.DynamicEnhancementAgent" value="true" />
 			<property name="openjpa.RuntimeUnenhancedClasses" value="supported" />
-			<property name="javax.persistence.schema-generation.database.action" value="create" />
-			<property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(ForeignKeys=true)" />
-			<property name="openjpa.jdbc.MappingDefaults"
-				value="ForeignKeyDeleteAction=restrict,JoinForeignKeyDeleteAction=restrict" />				
 			<property name="openjpa.Log" value="DefaultLevel=WARN, Runtime=INFO, Tool=INFO"/>
 			<property name="openjpa.ConnectionFactoryProperties" value="PrintParameters=true" />
 		</properties>

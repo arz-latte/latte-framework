@@ -1,15 +1,12 @@
 package at.arz.latte.framework.services.restful.admin;
 
+import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
-
-import at.arz.latte.framework.services.restful.admin.ModuleService;
-import at.arz.latte.framework.services.restful.admin.GroupService;
-import at.arz.latte.framework.services.restful.admin.UserService;
 
 /**
  * initialization of RESTful Service classes
@@ -20,6 +17,8 @@ import at.arz.latte.framework.services.restful.admin.UserService;
 @ApplicationScoped
 @ApplicationPath("/admin/api")
 public class AdministrationConfiguration extends Application {
+
+	private static final String ADMIN_CONFIG_FILE = "administration-service-config.xml";
 
 	private Set<Class<?>> applicationClasses;
 
@@ -36,5 +35,9 @@ public class AdministrationConfiguration extends Application {
 		applicationClasses.add(ModuleService.class);
 		applicationClasses.add(UserService.class);
 		applicationClasses.add(GroupService.class);
+	}
+
+	public static URL getConfiguration() {
+		return AdministrationConfiguration.class.getResource(ADMIN_CONFIG_FILE);
 	}
 }

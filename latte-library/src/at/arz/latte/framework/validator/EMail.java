@@ -21,9 +21,9 @@ import javax.validation.Payload;
 @Retention(RUNTIME)
 @Documented
 public @interface EMail {
-	String message() default "Ungültige E-Mail-Adresse";
+	String message() default "UngÃ¼ltige E-Mail-Adresse";
 
-	Class<?>[]groups() default {};
+	Class<?>[] groups() default {};
 
-	Class<? extends Payload>[]payload() default {};
+	Class<? extends Payload>[] payload() default {};
 }

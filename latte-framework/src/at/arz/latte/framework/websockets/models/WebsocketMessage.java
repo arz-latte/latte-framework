@@ -1,6 +1,7 @@
 package at.arz.latte.framework.websockets.models;
 
 import java.io.StringReader;
+
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
@@ -48,7 +49,8 @@ public class WebsocketMessage {
 
 	public String toJSON() {
 
-		JsonObjectBuilder json = Json.createObjectBuilder().add("message", getMessage());
+		JsonObjectBuilder json = Json.createObjectBuilder().add("message",
+																getMessage());
 
 		if (moduleId != null) {
 			json.add("module-id", getModuleId());
@@ -58,7 +60,8 @@ public class WebsocketMessage {
 	}
 
 	public static WebsocketMessage fromJSON(String message) {
-		JsonObject json = Json.createReader(new StringReader(message)).readObject();
+		JsonObject json = Json.createReader(new StringReader(message))
+								.readObject();
 
 		WebsocketMessage result = new WebsocketMessage(json.getString("message"));
 

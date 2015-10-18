@@ -2,9 +2,9 @@ package at.arz.latte.framework.services.restful.admin;
 
 import java.util.List;
 import java.util.Set;
+import java.util.function.Function;
 
-import javax.ejb.EJB;
-import javax.enterprise.context.RequestScoped;
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
@@ -17,11 +17,10 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import at.arz.latte.framework.persistence.beans.ModuleManagementBean;
-import at.arz.latte.framework.persistence.beans.UserManagementBean;
-import at.arz.latte.framework.persistence.models.Module;
-import at.arz.latte.framework.restful.dta.ModuleData;
-import at.arz.latte.framework.services.restful.exception.LatteValidationException;
+import at.arz.latte.framework.exceptions.LatteValidationException;
+import at.arz.latte.framework.module.Module;
+import at.arz.latte.framework.module.services.ModuleManagementBean;
+import at.arz.latte.framework.restapi.ModuleData;
 
 /**
  * RESTful service for module management
@@ -29,15 +28,12 @@ import at.arz.latte.framework.services.restful.exception.LatteValidationExceptio
  * Dominik Neuner {@link "mailto:dominik@neuner-it.at"}
  *
  */
-@RequestScoped
+@Stateless
 @Path("modules")
 public class ModuleService {
 
-	@EJB
+	@Inject
 	private ModuleManagementBean bean;
-
-	@EJB
-	private UserManagementBean userBean;
 
 	@Inject
 	private Validator validator;
@@ -66,8 +62,11 @@ public class ModuleService {
 			throw new LatteValidationException(400, violations);
 		}
 
-		Module module = new Module(moduleData.getName(), moduleData.getProvider(), moduleData.getUrl(),
-				moduleData.getInterval(), moduleData.getEnabled());
+		Module module = new Module(	moduleData.getName(),
+									moduleData.getProvider(),
+									moduleData.getUrl(),
+									moduleData.getInterval(),
+									moduleData.getEnabled());
 
 		return toModuleData(bean.createModule(module));
 	}
@@ -81,9 +80,14 @@ public class ModuleService {
 			throw new LatteValidationException(400, violations);
 		}
 
-		Module after = bean.updateModule(moduleData.getId(), moduleData.getName(), moduleData.getProvider(),
-				moduleData.getUrl(), moduleData.getInterval(), moduleData.getEnabled(),
-				!moduleData.getEnabled() ? false : null);
+		Module after = bean.updateModule(	moduleData.getId(),
+											moduleData.getName(),
+											moduleData.getProvider(),
+											moduleData.getUrl(),
+											moduleData.getInterval(),
+											moduleData.getEnabled(),
+											!moduleData.getEnabled() ? false
+																	: null);
 
 		return toModuleData(after);
 	}
@@ -94,10 +98,25 @@ public class ModuleService {
 		bean.deleteModule(moduleId);
 	}
 
-	private Set<ConstraintViolation<Object>> requestValidation(Object moduleData) {
+	private Set<ConstraintViolation<Object>>
+			requestValidation(Object moduleData) {
 		return validator.validate(moduleData);
 	}
 
+	public static final Function<Module,ModuleData> MODULE_TO_MODULEDATA=new Function<Module, ModuleData>() {
+
+		@Override
+		public ModuleData apply(Module module) {
+			ModuleData moduleData = new ModuleData();
+			moduleData.setId(module.getId());
+			moduleData.setName(module.getName());
+			moduleData.setProvider(module.getProvider());
+			moduleData.setUrl(module.getUrl());
+			moduleData.setInterval(module.getInterval());
+			moduleData.setEnabled(module.getEnabled());
+			return moduleData;
+		}
+	};
 	/**
 	 * helper for REST service
 	 * 
@@ -105,13 +124,6 @@ public class ModuleService {
 	 * @return
 	 */
 	public ModuleData toModuleData(Module module) {
-		ModuleData moduleData = new ModuleData();
-		moduleData.setId(module.getId());
-		moduleData.setName(module.getName());
-		moduleData.setProvider(module.getProvider());
-		moduleData.setUrl(module.getUrl());
-		moduleData.setInterval(module.getInterval());
-		moduleData.setEnabled(module.getEnabled());
-		return moduleData;
+		return MODULE_TO_MODULEDATA.apply(module);
 	}
 }

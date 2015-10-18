@@ -5,6 +5,8 @@ import java.util.Set;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import javax.ws.rs.DELETE;
@@ -16,12 +18,10 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import at.arz.latte.framework.persistence.beans.GroupManagementBean;
-import at.arz.latte.framework.persistence.models.Group;
-import at.arz.latte.framework.persistence.models.Permission;
-import at.arz.latte.framework.restful.dta.GroupData;
-import at.arz.latte.framework.restful.dta.PermissionData;
-import at.arz.latte.framework.services.restful.exception.LatteValidationException;
+import at.arz.latte.framework.FrameworkConstants;
+import at.arz.latte.framework.admin.Group;
+import at.arz.latte.framework.exceptions.LatteValidationException;
+import at.arz.latte.framework.restapi.GroupData;
 
 /**
  * RESTful service for group management
@@ -34,29 +34,29 @@ import at.arz.latte.framework.services.restful.exception.LatteValidationExceptio
 @Path("/groups")
 public class GroupAdministration {
 
-	@Inject
-	private GroupManagementBean bean;
+	@PersistenceContext(unitName = FrameworkConstants.JPA_UNIT)
+	private EntityManager em;
 
 	@Inject
 	private Validator validator;
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<GroupData> getAllGroups() {
-		return bean.getAllGroupsData();
+	public List<GroupData> allGroups() {
+		return new GroupEditor(em).getAllGroupsData();
 	}
 
 	@GET
 	@Path("{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public GroupData getRole(@PathParam("id") Long id) {
-		Group group = bean.getGroup(id);
-		return toGroupData(group);
+	public GroupData getGroupById(@PathParam("id") Long id) {
+		Group group = new GroupEditor(em).getGroup(id);
+		return AdminMapper.MAP_TO_GROUPDETAIL.apply(group);
 	}
 
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
-	public GroupData createRole(GroupData groupData) {
+	public GroupData createNewGroup(GroupData groupData) {
 
 		Set<ConstraintViolation<Object>> violations = requestValidation(groupData);
 		if (!violations.isEmpty()) {
@@ -65,52 +65,34 @@ public class GroupAdministration {
 
 		Group group = new Group(groupData.getName());
 
-		return toGroupData(bean.createGroup(group, groupData.getPermission()));
+		return AdminMapper.MAP_TO_GROUPDETAIL.apply(new GroupEditor(em).createGroup(	group,
+		groupData.getPermission()));
 	}
 
 	@PUT
 	@Produces(MediaType.APPLICATION_JSON)
-	public GroupData updateRole(GroupData groupData) {
+	public GroupData updateGroup(GroupData groupData) {
 
 		Set<ConstraintViolation<Object>> violations = requestValidation(groupData);
 		if (!violations.isEmpty()) {
 			throw new LatteValidationException(400, violations);
 		}
 
-		Group group = bean.updateGroup(groupData.getId(), groupData.getName(), groupData.getPermission());
+		Group group = new GroupEditor(em).updateGroup(	groupData.getId(),
+														groupData.getName(),
+														groupData.getPermission());
 
-		return toGroupData(group);
+		return AdminMapper.MAP_TO_GROUPDETAIL.apply(group);
 	}
 
 	@DELETE
 	@Path("{id}")
 	public void deleteGroup(@PathParam("id") Long groupId) {
-		bean.deleteGroup(groupId);
+		new GroupEditor(em).deleteGroup(groupId);
 	}
 
-	private Set<ConstraintViolation<Object>> requestValidation(Object groupData) {
+	private Set<ConstraintViolation<Object>>
+			requestValidation(Object groupData) {
 		return validator.validate(groupData);
-	}
-
-	/**
-	 * helper for REST service
-	 * 
-	 * @param group
-	 * @return
-	 */
-	public GroupData toGroupData(Group group) {
-		GroupData groupData = new GroupData();
-		groupData.setId(group.getId());
-		groupData.setName(group.getName());
-
-		if (group.getPermissions() != null) {
-			for (Permission permission : group.getPermissions()) {
-				PermissionData permissionData = new PermissionData();
-				permissionData.setId(permission.getId());
-				groupData.addPermission(permissionData);
-			}
-		}
-		
-		return groupData;
 	}
 }

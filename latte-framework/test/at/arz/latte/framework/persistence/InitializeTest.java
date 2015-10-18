@@ -10,11 +10,11 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import at.arz.latte.framework.admin.Group;
+import at.arz.latte.framework.admin.Permission;
+import at.arz.latte.framework.admin.User;
+import at.arz.latte.framework.module.Module;
 import at.arz.latte.framework.persistence.JpaPersistenceSetup;
-import at.arz.latte.framework.persistence.models.Module;
-import at.arz.latte.framework.persistence.models.Permission;
-import at.arz.latte.framework.persistence.models.Group;
-import at.arz.latte.framework.persistence.models.User;
 
 public class InitializeTest  {
 

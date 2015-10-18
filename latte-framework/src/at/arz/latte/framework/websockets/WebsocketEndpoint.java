@@ -22,7 +22,9 @@ import at.arz.latte.framework.websockets.models.WebsocketMessage;
  *
  */
 @Singleton
-@ServerEndpoint(value = "/ws", encoders = WebsocketMessageEncoder.class, decoders = WebsocketMessageDecoder.class)
+@ServerEndpoint(value = "/ws",
+				encoders = WebsocketMessageEncoder.class,
+				decoders = WebsocketMessageDecoder.class)
 public class WebsocketEndpoint {
 
 	private static Set<Session> sessions = Collections.synchronizedSet(new HashSet<Session>());

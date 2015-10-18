@@ -36,27 +36,26 @@ public class Login {
 		}
 		redirectTo(loginFormURI);
 	}
-	
-	public void processLogin() throws IOException, ServletException{
+
+	public void processLogin() throws IOException, ServletException {
 		initialize();
 		logoutBeforeLogin();
-		String username=getUserName();
-		String password=getPassword();
+		String username = getUserName();
+		String password = getPassword();
 		request.login(username, password);
 		resetRedirectCookie();
 		redirectTo(getDestinationAfterLogin());
 	}
-	
+
 	public String getDestinationAfterLogin() {
-		if(redirectCookie == null){
-					return "/latte/index.html";
+		if (redirectCookie == null) {
+			return "/latte/index.html";
 		}
-		return redirectCookie.getValue(); 
+		return redirectCookie.getValue();
 	}
-	
 
 	private void logoutBeforeLogin() throws ServletException {
-		if(request.getUserPrincipal() != null ){
+		if (request.getUserPrincipal() != null) {
 			request.logout();
 		}
 	}
@@ -88,7 +87,7 @@ public class Login {
 
 	public Cookie getLatteRedirectCookie() {
 		Cookie[] cookies = request.getCookies();
-		if(cookies==null){
+		if (cookies == null) {
 			return null;
 		}
 		for (Cookie cookie : cookies) {

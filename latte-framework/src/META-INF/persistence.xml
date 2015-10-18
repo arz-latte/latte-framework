@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+	<persistence-unit name="latte-unit">
+		<jta-data-source>java:comp/env/jdbc/latte</jta-data-source>
+		<non-jta-data-source>java:comp/env/jdbc/latte</non-jta-data-source>
+		<class>at.arz.latte.framework.admin.Group</class>
+		<class>at.arz.latte.framework.admin.Permission</class>
+		<class>at.arz.latte.framework.admin.User</class>
+		<class>at.arz.latte.framework.module.Menu</class>
+		<class>at.arz.latte.framework.module.Module</class>
+		<class>at.arz.latte.framework.module.SubMenu</class>
+		
+		<properties>
+			<property name="openjpa.DynamicEnhancementAgent" value="true" />
+			<property name="openjpa.RuntimeUnenhancedClasses" value="supported" />
+			<property name="javax.persistence.schema-generation.database.action" value="create" />
+			<property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(ForeignKeys=true)" />
+			<property name="openjpa.jdbc.MappingDefaults"
+				value="ForeignKeyDeleteAction=restrict,JoinForeignKeyDeleteAction=restrict" />				
+			<property name="openjpa.Log" value="DefaultLevel=WARN, Runtime=INFO, Tool=INFO"/>
+			<property name="openjpa.ConnectionFactoryProperties" value="PrintParameters=true" />
+		</properties>
+		
+	</persistence-unit>
+</persistence>

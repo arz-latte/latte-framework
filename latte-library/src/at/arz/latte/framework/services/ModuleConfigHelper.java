@@ -16,9 +16,9 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
-import at.arz.latte.framework.restful.dta.MenuData;
-import at.arz.latte.framework.restful.dta.SubMenuData;
-import at.arz.latte.framework.services.restful.exception.LatteValidationException;
+import at.arz.latte.framework.exceptions.LatteValidationException;
+import at.arz.latte.framework.restapi.MenuData;
+import at.arz.latte.framework.restapi.SubMenuData;
 
 /**
  * helper class for RESTful module management service
@@ -47,11 +47,14 @@ public class ModuleConfigHelper {
 	 * @throws IOException
 	 * @throws LatteValidationException
 	 */
-	public MenuData loadAndCacheServiceConfig(URL url, Long lastModified)
-			throws JAXBException, IOException, LatteValidationException {
+	public	MenuData
+			loadAndCacheServiceConfig(URL url, Long lastModified)	throws JAXBException,
+																	IOException,
+																	LatteValidationException {
 
 		String path = url.getPath();// .getPath();
-		if (menu.size() == 0 || lastModified == null || lastModified < menu.get(path).getLastModified()) {
+		if (menu.size() == 0 || lastModified == null
+			|| lastModified < menu.get(path).getLastModified()) {
 			menu.put(path, loadServiceConfig(url));
 		}
 
@@ -66,7 +69,9 @@ public class ModuleConfigHelper {
 	 * @throws JAXBException
 	 * @throws IOException
 	 */
-	private MenuData loadServiceConfig(URL url) throws JAXBException, IOException, LatteValidationException {
+	private MenuData loadServiceConfig(URL url)	throws JAXBException,
+												IOException,
+												LatteValidationException {
 
 		File file = new File(url.getPath());
 
@@ -105,7 +110,8 @@ public class ModuleConfigHelper {
 	 * @param submenus
 	 * @throws LatteValidationException
 	 */
-	private void validateSubMenu(List<SubMenuData> submenus) throws LatteValidationException {
+	private void
+			validateSubMenu(List<SubMenuData> submenus) throws LatteValidationException {
 
 		if (submenus != null) {
 
@@ -122,7 +128,8 @@ public class ModuleConfigHelper {
 		}
 	}
 
-	private Set<ConstraintViolation<Object>> requestValidation(Object moduleData) {
+	private Set<ConstraintViolation<Object>>
+			requestValidation(Object moduleData) {
 		return validator.validate(moduleData);
 	}
 

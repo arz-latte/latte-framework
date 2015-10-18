@@ -12,15 +12,18 @@ import javax.servlet.http.HttpServletResponse;
 public class LoginServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
-		Login login = new Login(req,res);
+	public	void
+			doGet(HttpServletRequest req, HttpServletResponse res)	throws IOException,
+																	ServletException {
+		Login login = new Login(req, res);
 		login.showForm("/latte/login.html");
 	}
 
-
-	public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
-		Login login = new Login(req,res);
+	public	void
+			doPost(HttpServletRequest req, HttpServletResponse res)	throws IOException,
+																	ServletException {
+		Login login = new Login(req, res);
 		login.processLogin();
 	}
-	
+
 }
