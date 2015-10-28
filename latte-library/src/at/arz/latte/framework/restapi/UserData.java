@@ -45,15 +45,10 @@ public class UserData {
 	public UserData() {
 	}
 
-	/**
-	 * constructor for REST list view
-	 * 
-	 * @param id
-	 * @param firstName
-	 * @param lastName
-	 * @param username
-	 */
-	public UserData(Long id, String firstName, String lastName, String email) {
+	public UserData(Long id,
+					String firstName,
+					String lastName,
+					String email) {
 		this();
 		this.id = id;
 		this.firstName = firstName;
@@ -173,7 +168,7 @@ public class UserData {
 
 	@Override
 	public String toString() {
-		return "UserData [id=" + id
+		return "UserData [id="+ id
 				+ ", firstName="
 				+ firstName
 				+ ", lastName="

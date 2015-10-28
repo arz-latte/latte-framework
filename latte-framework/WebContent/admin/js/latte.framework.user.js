@@ -60,7 +60,6 @@ var appUser = {
 	showUser : function() {
 		$("#btn-delete").show();
 		appAdmin.enterEditMode();
-		appUser.currentId = null;
 
 		// load user details
 		appUser.currentId = $(this).attr("data-id");
@@ -104,8 +103,6 @@ var appUser = {
 						"id" : $(selected).val()
 					});
 				});
-
-		console.log(u);
 
 		if (u.id > 0) {
 

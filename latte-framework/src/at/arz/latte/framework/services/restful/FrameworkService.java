@@ -63,7 +63,7 @@ public class FrameworkService {
 	@Produces(MediaType.APPLICATION_JSON)
 	public UserData getUserData() {
 		String userName = authorization.getPrincipal().getName();
-		List<UserData> list = Functions.map(	AdminMapper.USER_TO_USERDATA,
+		List<UserData> list = Functions.map(	AdminMapper.MAP_TO_USERDATA,
 													new AdminQuery(em).userByEmail(userName));
 		if (list.isEmpty()) {
 			throw new UserNotFound(userName);

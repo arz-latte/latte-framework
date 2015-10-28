@@ -33,7 +33,6 @@ public class AdministrationConfiguration extends Application {
 	private void initApplicationClasses() {
 		applicationClasses = new HashSet<Class<?>>();
 		applicationClasses.add(ModuleService.class);
-		applicationClasses.add(UserService.class);
 		applicationClasses.add(GroupService.class);
 	}
 

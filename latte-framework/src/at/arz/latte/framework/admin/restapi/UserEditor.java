@@ -14,6 +14,7 @@ import at.arz.latte.framework.admin.Group;
 import at.arz.latte.framework.admin.User;
 import at.arz.latte.framework.exceptions.LatteValidationException;
 import at.arz.latte.framework.restapi.GroupData;
+import at.arz.latte.framework.restapi.UserData;
 
 /**
  * bean for user management
@@ -30,14 +31,19 @@ class UserEditor {
 		this.em = Objects.requireNonNull(em);
 	}
 
-	public User createUser(User user, Set<GroupData> groupData) {
+	public User createUser(UserData userData) {
+
+		User user = new User(	userData.getFirstName(),
+								userData.getLastName(),
+								userData.getEmail(),
+								userData.getPassword());
 
 		assertEmailIsNotOwnedByAnotherUser(user.getEmail());
 
 		em.persist(user);
 
 		Set<Group> groups = new HashSet<>();
-		for (GroupData r : groupData) {
+		for (GroupData r : userData.getGroup()) {
 			Group group = em.find(Group.class, r.getId());
 			groups.add(group);
 		}
@@ -46,25 +52,20 @@ class UserEditor {
 		return user;
 	}
 
-	public User updateUser(	Long id,
-							String firstName,
-							String lastName,
-							String email,
-							String password,
-							Set<GroupData> groupData) {
+	public User updateUser(UserData userData) {
 
-		User user = em.find(User.class, id);
-		user.setFirstName(firstName);
-		user.setLastName(lastName);
-		user.setPassword(password);
+		User user = em.find(User.class, userData.getId());
+		user.setFirstName(userData.getFirstName());
+		user.setLastName(userData.getLastName());
+		user.setPassword(userData.getPassword());
 
-		if (!Objects.equals(user.getEmail(), email)) {
-			assertEmailIsNotOwnedByAnotherUser(email);
-			user.setEmail(email);
+		if (!Objects.equals(user.getEmail(), userData.getEmail())) {
+			assertEmailIsNotOwnedByAnotherUser(userData.getEmail());
+			user.setEmail(userData.getEmail());
 		}
 
 		Set<Group> groups = new HashSet<>();
-		for (GroupData g : groupData) {
+		for (GroupData g : userData.getGroup()) {
 			Group group = em.find(Group.class, g.getId());
 			groups.add(group);
 		}

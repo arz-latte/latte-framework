@@ -20,10 +20,8 @@ import javax.ws.rs.core.MediaType;
 
 import at.arz.latte.framework.FrameworkConstants;
 import at.arz.latte.framework.admin.AdminQuery;
-import at.arz.latte.framework.admin.Group;
 import at.arz.latte.framework.admin.User;
 import at.arz.latte.framework.exceptions.LatteValidationException;
-import at.arz.latte.framework.restapi.GroupData;
 import at.arz.latte.framework.restapi.UserData;
 import at.arz.latte.framework.util.Functions;
 import at.arz.latte.framework.util.JPA;
@@ -41,7 +39,8 @@ public class UserAdministration {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<UserData> allUsers() {
-		return Functions.map(AdminMapper.USER_TO_USERDATA, new AdminQuery(em).allUsers());
+		return Functions.map(	AdminMapper.MAP_TO_USERDATA,
+								new AdminQuery(em).allUsers());
 	}
 
 	@GET
@@ -50,7 +49,7 @@ public class UserAdministration {
 	public UserData userWithId(@PathParam("id") Long id) {
 		User user = em.find(User.class, id);
 		JPA.fetchAll(user.getGroup());
-		return AdminMapper.USER_TO_USERDATA.apply(user);
+		return AdminMapper.MAP_TO_USERDETAIL.apply(user);
 	}
 
 	@POST
@@ -62,12 +61,8 @@ public class UserAdministration {
 			throw new LatteValidationException(400, violations);
 		}
 
-		User user = new User(	userData.getFirstName(),
-								userData.getLastName(),
-								userData.getEmail(),
-								userData.getPassword());
-
-		return toUserData(new UserEditor(em).createUser(user, userData.getGroup()));
+		User user = new UserEditor(em).createUser(userData);
+		return AdminMapper.MAP_TO_USERDETAIL.apply(user);
 	}
 
 	@PUT
@@ -79,14 +74,9 @@ public class UserAdministration {
 			throw new LatteValidationException(400, violations);
 		}
 
-		User user = new UserEditor(em).updateUser(	userData.getId(),
-												userData.getFirstName(),
-												userData.getLastName(),
-												userData.getEmail(),
-												userData.getPassword(),
-												userData.getGroup());
+		User user = new UserEditor(em).updateUser(userData);
 
-		return toUserData(user);
+		return AdminMapper.MAP_TO_USERDETAIL.apply(user);
 	}
 
 	@DELETE
@@ -95,33 +85,9 @@ public class UserAdministration {
 		new UserEditor(em).deleteUser(userId);
 	}
 
-	private Set<ConstraintViolation<Object>> requestValidation(Object userData) {
+	private	Set<ConstraintViolation<Object>>
+			requestValidation(Object userData) {
 		return validator.validate(userData);
-	}
-
-	/**
-	 * helper for REST service
-	 * 
-	 * @param userData
-	 * @return
-	 */
-	public UserData toUserData(User user) {
-		UserData userData = new UserData();
-		userData.setId(user.getId());
-		userData.setFirstName(user.getFirstName());
-		userData.setLastName(user.getLastName());
-		userData.setEmail(user.getEmail());
-		userData.setPassword(user.getPassword());
-
-		if (user.getGroup() != null) {
-			for (Group group : user.getGroup()) {
-				GroupData groupData = new GroupData();
-				groupData.setId(group.getId());
-				userData.addGroup(groupData);
-			}
-		}
-
-		return userData;
 	}
 
 }
