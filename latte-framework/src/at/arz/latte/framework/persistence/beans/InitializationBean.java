@@ -13,12 +13,12 @@ import javax.persistence.PersistenceContext;
 import javax.xml.bind.JAXBException;
 
 import at.arz.latte.framework.FrameworkConstants;
+import at.arz.latte.framework.admin.restapi.AdministrationApplication;
 import at.arz.latte.framework.exceptions.LatteValidationException;
 import at.arz.latte.framework.module.Menu;
 import at.arz.latte.framework.module.Module;
 import at.arz.latte.framework.restapi.MenuData;
 import at.arz.latte.framework.services.ModuleConfigHelper;
-import at.arz.latte.framework.services.restful.admin.AdministrationConfiguration;
 
 /**
  * initializes status of all stored modules (set running to false)
@@ -49,7 +49,7 @@ public class InitializationBean {
 
 		// load administration configuration
 
-		URL url = AdministrationConfiguration.getConfiguration();
+		URL url = AdministrationApplication.getConfiguration();
 		MenuData menuData = configHelper.loadAndCacheServiceConfig(url, null);
 		ADMIN_MENU = Menu.getMenuRec(menuData);
 

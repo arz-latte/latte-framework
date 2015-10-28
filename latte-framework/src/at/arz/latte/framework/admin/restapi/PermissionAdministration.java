@@ -16,7 +16,7 @@ import at.arz.latte.framework.restapi.PermissionData;
 import at.arz.latte.framework.util.Functions;
 
 /**
- * RESTful service for group management
+ * RESTful service for permission management
  * 
  * @author Dominik Neuner {@link "mailto:dominik@neuner-it.at"}
  * @author mrodler

@@ -1,8 +1,5 @@
 package at.arz.latte.framework.persistence;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
@@ -14,7 +11,6 @@ import at.arz.latte.framework.admin.Group;
 import at.arz.latte.framework.admin.Permission;
 import at.arz.latte.framework.admin.User;
 import at.arz.latte.framework.module.Module;
-import at.arz.latte.framework.persistence.JpaPersistenceSetup;
 
 public class InitializeTest  {
 
@@ -75,22 +71,24 @@ public class InitializeTest  {
 		
 		// users
 		User uAdmin = new User("Admin", "Admin", "admin@arz.at", "admin");
-		Set<Group> groups = new HashSet<>();
-		groups.add(gUser);
-		groups.add(gDemo);
-		groups.add(gAdmin);
-		uAdmin.setGroup(groups);
+		uAdmin.addGroup(gUser);
+		uAdmin.addGroup(gDemo);
+		uAdmin.addGroup(gAdmin);
 		em.persist(uAdmin);		
 
 		User uDemo = new User("User", "User", "user@arz.at", "user");
-		groups = new HashSet<>();
-		groups.add(gUser);
-		groups.add(gDemo);
-		uDemo.setGroup(groups);
+		uDemo.addGroup(gUser);
+		uDemo.addGroup(gDemo);
 		em.persist(uDemo);		
 		
 		// demo module
-		Module mDemo = new Module("Demo", "ARZ", "demo", 60, true);
+		Module mDemo = new Module();
+		mDemo.setName("Demo");
+		mDemo.setProvider("ARZ");
+		mDemo.setUrl("demo");
+		mDemo.setInterval(60);
+		mDemo.setEnabled(true);
+		
 		em.persist(mDemo);
 		
 		em.getTransaction().commit();

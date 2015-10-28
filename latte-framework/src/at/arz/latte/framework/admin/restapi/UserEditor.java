@@ -1,6 +1,5 @@
 package at.arz.latte.framework.admin.restapi;
 
-import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.logging.Logger;
@@ -33,21 +32,15 @@ class UserEditor {
 
 	public User createUser(UserData userData) {
 
+		assertEmailIsNotOwnedByAnotherUser(userData.getEmail());
+
 		User user = new User(	userData.getFirstName(),
 								userData.getLastName(),
 								userData.getEmail(),
 								userData.getPassword());
-
-		assertEmailIsNotOwnedByAnotherUser(user.getEmail());
-
 		em.persist(user);
 
-		Set<Group> groups = new HashSet<>();
-		for (GroupData r : userData.getGroup()) {
-			Group group = em.find(Group.class, r.getId());
-			groups.add(group);
-		}
-		user.setGroup(groups);
+		setUserGroups(user, userData.getGroup());
 
 		return user;
 	}
@@ -63,24 +56,19 @@ class UserEditor {
 			assertEmailIsNotOwnedByAnotherUser(userData.getEmail());
 			user.setEmail(userData.getEmail());
 		}
-
-		Set<Group> groups = new HashSet<>();
-		for (GroupData g : userData.getGroup()) {
-			Group group = em.find(Group.class, g.getId());
-			groups.add(group);
-		}
-		user.setGroup(groups);
+		
+		setUserGroups(user, userData.getGroup());
 
 		return user;
 	}
 
-	public void deleteUser(Long userId) {
+	public void deleteUser(Long id) {
 		try {
-			User user = em.find(User.class, userId);
+			User user = em.find(User.class, id);
 			em.remove(user);
 			LOG.info("deleteUser: user deleted:" + user.getEmail());
 		} catch (EntityNotFoundException e) {
-			LOG.info("deleteUser: user not found:" + userId);
+			LOG.info("deleteUser: user not found:" + id);
 		}
 	}
 
@@ -96,9 +84,16 @@ class UserEditor {
 		if (!query.getResultList().isEmpty()) {
 			LOG.info("can't store user, email already exists:" + email);
 			throw new LatteValidationException(	400,
-												"username",
-												"Email wird bereits von einem anderen Benutzer verwendet.");
+												"email",
+												"Wird bereits von einem anderen Benutzer verwendet.");
 		}
 	}
 
+	private void setUserGroups(User user, Set<GroupData> groupData) {
+		for (GroupData g : groupData) {
+			Group group = em.find(Group.class, g.getId());
+			user.addGroup(group);
+		}
+	}
+	
 }

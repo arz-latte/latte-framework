@@ -20,22 +20,20 @@ import javax.ws.rs.core.MediaType;
 
 import at.arz.latte.framework.FrameworkConstants;
 import at.arz.latte.framework.admin.AdminQuery;
-import at.arz.latte.framework.admin.User;
 import at.arz.latte.framework.exceptions.LatteValidationException;
-import at.arz.latte.framework.restapi.UserData;
+import at.arz.latte.framework.module.Module;
+import at.arz.latte.framework.restapi.ModuleData;
 import at.arz.latte.framework.util.Functions;
-import at.arz.latte.framework.util.JPA;
 
 /**
- * RESTful service for user management
+ * RESTful service for module management
  * 
- * @author Dominik Neuner {@link "mailto:dominik@neuner-it.at"}
- * @author mrodler
+ * Dominik Neuner {@link "mailto:dominik@neuner-it.at"}
  *
  */
 @Stateless
-@Path("/users")
-public class UserAdministration {
+@Path("modules")
+public class ModuleAdministration {
 
 	@PersistenceContext(unitName = FrameworkConstants.JPA_UNIT)
 	private EntityManager em;
@@ -45,55 +43,54 @@ public class UserAdministration {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<UserData> allUsers() {
-		return Functions.map(	AdminMapper.MAP_TO_USERDATA,
-								new AdminQuery(em).allUsers());
+	public List<ModuleData> allModules() {
+		return Functions.map(	AdminMapper.MAP_TO_MODULEDATA,
+								new AdminQuery(em).allModules());
 	}
 
 	@GET
 	@Path("{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public UserData userWithId(@PathParam("id") Long id) {
-		User user = em.find(User.class, id);
-		JPA.fetchAll(user.getGroups());
-		return AdminMapper.MAP_TO_USERDETAIL.apply(user);
+	public ModuleData moduleWithId(@PathParam("id") Long id) {
+		Module module = em.find(Module.class, id);
+		return AdminMapper.MAP_TO_MODULEDATA.apply(module);
 	}
 
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
-	public UserData createUser(UserData userData) {
+	public ModuleData createModule(ModuleData moduleData) {
 
-		Set<ConstraintViolation<Object>> violations = requestValidation(userData);
+		Set<ConstraintViolation<Object>> violations = requestValidation(moduleData);
 		if (!violations.isEmpty()) {
 			throw new LatteValidationException(400, violations);
 		}
 
-		User user = new UserEditor(em).createUser(userData);
-		return AdminMapper.MAP_TO_USERDETAIL.apply(user);
+		Module module = new ModuleEditor(em).createModule(moduleData);
+		return AdminMapper.MAP_TO_MODULEDATA.apply(module);
 	}
 
 	@PUT
 	@Produces(MediaType.APPLICATION_JSON)
-	public UserData updateUser(UserData userData) {
-
-		Set<ConstraintViolation<Object>> violations = requestValidation(userData);
+	public ModuleData updateModule(ModuleData moduleData) {
+		
+		Set<ConstraintViolation<Object>> violations = requestValidation(moduleData);
 		if (!violations.isEmpty()) {
 			throw new LatteValidationException(400, violations);
 		}
-
-		User user = new UserEditor(em).updateUser(userData);
-		return AdminMapper.MAP_TO_USERDETAIL.apply(user);
+		
+		Module module = new ModuleEditor(em).updateModule(moduleData);		
+		return AdminMapper.MAP_TO_MODULEDATA.apply(module);
 	}
 
 	@DELETE
 	@Path("{id}")
-	public void deleteUser(@PathParam("id") Long id) {
-		new UserEditor(em).deleteUser(id);
+	public void deleteModule(@PathParam("id") Long id) {
+		new ModuleEditor(em).deleteModule(id);
 	}
 
-	private	Set<ConstraintViolation<Object>>
-			requestValidation(Object userData) {
-		return validator.validate(userData);
+	private Set<ConstraintViolation<Object>>
+			requestValidation(Object moduleData) {
+		return validator.validate(moduleData);
 	}
 
 }

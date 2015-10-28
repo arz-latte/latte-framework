@@ -1,4 +1,4 @@
-package at.arz.latte.framework.websockets.models;
+package at.arz.latte.framework.websockets;
 
 import java.io.StringReader;
 

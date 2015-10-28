@@ -24,7 +24,7 @@ import at.arz.latte.framework.restapi.ModuleData;
 import at.arz.latte.framework.restapi.UserData;
 import at.arz.latte.framework.util.Functions;
 import at.arz.latte.framework.websockets.WebsocketEndpoint;
-import at.arz.latte.framework.websockets.models.WebsocketMessage;
+import at.arz.latte.framework.websockets.WebsocketMessage;
 
 /**
  * RESTful service for module management

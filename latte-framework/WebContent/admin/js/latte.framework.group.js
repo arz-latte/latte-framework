@@ -1,15 +1,15 @@
+"use strict";
+
 var appGroup = {
-
-	API_GROUPS : 'api/groups',
-
-	currentId : null,
+		
+	URI_GROUPS : '/latte/api/admin/groups',
+	URI_PERMISSIONS : '/latte/api/admin/permissions',
 
 	loadGroups : function() {
 		appAdmin.leaveEditMode();
 		appGroup.currentId = null;
 
-		$.getJSON(appGroup.API_GROUPS + "/all.json", function(data) {
-
+		latte.call(appGroup.URI_GROUPS, function(data) {
 			var $groups = $("#groups");
 			$groups.find("tr:has(td)").remove(); // clear
 
@@ -33,8 +33,7 @@ var appGroup = {
 	},
 
 	loadPermissions : function() {
-		$.getJSON(appGroup.API_GROUPS + "/permissions.json", function(data) {
-
+		latte.call(appGroup.URI_PERMISSIONS, function(data) {
 			var $permissions = $("[name=select-permission]");
 			$permissions.find("option").remove(); // clear
 
@@ -56,11 +55,10 @@ var appGroup = {
 	showGroup : function() {
 		$("#btn-delete").show();
 		appAdmin.enterEditMode();
-		appGroup.currentId = null;
 
 		// load group details
 		appGroup.currentId = $(this).attr("data-id");
-		$.getJSON(appGroup.API_GROUPS + "/get.json/" + appGroup.currentId,
+		latte.call(appGroup.URI_GROUPS + "/" + appGroup.currentId,
 				function(data) {
 
 					// fill form
@@ -102,8 +100,8 @@ var appGroup = {
 
 		if (g.id > 0) {
 
-			$.ajax({
-				url : appGroup.API_GROUPS + "/update.json",
+			latte.ajax({
+				url : appGroup.URI_GROUPS,
 				type : "PUT",
 				data : JSON.stringify({
 					"group" : g
@@ -117,8 +115,8 @@ var appGroup = {
 			});
 		} else {
 
-			$.ajax({
-				url : appGroup.API_GROUPS + "/create.json",
+			latte.ajax({
+				url : appGroup.URI_GROUPS,
 				type : "POST",
 				data : JSON.stringify({
 					"group" : g
@@ -138,8 +136,8 @@ var appGroup = {
 	deleteGroup : function() {
 		var choice = confirm("Sind Sie sicher?");
 		if (choice == true) {
-			$.ajax({
-				url : appGroup.API_GROUPS + "/delete.json/" + appGroup.currentId,
+			latte.ajax({
+				url : appGroup.URI_GROUPS + "/" + appGroup.currentId,
 				type : "DELETE",
 			}).done(function(data) {
 				app.showSuccessMessage("Gruppe gel&ouml;scht");
@@ -158,26 +156,23 @@ var appGroup = {
 		return false;
 	},
 
+	initModule : function() {
+		appAdmin.init();
+
+		$("#btn-load").on("click", appGroup.loadGroups);
+		$("#btn-add").on("click", appGroup.addNewGroup);
+
+		$("#btn-store").on("click", appGroup.storeGroup);
+		$("#btn-delete").on("click", appGroup.deleteGroup);
+		$("#btn-restore").on("click", appGroup.restoreGroup);
+
+		$("#list-area tbody").on("click", "tr", appGroup.showGroup);
+
+		appGroup.loadGroups();
+		appGroup.loadPermissions();
+	},
 };
 
-// ===========================================================================
-// ready & event handlers
-// ===========================================================================
-function initGroup() {
-
-	appAdmin.init();
-
-	$("#btn-load").on("click", appGroup.loadGroups);
-	$("#btn-add").on("click", appGroup.addNewGroup);
-
-	$("#btn-store").on("click", appGroup.storeGroup);
-	$("#btn-delete").on("click", appGroup.deleteGroup);
-	$("#btn-restore").on("click", appGroup.restoreGroup);
-
-	$("#list-area tbody").on("click", "tr", appGroup.showGroup);
-
-	appGroup.loadGroups();
-	appGroup.loadPermissions();
-}
-
-$(initGroup);
+$(function() {
+	appGroup.initModule();
+});

@@ -1,19 +1,19 @@
 package at.arz.latte.framework.admin.restapi;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityNotFoundException;
+import javax.persistence.TypedQuery;
 
-import at.arz.latte.framework.admin.Group;
 import at.arz.latte.framework.admin.AdminQuery;
+import at.arz.latte.framework.admin.Group;
 import at.arz.latte.framework.admin.Permission;
 import at.arz.latte.framework.exceptions.LatteValidationException;
 import at.arz.latte.framework.restapi.GroupData;
 import at.arz.latte.framework.restapi.PermissionData;
-import at.arz.latte.framework.util.Functions;
-import at.arz.latte.framework.util.JPA;
 
 /**
  * bean for group management
@@ -22,6 +22,7 @@ import at.arz.latte.framework.util.JPA;
  *
  */
 class GroupEditor {
+	private static final Logger LOG = Logger.getLogger(GroupEditor.class.getSimpleName());
 
 	private EntityManager em;
 
@@ -29,27 +30,59 @@ class GroupEditor {
 		this.em = Objects.requireNonNull(em);
 	}
 
-	public List<GroupData> getAllGroupsData() {
-		return Functions.map(	AdminMapper.MAP_TO_GROUPDATA,
-								new AdminQuery(em).allGroups());
-	}
+	public Group createGroup(GroupData groupData) {
 
-	public Group getGroup(Long groupId) {
-		System.out.println("execute getGroup");
-		Group r = em.find(Group.class, groupId);
-		JPA.fetchAll(r.getPermissions());
-		return r;
-	}
+		assertNameIsNotOwnedByAnotherGroup(groupData.getName());
 
-	public Group createGroup(Group group, Set<PermissionData> permissionData) {
-
-		checkDuplicateGroup(group.getId(), group.getName());
-
+		Group group = new Group(groupData.getName());
 		em.persist(group);
 
-		setGroupPermissions(group, permissionData);
+		setGroupPermissions(group, groupData.getPermission());
 
 		return group;
+	}
+
+	public Group updateGroup(GroupData groupData) {
+
+		Group group = em.find(Group.class, groupData.getId());
+
+		if (!Objects.equals(group.getName(), groupData.getName())) {
+			assertNameIsNotOwnedByAnotherGroup(groupData.getName());
+			group.setName(groupData.getName());
+		}
+
+		setGroupPermissions(group, groupData.getPermission());
+
+		return group;
+	}
+
+	public void deleteGroup(Long id) {
+		try {
+			Group group = em.find(Group.class, id);
+			em.remove(group);
+			LOG.info("deleteGroup: group deleted:" + group.getName());
+		} catch (EntityNotFoundException e) {
+			LOG.info("deleteGroup: group not found:" + id);
+		}
+	}
+
+	/**
+	 * check if group name is already stored, throws LatteValidationException if
+	 * name is a duplicate
+	 * 
+	 * @param name
+	 * @throws LatteValidationException
+	 */
+	private	void
+			assertNameIsNotOwnedByAnotherGroup(String name) throws LatteValidationException {
+
+		TypedQuery<Group> query = new AdminQuery(em).groupByName(name);
+		if (!query.getResultList().isEmpty()) {
+			LOG.info("can't store group, name already exists:" + name);
+			throw new LatteValidationException(	400,
+												"name",
+												"Eintrag bereits vorhanden");
+		}
 	}
 
 	private void setGroupPermissions(	Group group,
@@ -60,54 +93,4 @@ class GroupEditor {
 		}
 	}
 
-	/**
-	 * update group via REST-service
-	 * 
-	 * @param id
-	 * @param name
-	 * @param permissionData
-	 * @return
-	 */
-	public Group updateGroup(	Long id,
-								String name,
-								Set<PermissionData> permissionData) {
-
-		checkDuplicateGroup(id, name);
-
-		Group group = getGroup(id);
-		group.setName(name);
-
-		setGroupPermissions(group, permissionData);
-
-		return group;
-	}
-
-	public void deleteGroup(Long groupId) {
-		Group toBeDeleted = getGroup(groupId);
-		em.remove(toBeDeleted);
-	}
-
-	/**
-	 * check if group name is already stored, throws LatteValidationException if
-	 * name is a duplicate
-	 * 
-	 * @param groupId
-	 * @param name
-	 * @throws LatteValidationException
-	 */
-	private void
-			checkDuplicateGroup(Long groupId, String name) throws LatteValidationException {
-		List<Group> duplicates = em.createNamedQuery(	Group.QUERY_GET_BY_NAME,
-														Group.class)
-									.setParameter("name", name)
-									.getResultList();
-
-		if (duplicates.size() == 1 && !duplicates.get(0)
-													.getId()
-													.equals(groupId)) {
-			throw new LatteValidationException(	400,
-												"name",
-												"Eintrag bereits vorhanden");
-		}
-	}
 }

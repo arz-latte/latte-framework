@@ -1,10 +1,8 @@
-package at.arz.latte.framework.websockets.encoders;
+package at.arz.latte.framework.websockets;
 
 import javax.websocket.EncodeException;
 import javax.websocket.Encoder;
 import javax.websocket.EndpointConfig;
-
-import at.arz.latte.framework.websockets.models.WebsocketMessage;
 
 /**
  * json encoder for websocket communication

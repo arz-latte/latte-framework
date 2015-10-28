@@ -11,10 +11,6 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
-import at.arz.latte.framework.websockets.decoders.WebsocketMessageDecoder;
-import at.arz.latte.framework.websockets.encoders.WebsocketMessageEncoder;
-import at.arz.latte.framework.websockets.models.WebsocketMessage;
-
 /**
  * websocket management
  * 

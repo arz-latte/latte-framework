@@ -2,6 +2,7 @@ package at.arz.latte.framework.admin;
 
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -10,6 +11,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -27,7 +30,7 @@ import at.arz.latte.framework.validator.EMail;
  * Dominik Neuner {@link "mailto:dominik@neuner-it.at"}
  *
  */
-@NamedQueries({ @NamedQuery(name = User.QUERY_GETALL,
+@NamedQueries({	@NamedQuery(name = User.QUERY_GETALL,
 							query = "SELECT u FROM User u"),
 				@NamedQuery(name = User.QUERY_GET_BY_EMAIL,
 							query = "SELECT u FROM User u WHERE u.email = :email") })
@@ -70,7 +73,12 @@ public class User implements Serializable {
 	private String password;
 
 	@ManyToMany(fetch = FetchType.LAZY)
-	private Set<Group> group = new HashSet<Group>();
+	@JoinTable(	name = "users_groups",
+	joinColumns = { @JoinColumn(name = "user_id",
+								referencedColumnName = "id") },
+	inverseJoinColumns = { @JoinColumn(	name = "group_id",
+										referencedColumnName = "id") })	
+	private Set<Group> groups = new HashSet<Group>();
 
 	@Version
 	private long version;
@@ -85,7 +93,10 @@ public class User implements Serializable {
 	/**
 	 * used for creation via REST-service or JUnit
 	 */
-	public User(String firstName, String lastName, String email, String password) {
+	public User(String firstName,
+				String lastName,
+				String email,
+				String password) {
 		this();
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -133,12 +144,13 @@ public class User implements Serializable {
 		this.password = password;
 	}
 
-	public Set<Group> getGroup() {
-		return group;
+	public Set<Group> getGroups() {
+		return groups;
 	}
 
-	public void setGroup(Set<Group> group) {
-		this.group = group;
+	public void addGroup(Group group) {
+		Objects.requireNonNull(group);
+		this.groups.add(group);
 	}
 
 	@Override
@@ -152,7 +164,7 @@ public class User implements Serializable {
 					+ ((lastName == null) ? 0 : lastName.hashCode());
 		result = prime * result
 					+ ((password == null) ? 0 : password.hashCode());
-		result = prime * result + ((group == null) ? 0 : group.hashCode());
+		result = prime * result + ((groups == null) ? 0 : groups.hashCode());
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		return result;
 	}
@@ -186,10 +198,10 @@ public class User implements Serializable {
 				return false;
 		} else if (!password.equals(other.password))
 			return false;
-		if (group == null) {
-			if (other.group != null)
+		if (groups == null) {
+			if (other.groups != null)
 				return false;
-		} else if (!group.equals(other.group))
+		} else if (!groups.equals(other.groups))
 			return false;
 		if (email == null) {
 			if (other.email != null)
@@ -201,7 +213,7 @@ public class User implements Serializable {
 
 	@Override
 	public String toString() {
-		return "User [id=" + id
+		return "User [id="+ id
 				+ ", firstName="
 				+ firstName
 				+ ", lastName="

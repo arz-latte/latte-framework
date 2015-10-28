@@ -1,17 +1,14 @@
-/**
- * version 28.08.2015
- */
+"use strict";
+
 var appModule = {
 
-	API_MODULES : 'api/modules',
-
-	currentId : null,
+	URI_MODULES : '/latte/api/admin/modules',
 
 	loadModules : function() {
 		appAdmin.leaveEditMode();
+		appAdmin.currentId = null;
 
-		$.getJSON(appModule.API_MODULES + "/all.json", function(data) {
-
+		latte.call(appModule.URI_MODULES, function(data) {
 			var $modules = $("#modules");
 			$modules.find("tr:has(td)").remove(); // clear
 
@@ -33,7 +30,7 @@ var appModule = {
 	parseModuleRow : function(module) {
 		var $name = $("<td/>").append(module.name);
 
-		version = "";
+		var version = "";
 		if (module.lastmodified) {
 			var dt = new Date(module.lastmodified);
 			var h = dt.getHours() < 10 ? "0" + dt.getHours() : dt.getHours();
@@ -69,21 +66,20 @@ var appModule = {
 	showModule : function() {
 		$("#btn-delete").show();
 		appAdmin.enterEditMode();
-		appModule.currentId = null;
 
 		// load module details
 		appModule.currentId = $(this).attr("data-id");
-		$.getJSON(appModule.API_MODULES + "/get.json/" + appModule.currentId,
-				function(data) {
+		latte.call(appModule.URI_MODULES + "/" + appModule.currentId, function(
+				data) {
 
-					// fill form
-					var m = data.module;
-					$("[name=input-name]").val(m.name);
-					$("[name=input-provider]").val(m.provider);
-					$("[name=input-url]").val(m.url);
-					$("[name=input-interval]").val(m.interval);
-					$("[name=input-enabled]").prop("checked", m.enabled);
-				});
+			// fill form
+			var m = data.module;
+			$("[name=input-name]").val(m.name);
+			$("[name=input-provider]").val(m.provider);
+			$("[name=input-url]").val(m.url);
+			$("[name=input-interval]").val(m.interval);
+			$("[name=input-enabled]").prop("checked", m.enabled);
+		});
 	},
 
 	storeModule : function() {
@@ -98,8 +94,8 @@ var appModule = {
 
 		if (m.id > 0) {
 
-			$.ajax({
-				url : appModule.API_MODULES + "/update.json",
+			latte.ajax({
+				url : appModule.URI_MODULES,
 				type : "PUT",
 				data : JSON.stringify({
 					"module" : m
@@ -113,8 +109,8 @@ var appModule = {
 			});
 		} else {
 
-			$.ajax({
-				url : appModule.API_MODULES + "/create.json",
+			latte.ajax({
+				url : appModule.URI_MODULES,
 				type : "POST",
 				data : JSON.stringify({
 					"module" : m
@@ -134,12 +130,10 @@ var appModule = {
 	deleteModule : function() {
 		var choice = confirm("Sind Sie sicher?");
 		if (choice == true) {
-			$.ajax(
-					{
-						url : appModule.API_MODULES + "/delete.json/"
-								+ appModule.currentId,
-						type : "DELETE",
-					}).done(function(data) {
+			latte.ajax({
+				url : appModule.URI_MODULES + "/" + appModule.currentId,
+				type : "DELETE",
+			}).done(function(data) {
 				app.showSuccessMessage("Modul gel&ouml;scht");
 				appModule.loadModules();
 			}).fail(function() {
@@ -156,25 +150,23 @@ var appModule = {
 		return false;
 	},
 
+	initModule : function() {
+		appAdmin.init();
+
+		$("#btn-load").on("click", appModule.loadModules);
+		$("#btn-add").on("click", appModule.addNewModule);
+
+		$("#btn-store").on("click", appModule.storeModule);
+		$("#btn-delete").on("click", appModule.deleteModule);
+		$("#btn-restore").on("click", appModule.restoreModule);
+
+		$("#list-area tbody").on("click", "tr", appModule.showModule);
+
+		appModule.loadModules();
+	},
+
 };
 
-// ===========================================================================
-// ready & event handlers
-// ===========================================================================
-function initModule() {
-
-	appAdmin.init();
-
-	$("#btn-load").on("click", appModule.loadModules);
-	$("#btn-add").on("click", appModule.addNewModule);
-
-	$("#btn-store").on("click", appModule.storeModule);
-	$("#btn-delete").on("click", appModule.deleteModule);
-	$("#btn-restore").on("click", appModule.restoreModule);
-
-	$("#list-area tbody").on("click", "tr", appModule.showModule);
-
-	appModule.loadModules();
-}
-
-$(initModule);
+$(function() {
+	appModule.initModule();
+});

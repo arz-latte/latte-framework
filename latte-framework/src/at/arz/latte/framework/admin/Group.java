@@ -28,7 +28,7 @@ import javax.validation.constraints.Size;
  * Dominik Neuner {@link "mailto:dominik@neuner-it.at"}
  *
  */
-@NamedQueries({ @NamedQuery(name = Group.QUERY_ALL,
+@NamedQueries({	@NamedQuery(name = Group.QUERY_ALL,
 							query = "SELECT g FROM Group g"),
 				@NamedQuery(name = Group.QUERY_GET_BY_NAME,
 							query = "SELECT g FROM Group g WHERE g.name = :name") })
@@ -154,7 +154,7 @@ public class Group implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Group [id=" + id
+		return "Group [id="+ id
 				+ ", name="
 				+ name
 				+ ", permission="

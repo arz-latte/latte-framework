@@ -23,7 +23,7 @@ import at.arz.latte.framework.module.Menu;
 import at.arz.latte.framework.module.Module;
 import at.arz.latte.framework.restapi.MenuData;
 import at.arz.latte.framework.websockets.WebsocketEndpoint;
-import at.arz.latte.framework.websockets.models.WebsocketMessage;
+import at.arz.latte.framework.websockets.WebsocketMessage;
 
 /**
  * timer for periodic checking of module status

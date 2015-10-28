@@ -2,8 +2,6 @@
 
 var appUser = {
 
-	API_USERS : 'api/users',
-
 	URI_USERS : '/latte/api/admin/users',
 	URI_GROUPS : '/latte/api/admin/groups',
 
@@ -38,7 +36,6 @@ var appUser = {
 
 	loadGroups : function() {
 		latte.call(appUser.URI_GROUPS, function(data) {
-
 			var $groups = $("[name=select-group]");
 			$groups.find("option").remove(); // clear
 
@@ -176,7 +173,7 @@ var appUser = {
 
 		appUser.loadGroups();
 		appUser.loadUsers();
-	}
+	},
 };
 
 $(function() {

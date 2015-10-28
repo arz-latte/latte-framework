@@ -24,7 +24,7 @@ import javax.validation.constraints.Size;
 @NamedQueries({ @NamedQuery(name = Permission.QUERY_GETALL,
 							query = "SELECT p FROM Permission p"),
 				@NamedQuery(name = Permission.QUERY_GET_NAME_BY_USER,
-							query = "SELECT p.name FROM User u JOIN u.group g JOIN g.permissions p WHERE u.email = :email"), })
+							query = "SELECT p.name FROM User u JOIN u.groups g JOIN g.permissions p WHERE u.email = :email"), })
 @Entity
 @Table(name = "permissions")
 public class Permission implements Serializable {

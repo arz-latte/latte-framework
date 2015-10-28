@@ -26,12 +26,16 @@ import javax.validation.constraints.Size;
  * Dominik Neuner {@link "mailto:dominik@neuner-it.at"}
  *
  */
-@NamedQueries({ @NamedQuery(name = Module.QUERY_GETALL,
+@NamedQueries({	@NamedQuery(name = Module.QUERY_GETALL,
 							query = "SELECT m FROM Module m"),
 				@NamedQuery(name = Module.QUERY_GETALL_ENABLED,
 							query = "SELECT m FROM Module m WHERE m.enabled=true AND m.id > 0"),
 				@NamedQuery(name = Module.QUERY_GETALL_ENABLED_SORTED,
 							query = "SELECT m FROM Module m WHERE m.enabled=true ORDER BY m.menu.order"),
+				@NamedQuery(name = Module.QUERY_GET_BY_NAME,
+				query = "SELECT m FROM Module m WHERE m.name = :name"),
+				@NamedQuery(name = Module.QUERY_GET_BY_URL,
+				query = "SELECT m FROM Module m WHERE m.url = :url"),
 				@NamedQuery(name = Module.STOP_ALL,
 							query = "UPDATE Module m SET m.running = false"), })
 @Entity
@@ -43,6 +47,8 @@ public class Module implements Serializable {
 	public static final String QUERY_GETALL = "Module.GetAll";
 	public static final String QUERY_GETALL_ENABLED = "Module.GetAllEnabled";
 	public static final String QUERY_GETALL_ENABLED_SORTED = "Module.GetAllEnabledSorted";
+	public static final String QUERY_GET_BY_NAME = "Module.GetByName";
+	public static final String QUERY_GET_BY_URL = "Module.GetByUrl";
 	public static final String STOP_ALL = "Module.StopAll";
 
 	@Id
@@ -109,23 +115,6 @@ public class Module implements Serializable {
 	 */
 	public Module() {
 		super();
-	}
-
-	/**
-	 * used for creation via REST-service or JUnit
-	 */
-	public Module(	String name,
-					String provider,
-					String url,
-					int interval,
-					Boolean enabled) {
-		this();
-		this.name = name;
-		this.provider = provider;
-		this.url = url;
-		this.interval = interval;
-		this.enabled = enabled;
-		this.running = false;
 	}
 
 	public Long getId() {
@@ -202,7 +191,7 @@ public class Module implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Module [id=" + id
+		return "Module [id="+ id
 				+ ", name="
 				+ name
 				+ ", provider="

@@ -1,10 +1,8 @@
-package at.arz.latte.framework.websockets.decoders;
+package at.arz.latte.framework.websockets;
 
 import javax.websocket.DecodeException;
 import javax.websocket.Decoder;
 import javax.websocket.EndpointConfig;
-
-import at.arz.latte.framework.websockets.models.WebsocketMessage;
 
 /**
  * json decoder for websocket communication
