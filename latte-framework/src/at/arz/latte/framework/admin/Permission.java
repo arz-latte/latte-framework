@@ -21,8 +21,10 @@ import javax.validation.constraints.Size;
  * Dominik Neuner {@link "mailto:dominik@neuner-it.at"}
  *
  */
-@NamedQueries({ @NamedQuery(name = Permission.QUERY_GETALL,
+@NamedQueries({	@NamedQuery(name = Permission.QUERY_GETALL,
 							query = "SELECT p FROM Permission p"),
+				@NamedQuery(name = Permission.QUERY_GETALL_NAME,
+							query = "SELECT p.name FROM Permission p"),
 				@NamedQuery(name = Permission.QUERY_GET_NAME_BY_USER,
 							query = "SELECT p.name FROM User u JOIN u.groups g JOIN g.permissions p WHERE u.email = :email"), })
 @Entity
@@ -32,6 +34,7 @@ public class Permission implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	public static final String QUERY_GETALL = "Permission.GetAll";
+	public static final String QUERY_GETALL_NAME = "Permission.GetAllName";
 	public static final String QUERY_GET_NAME_BY_USER = "Permission.GetNameByUser";
 
 	@Id

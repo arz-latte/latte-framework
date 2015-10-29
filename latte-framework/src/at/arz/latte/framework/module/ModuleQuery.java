@@ -20,8 +20,8 @@ public class ModuleQuery {
 												Module.class);
 	}
 
-	public TypedQuery<Permission> allPermissions() {
-		return entityManager.createNamedQuery(	Permission.QUERY_GETALL,
-												Permission.class);
+	public TypedQuery<String> allPermissionsName() {
+		return entityManager.createNamedQuery(	Permission.QUERY_GETALL_NAME,
+												String.class);
 	}
 }
