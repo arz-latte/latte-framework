@@ -2,17 +2,13 @@ package at.arz.latte.framework.module;
 
 import java.io.Serializable;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Version;
@@ -29,15 +25,13 @@ import javax.validation.constraints.Size;
 @NamedQueries({	@NamedQuery(name = Module.QUERY_GETALL,
 							query = "SELECT m FROM Module m"),
 				@NamedQuery(name = Module.QUERY_GETALL_ENABLED,
-							query = "SELECT m FROM Module m WHERE m.enabled=true AND m.id > 0"),
-				@NamedQuery(name = Module.QUERY_GETALL_ENABLED_SORTED,
-							query = "SELECT m FROM Module m JOIN FETCH m.menu WHERE m.enabled=true ORDER BY m.menu.order"),
+							query = "SELECT m FROM Module m WHERE m.enabled=true"),
 				@NamedQuery(name = Module.QUERY_GET_BY_NAME,
-				query = "SELECT m FROM Module m WHERE m.name = :name"),
+							query = "SELECT m FROM Module m WHERE m.name = :name"),
 				@NamedQuery(name = Module.QUERY_GET_BY_URL,
-				query = "SELECT m FROM Module m WHERE m.url = :url"),
+							query = "SELECT m FROM Module m WHERE m.url = :url"),
 				@NamedQuery(name = Module.STOP_ALL,
-							query = "UPDATE Module m SET m.running = false"), })
+							query = "UPDATE Module m SET m.running = false, m.lastModified = null"), })
 @Entity
 @Table(name = "modules")
 public class Module implements Serializable {
@@ -46,7 +40,6 @@ public class Module implements Serializable {
 
 	public static final String QUERY_GETALL = "Module.GetAll";
 	public static final String QUERY_GETALL_ENABLED = "Module.GetAllEnabled";
-	public static final String QUERY_GETALL_ENABLED_SORTED = "Module.GetAllEnabledSorted";
 	public static final String QUERY_GET_BY_NAME = "Module.GetByName";
 	public static final String QUERY_GET_BY_URL = "Module.GetByUrl";
 	public static final String STOP_ALL = "Module.StopAll";
@@ -100,12 +93,6 @@ public class Module implements Serializable {
 	 */
 	@Column(name = "lastmodified")
 	private Long lastModified;
-
-	@OneToOne(	cascade = CascadeType.ALL,
-				orphanRemoval = true,
-				fetch = FetchType.LAZY)
-	@JoinColumn(name = "menu_id")
-	private Menu menu;
 
 	@Version
 	private long version;
@@ -181,14 +168,6 @@ public class Module implements Serializable {
 		this.lastModified = lastModified;
 	}
 
-	public Menu getMenu() {
-		return menu;
-	}
-
-	public void setMenu(Menu menu) {
-		this.menu = menu;
-	}
-
 	@Override
 	public String toString() {
 		return "Module [id="+ id
@@ -206,8 +185,6 @@ public class Module implements Serializable {
 				+ enabled
 				+ ", lastModified="
 				+ lastModified
-				+ ", menu="
-				+ menu
 				+ "]";
 	}
 

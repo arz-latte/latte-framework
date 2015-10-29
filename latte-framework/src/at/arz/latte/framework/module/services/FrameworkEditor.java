@@ -1,6 +1,5 @@
 package at.arz.latte.framework.module.services;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -8,10 +7,10 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 
 import at.arz.latte.framework.admin.Permission;
-import at.arz.latte.framework.module.Menu;
 import at.arz.latte.framework.module.Module;
 import at.arz.latte.framework.module.ModuleQuery;
-import at.arz.latte.framework.module.SubMenu;
+import at.arz.latte.framework.restapi.MenuData;
+import at.arz.latte.framework.restapi.SubMenuData;
 
 /**
  * bean for framework/module management
@@ -28,78 +27,57 @@ public class FrameworkEditor {
 		this.em = Objects.requireNonNull(em);
 	}
 
-	public Module updateModule(Long id, boolean running) {
+	public Module update(Long id, boolean running) {
 		Module module = em.find(Module.class, id);
 		module.setRunning(running);
 		return module;
 	}
 
-	public Module updateModule(Long id, Menu menu) {
+	public Module update(Long id, MenuData menu) {
 
 		// find permission in db
-		HashMap<String, Permission> storedPermissions = new HashMap<>();
-		List<Permission> permissions = new ModuleQuery(em)	.allPermissions()
-															.getResultList();
-		for (Permission p : permissions) {
-			storedPermissions.put(p.getName(), p);
-		}
+		List<String> permissions = new ModuleQuery(em)	.allPermissionsName()
+														.getResultList();
 
-		Module module = updateModule(id, true);
+		Module module = update(id, true);
 		module.setLastModified(menu.getLastModified());
 
-		// update menu entry
-		module.setMenu(menu);
-
 		// update permissions
-		getMenuPermissionsRec(module, storedPermissions);
+		updatePermissions(menu, permissions);
 
 		return module;
 	}
 
-	private	void
-			getMenuPermissionsRec(	Module module,
-									HashMap<String, Permission> storedPermissions) {
+	private void updatePermissions(	MenuData menu,
+										List<String> permissions) {
 
-		Menu menu = module.getMenu();
-		Permission p = menu.getPermission();
-		if (p != null) {
-
-			if (storedPermissions.containsKey(p.getName())) {
-				menu.setPermission(storedPermissions.get(p.getName()));
-			} else {
-				storedPermissions.put(p.getName(), p);
-				em.persist(p);
-				menu.setPermission(p);
+		String permission = menu.getPermission();
+		if (permission != null) {
+			if (!permissions.contains(permission)) {
+				permissions.add(permission);
+				em.persist(new Permission(permission));
 			}
 		}
 
 		// get recursive submenu permissions
-		getSubMenuPermissionsRec(module, menu.getSubMenus(), storedPermissions);
+		updatePermissions(menu.getSubMenus(), permissions);
 	}
 
-	private	void
-			getSubMenuPermissionsRec(	Module module,
-										List<SubMenu> subMenus,
-										HashMap<String, Permission> storedPermissions) {
+	private void updatePermissions(	List<SubMenuData> subMenus,
+											List<String> permissions) {
 
-		for (SubMenu menu : subMenus) {
+		for (SubMenuData menu : subMenus) {
 
-			Permission p = menu.getPermission();
-			if (p != null) {
-
-				if (storedPermissions.containsKey(p.getName())) {
-					menu.setPermission(storedPermissions.get(p.getName()));
-				} else {
-					storedPermissions.put(p.getName(), p);
-					em.persist(p);
-					menu.setPermission(p);
+			String permission = menu.getPermission();
+			if (permission != null) {
+				if (!permissions.contains(permission)) {
+					permissions.add(permission);
+					em.persist(new Permission(permission));
 				}
 			}
 
 			// get recursive submenu permissions
-			getSubMenuPermissionsRec(	module,
-										menu.getSubMenus(),
-										storedPermissions);
+			updatePermissions(menu.getSubMenus(), permissions);
 		}
 	}
 

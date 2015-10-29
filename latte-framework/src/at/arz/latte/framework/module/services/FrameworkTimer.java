@@ -22,7 +22,6 @@ import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 
 import at.arz.latte.framework.FrameworkConstants;
 import at.arz.latte.framework.exceptions.LatteValidationException;
-import at.arz.latte.framework.module.Menu;
 import at.arz.latte.framework.module.Module;
 import at.arz.latte.framework.module.ModuleQuery;
 import at.arz.latte.framework.restapi.MenuData;
@@ -39,6 +38,8 @@ import at.arz.latte.framework.websockets.WebsocketMessage;
 @DependsOn({ "WebsocketEndpoint" })
 public class FrameworkTimer {
 
+	private static final String CONFIG_PATH = "/api/config/status.json";
+
 	@PersistenceContext(unitName = FrameworkConstants.JPA_UNIT)
 	private EntityManager em;
 	
@@ -48,8 +49,9 @@ public class FrameworkTimer {
 	@Inject
 	private Validator validator;
 
-	private static final String CONFIG_PATH = "/api/config/status.json";
-
+	@Inject 
+	private FrameworkNavigation frameworkNavigation;
+	
 	/**
 	 * wait 10 seconds before start
 	 */
@@ -106,20 +108,21 @@ public class FrameworkTimer {
 			Set<ConstraintViolation<Object>> violations = requestValidation(menuData);
 			if (!violations.isEmpty()) {
 				throw new LatteValidationException(400, violations);
-			}
-
+			}			
+			
 			// got response -> check version
 			if (module.getLastModified() == null || module.getLastModified() < menuData.getLastModified()) {
 
-				Menu menu = Menu.getMenuRec(menuData);
-				new FrameworkEditor(em).updateModule(module.getId(), menu);
+				frameworkNavigation.update(module.getId(), menuData);
+				
+				new FrameworkEditor(em).update(module.getId(), menuData);
 
 				websocket.chat(new WebsocketMessage("update-module",
 													module.getId().toString()));
 			} else if (!module.getRunning()) {
 
 				// set module running to true
-				new FrameworkEditor(em).updateModule(module.getId(), true);
+				new FrameworkEditor(em).update(module.getId(), true);
 
 				websocket.chat(new WebsocketMessage("activate-module",
 													module.getId().toString()));
@@ -132,7 +135,7 @@ public class FrameworkTimer {
 			// set module as inactive
 			if (module.getRunning()) {
 
-				new FrameworkEditor(em).updateModule(module.getId(), false);
+				new FrameworkEditor(em).update(module.getId(), false);
 
 				websocket.chat(new WebsocketMessage("deactivate-module",
 													module.getId().toString()));

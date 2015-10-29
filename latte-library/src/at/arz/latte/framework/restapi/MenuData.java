@@ -13,7 +13,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "menu")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class MenuData implements Serializable {
+public class MenuData implements Serializable, Comparable<MenuData> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -49,10 +49,11 @@ public class MenuData implements Serializable {
 		subMenus = new ArrayList<>();
 	}
 
-	public MenuData(String name, String url, String style) {
+	public MenuData(String name, String url, Integer order, String style) {
 		this();
 		this.name = name;
 		this.url = url;
+		this.order = order;
 		this.style = style;
 	}
 
@@ -136,4 +137,17 @@ public class MenuData implements Serializable {
 				+ "]";
 	}
 
+	@Override
+	public int compareTo(MenuData m) {
+
+		if (this.getOrder() == null && m.getOrder() == null) {
+			return 0;
+		} else if (this.getOrder() == null) {
+			return 1;
+		} else if (m.getOrder() == null) {
+			return -1;
+		}
+
+		return this.getOrder().compareTo(m.getOrder());
+	}
 }

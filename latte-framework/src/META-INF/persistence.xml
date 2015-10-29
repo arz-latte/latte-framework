@@ -6,9 +6,7 @@
 		<class>at.arz.latte.framework.admin.Group</class>
 		<class>at.arz.latte.framework.admin.Permission</class>
 		<class>at.arz.latte.framework.admin.User</class>
-		<class>at.arz.latte.framework.module.Menu</class>
 		<class>at.arz.latte.framework.module.Module</class>
-		<class>at.arz.latte.framework.module.SubMenu</class>
 		
 		<properties>
 			<property name="openjpa.DynamicEnhancementAgent" value="true" />

@@ -7,6 +7,7 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.xml.bind.JAXBException;
@@ -14,7 +15,6 @@ import javax.xml.bind.JAXBException;
 import at.arz.latte.framework.FrameworkConstants;
 import at.arz.latte.framework.admin.restapi.AdministrationApplication;
 import at.arz.latte.framework.exceptions.LatteValidationException;
-import at.arz.latte.framework.module.Menu;
 import at.arz.latte.framework.module.Module;
 import at.arz.latte.framework.restapi.MenuData;
 import at.arz.latte.framework.services.ModuleConfigHelper;
@@ -35,10 +35,8 @@ public class FrameworkInitialization {
 	@EJB
 	private ModuleConfigHelper configHelper;
 
-	/**
-	 * cache administration menu
-	 */
-	public static Menu ADMIN_MENU;
+	@Inject
+	private FrameworkNavigation frameworkNavigation;
 
 	@PostConstruct
 	private void initialize()	throws LatteValidationException,
@@ -48,7 +46,7 @@ public class FrameworkInitialization {
 		// load administration configuration
 		URL url = AdministrationApplication.getConfiguration();
 		MenuData menuData = configHelper.loadAndCacheServiceConfig(url, null);
-		ADMIN_MENU = Menu.getMenuRec(menuData);
+		frameworkNavigation.update(0L, menuData);
 
 		// initialize/stop all modules
 		em.createNamedQuery(Module.STOP_ALL).executeUpdate();

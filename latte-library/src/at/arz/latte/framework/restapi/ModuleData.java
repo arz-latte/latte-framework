@@ -16,7 +16,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement(name = "module")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class ModuleData {
+public class ModuleData implements Comparable<ModuleData> {
 
 	private Long id;
 
@@ -60,6 +60,12 @@ public class ModuleData {
 	private MenuData menu;
 
 	public ModuleData() {
+	}
+
+	public ModuleData(Long id, Boolean running) {
+		this();
+		this.id = id;
+		this.running = running;
 	}
 
 	/**
@@ -161,7 +167,7 @@ public class ModuleData {
 
 	@Override
 	public String toString() {
-		return "ModuleData [id=" + id
+		return "ModuleData [id="+ id
 				+ ", name="
 				+ name
 				+ ", provider="
@@ -179,6 +185,20 @@ public class ModuleData {
 				+ ", menu="
 				+ menu
 				+ "]";
+	}
+
+	@Override
+	public int compareTo(ModuleData o) {
+
+		if (this.getMenu() == null && o.getMenu() == null) {
+			return 0;
+		} else if (this.getMenu() == null) {
+			return 1;
+		} else if (o.getMenu() == null) {
+			return 1;
+		}
+
+		return this.getMenu().compareTo(o.getMenu());
 	}
 
 }
