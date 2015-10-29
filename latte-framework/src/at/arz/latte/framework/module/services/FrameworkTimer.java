@@ -8,6 +8,8 @@ import javax.ejb.EJB;
 import javax.ejb.Schedule;
 import javax.ejb.Singleton;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import javax.ws.rs.WebApplicationException;
@@ -18,6 +20,7 @@ import org.apache.cxf.jaxrs.client.WebClient;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 
+import at.arz.latte.framework.FrameworkConstants;
 import at.arz.latte.framework.exceptions.LatteValidationException;
 import at.arz.latte.framework.module.Menu;
 import at.arz.latte.framework.module.Module;
@@ -32,20 +35,17 @@ import at.arz.latte.framework.websockets.WebsocketMessage;
  *
  */
 @Singleton
-@DependsOn({ "ModuleManagementBean", "WebsocketEndpoint" })
-public class ModuleTimerService {
+@DependsOn({ "WebsocketEndpoint" })
+public class FrameworkTimer {
 
-	@EJB
-	private ModuleManagementBean bean;
-
+	@PersistenceContext(unitName = FrameworkConstants.JPA_UNIT)
+	private EntityManager em;
+	
 	@EJB
 	private WebsocketEndpoint websocket;
 
 	@Inject
 	private Validator validator;
-
-	// todo
-	private static final String FRAMEWORK_URI = "http://localhost:8080";
 
 	private static final String CONFIG_PATH = "/api/config/status.json";
 
@@ -63,7 +63,7 @@ public class ModuleTimerService {
 
 		if (counter >= 0) {
 
-			List<Module> modules = bean.getAllEnabledModules();
+			List<Module> modules = new FrameworkEditor(em).getAllEnabledModules();
 
 			// notify clients if number of enabled modules changed
 			if (modulesSize == null) {
@@ -90,7 +90,7 @@ public class ModuleTimerService {
 	private void checkStatus(Module module) {
 
 		try {
-			WebClient client = setupClient(	FRAMEWORK_URI,
+			WebClient client = setupClient(	FrameworkConstants.FRAMEWORK_URI,
 											module.getUrl() + CONFIG_PATH);
 
 			// send lastModified of module to client
@@ -111,14 +111,14 @@ public class ModuleTimerService {
 			if (module.getLastModified() == null || module.getLastModified() < menuData.getLastModified()) {
 
 				Menu menu = Menu.getMenuRec(menuData);
-				bean.updateModuleMenu(module.getId(), menu);
+				new FrameworkEditor(em).updateModule(module.getId(), menu);
 
 				websocket.chat(new WebsocketMessage("update-module",
 													module.getId().toString()));
 			} else if (!module.getRunning()) {
 
 				// set module running to true
-				bean.updateModuleRunning(module.getId(), true);
+				new FrameworkEditor(em).updateModule(module.getId(), true);
 
 				websocket.chat(new WebsocketMessage("activate-module",
 													module.getId().toString()));
@@ -131,7 +131,7 @@ public class ModuleTimerService {
 			// set module as inactive
 			if (module.getRunning()) {
 
-				bean.updateModuleRunning(module.getId(), false);
+				new FrameworkEditor(em).updateModule(module.getId(), false);
 
 				websocket.chat(new WebsocketMessage("deactivate-module",
 													module.getId().toString()));

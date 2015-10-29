@@ -57,7 +57,7 @@ public class Menu implements Serializable {
 
 	@OneToMany(	cascade = CascadeType.ALL,
 				orphanRemoval = true,
-				fetch = FetchType.LAZY)
+				fetch = FetchType.EAGER)
 	@JoinColumn(name = "menu_id")
 	@OrderColumn(name = "order")
 	private List<SubMenu> subMenus;
@@ -65,6 +65,12 @@ public class Menu implements Serializable {
 	@NotNull
 	@Column(name = "lastmodified")
 	private Long lastModified;
+	
+	/**
+	 * css class attribute
+	 */
+	@Size(max = 31)
+	private String style;
 
 	@Version
 	private long version;
@@ -137,10 +143,18 @@ public class Menu implements Serializable {
 	public void setLastModified(Long lastModified) {
 		this.lastModified = lastModified;
 	}
+	
+	public String getStyle() {
+		return style;
+	}
+
+	public void setStyle(String style) {
+		this.style = style;
+	}
 
 	@Override
 	public String toString() {
-		return "Menu [id=" + id
+		return "Menu [id="+ id
 				+ ", name="
 				+ name
 				+ ", url="
@@ -153,6 +167,8 @@ public class Menu implements Serializable {
 				+ subMenus
 				+ ", lastModified="
 				+ lastModified
+				+ ", style="
+				+ style
 				+ "]";
 	}
 
@@ -172,6 +188,7 @@ public class Menu implements Serializable {
 		menu.setName(menuData.getName());
 		menu.setUrl(menuData.getUrl());
 		menu.setOrder(menuData.getOrder());
+		menu.setStyle(menuData.getStyle());
 		if (menuData.getPermission() != null) {
 			Permission p = new Permission(menuData.getPermission());
 			permissions.put(p.getName(), p);

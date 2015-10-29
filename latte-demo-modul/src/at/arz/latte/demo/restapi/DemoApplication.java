@@ -1,4 +1,4 @@
-package at.arz.latte.framework.services.restful;
+package at.arz.latte.demo.restapi;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -7,15 +7,11 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
-/**
- * initialization of RESTful Service classes
- * 
- * Dominik Neuner {@link "mailto:dominik@neuner-it.at"}
- *
- */
+import at.arz.latte.demo.restapi.DemoModuleRestfulService;
+
 @ApplicationScoped
 @ApplicationPath("/api")
-public class FrameworkConfiguration extends Application {
+public class DemoApplication extends Application {
 
 	private Set<Class<?>> applicationClasses;
 
@@ -29,6 +25,7 @@ public class FrameworkConfiguration extends Application {
 
 	private void initApplicationClasses() {
 		applicationClasses = new HashSet<Class<?>>();
-		applicationClasses.add(FrameworkService.class);
+		applicationClasses.add(DemoModuleConfigurationRestfulService.class);
+		applicationClasses.add(DemoModuleRestfulService.class);
 	}
 }

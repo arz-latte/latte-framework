@@ -1,10 +1,9 @@
-package at.arz.latte.framework.persistence.beans;
+package at.arz.latte.framework.module.services;
 
 import java.io.IOException;
 import java.net.URL;
 
 import javax.annotation.PostConstruct;
-import javax.ejb.DependsOn;
 import javax.ejb.EJB;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
@@ -28,8 +27,7 @@ import at.arz.latte.framework.services.ModuleConfigHelper;
  */
 @Singleton
 @Startup
-@DependsOn("ModuleManagementBean")
-public class InitializationBean {
+public class FrameworkInitialization {
 
 	@PersistenceContext(unitName = FrameworkConstants.JPA_UNIT)
 	private EntityManager em;
@@ -48,7 +46,6 @@ public class InitializationBean {
 								IOException {
 
 		// load administration configuration
-
 		URL url = AdministrationApplication.getConfiguration();
 		MenuData menuData = configHelper.loadAndCacheServiceConfig(url, null);
 		ADMIN_MENU = Menu.getMenuRec(menuData);

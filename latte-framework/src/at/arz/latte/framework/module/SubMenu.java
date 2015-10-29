@@ -64,6 +64,12 @@ public class SubMenu implements Serializable {
 	@Size(max = 31)
 	private String group;
 
+	/**
+	 * css class attribute
+	 */
+	@Size(max = 31)
+	private String style;
+
 	@ManyToOne
 	private Permission permission;
 
@@ -74,7 +80,7 @@ public class SubMenu implements Serializable {
 
 	@OneToMany(	cascade = CascadeType.ALL,
 				orphanRemoval = true,
-				fetch = FetchType.LAZY)
+				fetch = FetchType.EAGER)
 	@JoinColumn(name = "submenu_id")
 	@OrderColumn(name = "order")
 	private List<SubMenu> subMenus;
@@ -137,6 +143,14 @@ public class SubMenu implements Serializable {
 	public void setGroup(String group) {
 		this.group = group;
 	}
+	
+	public String getStyle() {
+		return style;
+	}
+
+	public void setStyle(String style) {
+		this.style = style;
+	}
 
 	public Permission getPermission() {
 		return permission;
@@ -177,7 +191,7 @@ public class SubMenu implements Serializable {
 
 	@Override
 	public String toString() {
-		return "SubMenu [id=" + id
+		return "SubMenu [id="+ id
 				+ ", name="
 				+ name
 				+ ", url="
@@ -188,6 +202,8 @@ public class SubMenu implements Serializable {
 				+ type
 				+ ", group="
 				+ group
+				+ ", style="
+				+ style
 				+ ", permission="
 				+ permission
 				+ ", disabled="
@@ -198,7 +214,7 @@ public class SubMenu implements Serializable {
 				+ subMenus
 				+ "]";
 	}
-
+	
 	// ----------------------- dta to entity -----------------------
 
 	/**
@@ -229,7 +245,8 @@ public class SubMenu implements Serializable {
 		subMenu.setDisabled(subMenuData.getDisabled());
 		subMenu.setType(subMenuData.getType());
 		subMenu.setGroup(subMenuData.getGroup());
-
+		subMenu.setStyle(subMenuData.getStyle());
+		
 		List<SubMenuData> subMenusData = subMenuData.getSubMenus();
 		if (subMenusData != null && !subMenusData.isEmpty()) {
 			for (SubMenuData s : subMenusData) {

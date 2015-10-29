@@ -33,6 +33,9 @@ public class SubMenuData implements Serializable {
 	@Size(max = 31)
 	private String group;
 
+	@Size(max = 31)
+	private String style;
+
 	@Size(min = 1, max = 31)
 	private String permission;
 
@@ -68,12 +71,14 @@ public class SubMenuData implements Serializable {
 	 * @param script
 	 * @param type
 	 * @param group
+	 * @param style
 	 */
 	public SubMenuData(	String name,
 						String url,
 						String script,
 						String type,
 						String group,
+						String style,
 						Boolean disabled) {
 		this();
 		this.name = name;
@@ -81,6 +86,7 @@ public class SubMenuData implements Serializable {
 		this.script = script;
 		this.type = type;
 		this.group = group;
+		this.style = style;
 		this.disabled = disabled;
 	}
 
@@ -124,6 +130,14 @@ public class SubMenuData implements Serializable {
 		this.group = group;
 	}
 
+	public String getStyle() {
+		return style;
+	}
+
+	public void setStyle(String style) {
+		this.style = style;
+	}
+
 	public String getPermission() {
 		return permission;
 	}
@@ -156,7 +170,7 @@ public class SubMenuData implements Serializable {
 
 	@Override
 	public String toString() {
-		return "SubMenuData [name=" + name
+		return "SubMenuData [name="+ name
 				+ ", url="
 				+ url
 				+ ", script="
@@ -165,6 +179,8 @@ public class SubMenuData implements Serializable {
 				+ type
 				+ ", group="
 				+ group
+				+ ", style="
+				+ style
 				+ ", permission="
 				+ permission
 				+ ", disabled="

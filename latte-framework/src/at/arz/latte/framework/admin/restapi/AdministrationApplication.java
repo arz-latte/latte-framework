@@ -8,6 +8,12 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
+/**
+ * initialization of RESTful administration service classes
+ * 
+ * Dominik Neuner {@link "mailto:dominik@neuner-it.at"}
+ *
+ */
 @ApplicationScoped
 @ApplicationPath("/api/admin")
 public class AdministrationApplication extends Application {

@@ -41,15 +41,19 @@ public class MenuData implements Serializable {
 	@XmlElement(name = "lastmodified")
 	private Long lastModified;
 
+	@Size(max = 31)
+	private String style;
+
 	public MenuData() {
 		super();
 		subMenus = new ArrayList<>();
 	}
 
-	public MenuData(String name, String url) {
+	public MenuData(String name, String url, String style) {
 		this();
 		this.name = name;
 		this.url = url;
+		this.style = style;
 	}
 
 	public String getName() {
@@ -84,6 +88,14 @@ public class MenuData implements Serializable {
 		this.permission = permission;
 	}
 
+	public String getStyle() {
+		return style;
+	}
+
+	public void setStyle(String style) {
+		this.style = style;
+	}
+
 	public List<SubMenuData> getSubMenus() {
 		return subMenus;
 	}
@@ -108,7 +120,7 @@ public class MenuData implements Serializable {
 
 	@Override
 	public String toString() {
-		return "MenuData [name=" + name
+		return "MenuData [name="+ name
 				+ ", url="
 				+ url
 				+ ", order="
@@ -119,6 +131,8 @@ public class MenuData implements Serializable {
 				+ subMenus
 				+ ", lastModified="
 				+ lastModified
+				+ ", style="
+				+ style
 				+ "]";
 	}
 

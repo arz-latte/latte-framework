@@ -1,6 +1,3 @@
-/**
- * version 04.10.2015
- */
 'use strict';
 
 var latte = {
@@ -492,11 +489,13 @@ var app = {
 			}
 			
 			// check locations with submenu urls
-			$.each(module.menu.submenu, function(index, submenu) {
-				if (window.location.pathname == submenu.url) {
-					localStorage.setItem("module-id", module.id);
-				}
-			});
+			if (module.menu.submenu) {
+				$.each(module.menu.submenu, function(index, submenu) {
+					if (window.location.pathname == submenu.url) {
+						localStorage.setItem("module-id", module.id);
+					}
+				});
+			}
 			
 			// initialize submenu of current active module
 			if (localStorage.getItem("module-id") == module.id) {
@@ -597,6 +596,16 @@ var app = {
 
 		if (menu.group) {
 			$entry.attr("data-group", menu.group);
+		}
+		
+		// add css style for this element
+		if (menu.style) {
+			$entry.addClass(menu.style);
+		}
+
+		// add css style for this element
+		if (menu.style) {
+			$entry.addClass(menu.style);
 		}
 
 		$subMenu.append($entry);

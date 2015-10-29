@@ -28,6 +28,7 @@
 	        <name>EAR</name>
 	        <script>alert("ok")</script>
 	        <type>ear</type>
+	        <style>menu_red</style>
 	    </submenu>
 	    <submenu>
 	        <name>WAR</name>

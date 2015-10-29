@@ -1,54 +1,94 @@
-package at.arz.latte.framework.module.services;
+package at.arz.latte.framework.restapi;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import javax.ejb.Stateless;
+import javax.ejb.EJB;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 import at.arz.latte.framework.FrameworkConstants;
+import at.arz.latte.framework.admin.AdminQuery;
+import at.arz.latte.framework.admin.Group;
+import at.arz.latte.framework.admin.restapi.AdminMapper;
+import at.arz.latte.framework.authorization.LatteAuthorization;
+import at.arz.latte.framework.exceptions.UserNotFound;
 import at.arz.latte.framework.module.Menu;
 import at.arz.latte.framework.module.Module;
 import at.arz.latte.framework.module.SubMenu;
-import at.arz.latte.framework.persistence.beans.InitializationBean;
-import at.arz.latte.framework.restapi.MenuData;
-import at.arz.latte.framework.restapi.ModuleData;
-import at.arz.latte.framework.restapi.SubMenuData;
+import at.arz.latte.framework.module.services.FrameworkInitialization;
+import at.arz.latte.framework.util.Functions;
+import at.arz.latte.framework.util.JPA;
+import at.arz.latte.framework.websockets.WebsocketEndpoint;
+import at.arz.latte.framework.websockets.WebsocketMessage;
 
 /**
- * bean for framework management
+ * RESTful service for framework management
  * 
  * Dominik Neuner {@link "mailto:dominik@neuner-it.at"}
  *
  */
-@Stateless
-public class FrameworkManagementBean {
+@Path("framework")
+public class FrameworkService {
+
+	@Inject
+	private LatteAuthorization authorization;
 
 	@PersistenceContext(unitName = FrameworkConstants.JPA_UNIT)
 	private EntityManager em;
 
+	@EJB
+	private WebsocketEndpoint websocket;
+
 	/**
-	 * get all modules with their menus for REST-service
+	 * get informations of currently logged in user
 	 * 
-	 * @param permissions
 	 * @return
 	 */
-	public List<ModuleData> getAll(Collection<String> permissions) {
+	@GET
+	@Path("user.json")
+	@Produces(MediaType.APPLICATION_JSON)
+	public UserData getUserData() {
+		String userName = authorization.getPrincipal().getName();
+		List<UserData> list = Functions.map(AdminMapper.MAP_TO_USERDATA,
+											new AdminQuery(em).userByEmail(userName));
+		if (list.isEmpty()) {
+			throw new UserNotFound(userName);
+		}
+		return list.get(0);
+	}
+
+	/**
+	 * get initialization data of all modules
+	 * 
+	 * @return
+	 */
+	@GET
+	@Path("init.json")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<ModuleData> getInitData() {
+
 		List<ModuleData> modulesData = new ArrayList<>();
 
 		// get modules from database
-		List<Module> modules = em.createNamedQuery(	Module.QUERY_GETALL_ENABLED_SORTED,
+		List<Module> modules = em	.createNamedQuery(Module.QUERY_GETALL_ENABLED_SORTED,
 													Module.class)
 									.getResultList();
-		for (Module module : modules) {
 
+		for (Module module : modules) {
 			ModuleData moduleData = new ModuleData();
 			moduleData.setId(module.getId());
 			moduleData.setRunning(module.getRunning());
 
-			moduleData.setMenu(getMenuData(module.getMenu(), permissions));
+			moduleData.setMenu(getMenuData(	module.getMenu(),
+											authorization.getPermissions()));
 
 			// ignore module if user has no permission to submenus
 			if (moduleData.getMenu() != null) {
@@ -57,16 +97,16 @@ public class FrameworkManagementBean {
 		}
 
 		// load and sort administration menu if user has "admin"-permission
-		if (permissions.contains("admin")) {
+		if (authorization.getPermissions().contains("admin")) {
 			ModuleData moduleData = new ModuleData();
 			moduleData.setId(0L);
 			moduleData.setRunning(true);
-			moduleData.setMenu(getMenuData(	InitializationBean.ADMIN_MENU,
-											permissions));
+			moduleData.setMenu(getMenuData(	FrameworkInitialization.ADMIN_MENU,
+											authorization.getPermissions()));
 
 			// sort admin menu
 			boolean added = false;
-			int adminMenuOrder = InitializationBean.ADMIN_MENU.getOrder();
+			int adminMenuOrder = FrameworkInitialization.ADMIN_MENU.getOrder();
 			for (int i = 0; i < modules.size(); i++) {
 				Menu menu = modules.get(i).getMenu();
 				if (menu.getOrder() > adminMenuOrder) {
@@ -93,13 +133,15 @@ public class FrameworkManagementBean {
 	private MenuData getMenuData(Menu menu, Collection<String> permissions) {
 
 		// ignore module if user has no permission
-		if (menu.getPermission() != null && !permissions.contains(menu.getPermission()
-																		.getName())) {
+		if (menu.getPermission() != null
+			&& !permissions.contains(menu.getPermission().getName())) {
 			return null;
 		}
 
 		// main menu entry
-		MenuData menuData = new MenuData(menu.getName(), menu.getUrl());
+		MenuData menuData = new MenuData(	menu.getName(),
+											menu.getUrl(),
+											menu.getStyle());
 
 		// sub menu entries
 		if (menu.getSubMenus() != null && !menu.getSubMenus().isEmpty()) {
@@ -126,8 +168,8 @@ public class FrameworkManagementBean {
 											Collection<String> permissions) {
 
 		// ignore submenu if user has no permission
-		if (menu.getPermission() != null && !permissions.contains(menu.getPermission()
-																		.getName())) {
+		if (menu.getPermission() != null
+			&& !permissions.contains(menu.getPermission().getName())) {
 			return null;
 		}
 
@@ -136,6 +178,7 @@ public class FrameworkManagementBean {
 													menu.getScript(),
 													menu.getType(),
 													menu.getGroup(),
+													menu.getStyle(),
 													menu.getDisabled());
 
 		// recursive add sub menus
@@ -146,6 +189,17 @@ public class FrameworkManagementBean {
 		}
 
 		return subMenuData;
+	}
+
+	/**
+	 * notify all clients about something via websocket
+	 * 
+	 * @return
+	 */
+	@POST
+	@Path("notify.json")
+	public void notifyClients(String moduleId) {
+		websocket.chat(new WebsocketMessage("notify", moduleId));
 	}
 
 }

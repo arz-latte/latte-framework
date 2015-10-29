@@ -31,7 +31,7 @@ import javax.validation.constraints.Size;
 				@NamedQuery(name = Module.QUERY_GETALL_ENABLED,
 							query = "SELECT m FROM Module m WHERE m.enabled=true AND m.id > 0"),
 				@NamedQuery(name = Module.QUERY_GETALL_ENABLED_SORTED,
-							query = "SELECT m FROM Module m WHERE m.enabled=true ORDER BY m.menu.order"),
+							query = "SELECT m FROM Module m JOIN FETCH m.menu WHERE m.enabled=true ORDER BY m.menu.order"),
 				@NamedQuery(name = Module.QUERY_GET_BY_NAME,
 				query = "SELECT m FROM Module m WHERE m.name = :name"),
 				@NamedQuery(name = Module.QUERY_GET_BY_URL,
@@ -87,13 +87,13 @@ public class Module implements Serializable {
 	 * currrent status of module
 	 */
 	@NotNull
-	private Boolean running;
+	private Boolean running = false;
 
 	/**
 	 * enable or disable checking of this module
 	 */
 	@NotNull
-	private Boolean enabled;
+	private Boolean enabled = false;
 
 	/**
 	 * duplicate of value in current menu entity (reduces joins)
