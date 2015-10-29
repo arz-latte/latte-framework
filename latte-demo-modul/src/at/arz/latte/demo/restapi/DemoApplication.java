@@ -7,7 +7,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
-import at.arz.latte.demo.restapi.DemoModuleRestfulService;
+import at.arz.latte.demo.restapi.DemoApplicationService;
 
 @ApplicationScoped
 @ApplicationPath("/api")
@@ -25,7 +25,7 @@ public class DemoApplication extends Application {
 
 	private void initApplicationClasses() {
 		applicationClasses = new HashSet<Class<?>>();
-		applicationClasses.add(DemoModuleConfigurationRestfulService.class);
-		applicationClasses.add(DemoModuleRestfulService.class);
+		applicationClasses.add(DemoApplicationConfig.class);
+		applicationClasses.add(DemoApplicationService.class);
 	}
 }

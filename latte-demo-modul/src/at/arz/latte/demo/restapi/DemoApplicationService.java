@@ -17,7 +17,7 @@ import at.arz.latte.framework.services.ModuleConfigHelper;
  */
 @ApplicationScoped
 @Path("demo")
-public class DemoModuleRestfulService {
+public class DemoApplicationService {
 
 	@EJB
 	private ModuleConfigHelper configHelper;

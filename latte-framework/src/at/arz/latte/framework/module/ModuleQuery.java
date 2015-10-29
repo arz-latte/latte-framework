@@ -5,6 +5,8 @@ import java.util.Objects;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
+import at.arz.latte.framework.admin.Permission;
+
 public class ModuleQuery {
 
 	private EntityManager entityManager;
@@ -13,7 +15,13 @@ public class ModuleQuery {
 		this.entityManager = Objects.requireNonNull(entityManager);
 	}
 
-	public TypedQuery<Module> all() {
-		return entityManager.createNamedQuery(Module.QUERY_GETALL, Module.class);
+	public TypedQuery<Module> allEnabled() {
+		return entityManager.createNamedQuery(	Module.QUERY_GETALL_ENABLED,
+												Module.class);
+	}
+
+	public TypedQuery<Permission> allPermissions() {
+		return entityManager.createNamedQuery(	Permission.QUERY_GETALL,
+												Permission.class);
 	}
 }

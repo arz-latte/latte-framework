@@ -16,7 +16,6 @@ import javax.ws.rs.core.MediaType;
 
 import at.arz.latte.framework.FrameworkConstants;
 import at.arz.latte.framework.admin.AdminQuery;
-import at.arz.latte.framework.admin.Group;
 import at.arz.latte.framework.admin.restapi.AdminMapper;
 import at.arz.latte.framework.authorization.LatteAuthorization;
 import at.arz.latte.framework.exceptions.UserNotFound;
@@ -25,7 +24,6 @@ import at.arz.latte.framework.module.Module;
 import at.arz.latte.framework.module.SubMenu;
 import at.arz.latte.framework.module.services.FrameworkInitialization;
 import at.arz.latte.framework.util.Functions;
-import at.arz.latte.framework.util.JPA;
 import at.arz.latte.framework.websockets.WebsocketEndpoint;
 import at.arz.latte.framework.websockets.WebsocketMessage;
 

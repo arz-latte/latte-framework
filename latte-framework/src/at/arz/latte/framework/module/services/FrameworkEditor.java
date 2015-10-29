@@ -10,6 +10,7 @@ import javax.persistence.EntityManager;
 import at.arz.latte.framework.admin.Permission;
 import at.arz.latte.framework.module.Menu;
 import at.arz.latte.framework.module.Module;
+import at.arz.latte.framework.module.ModuleQuery;
 import at.arz.latte.framework.module.SubMenu;
 
 /**
@@ -27,29 +28,23 @@ public class FrameworkEditor {
 		this.em = Objects.requireNonNull(em);
 	}
 
-	public List<Module> getAllEnabledModules() {
-		return em	.createNamedQuery(Module.QUERY_GETALL_ENABLED, Module.class)
-					.getResultList();
-	}
-
-	public Module updateModule(Long moduleId, boolean running) {
-		Module module = em.find(Module.class, moduleId);
+	public Module updateModule(Long id, boolean running) {
+		Module module = em.find(Module.class, id);
 		module.setRunning(running);
 		return module;
 	}
 
-	public Module updateModule(Long moduleId, Menu menu) {
+	public Module updateModule(Long id, Menu menu) {
 
 		// find permission in db
 		HashMap<String, Permission> storedPermissions = new HashMap<>();
-		List<Permission> permissions = em	.createNamedQuery(Permission.QUERY_GETALL,
-															Permission.class)
-											.getResultList();
+		List<Permission> permissions = new ModuleQuery(em)	.allPermissions()
+															.getResultList();
 		for (Permission p : permissions) {
 			storedPermissions.put(p.getName(), p);
 		}
 
-		Module module = updateModule(moduleId, true);
+		Module module = updateModule(id, true);
 		module.setLastModified(menu.getLastModified());
 
 		// update menu entry

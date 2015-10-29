@@ -23,12 +23,12 @@ import at.arz.latte.framework.services.ModuleConfigHelper;
  */
 @ApplicationScoped
 @Path("config")
-public class DemoModuleConfigurationRestfulService {
+public class DemoApplicationConfig {
+
+	private static final String CONFIG_PATH = "demo-service-config.xml";
 
 	@EJB
 	private ModuleConfigHelper configHelper;
-
-	private static final String CONFIG_PATH = "demo-service-config.xml";
 
 	private static MenuData menuData;
 
@@ -36,12 +36,13 @@ public class DemoModuleConfigurationRestfulService {
 	@Path("status.json")
 	@Produces({ MediaType.APPLICATION_JSON })
 	public	MenuData
-			getModule(@QueryParam("lastModified") Long lastModified) throws JAXBException,
-																	IOException {
+			getModule(@QueryParam("lastModified") Long lastModified)	throws JAXBException,
+																		IOException {
 
 		if (menuData == null) {
 			URL url = getClass().getResource(CONFIG_PATH);
-			menuData = configHelper.loadAndCacheServiceConfig(url, lastModified);
+			menuData = configHelper.loadAndCacheServiceConfig(	url,
+																lastModified);
 		}
 
 		return menuData;

@@ -24,6 +24,7 @@ import at.arz.latte.framework.FrameworkConstants;
 import at.arz.latte.framework.exceptions.LatteValidationException;
 import at.arz.latte.framework.module.Menu;
 import at.arz.latte.framework.module.Module;
+import at.arz.latte.framework.module.ModuleQuery;
 import at.arz.latte.framework.restapi.MenuData;
 import at.arz.latte.framework.websockets.WebsocketEndpoint;
 import at.arz.latte.framework.websockets.WebsocketMessage;
@@ -63,7 +64,7 @@ public class FrameworkTimer {
 
 		if (counter >= 0) {
 
-			List<Module> modules = new FrameworkEditor(em).getAllEnabledModules();
+			List<Module> modules = new ModuleQuery(em).allEnabled().getResultList();
 
 			// notify clients if number of enabled modules changed
 			if (modulesSize == null) {
