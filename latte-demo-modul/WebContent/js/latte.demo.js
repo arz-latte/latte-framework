@@ -18,13 +18,7 @@ var appDemo = {
 		$.ajax({
 			url : appDemo.API_DEMO + "/longtask",
 		}).done(function(data) {
-			var currentId = localStorage.getItem("module-id");
-			$.ajax({
-				url : app.API_LATTE + app.PATH_FRAMEWORK + "/notify.json",
-				type : "POST",
-				data : currentId,
-				contentType : "application/json; charset=UTF-8",
-			});
+			app.notifyFramework();
 		});
 		
 		alert("Aufgabe gestartet (10s)");

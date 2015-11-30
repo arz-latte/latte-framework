@@ -113,6 +113,20 @@ var app = {
 			$("#side-menu").find("li").addClass("disabled");
 		}
 	},
+	
+	/**
+	 * send notification to framework 
+	 * 
+	 */
+	notifyFramework : function() {		
+		var currentId = localStorage.getItem("module-id");
+		latte.ajax({
+			url : app.API_LATTE + app.PATH_FRAMEWORK + "/notify.json",
+			type : "POST",
+			data : currentId,
+			contentType : "application/json; charset=UTF-8",
+		});
+	},
 
 	/**
 	 * show success message to user
